@@ -1,6 +1,6 @@
 # BaksDev Wildberries Products
 
-![Version](https://img.shields.io/badge/version-6.3.19-blue) ![php 8.1+](https://img.shields.io/badge/php-min%208.1-red.svg)
+![Version](https://img.shields.io/badge/version-6.3.20-blue) ![php 8.1+](https://img.shields.io/badge/php-min%208.1-red.svg)
 
 Модуль продукции Wildberries
 
@@ -35,4 +35,3 @@ $ php bin/phpunit --group=wildberries-orders
 ## Лицензия ![License](https://img.shields.io/badge/MIT-green)
 
 The MIT License (MIT). Обратитесь к [Файлу лицензии](LICENSE.md) за дополнительной информацией.
-
