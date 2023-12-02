@@ -18,15 +18,11 @@
 
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
 
-//use App\Module\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
-//use App\Module\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm\PropertyFieldsByCategoryChoiceFormInterface;
-//use App\Module\Products\Category\Type\Id\CategoryUid;
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -55,7 +51,7 @@ final class WbBarcodeForm extends AbstractType
         $this->propertyFields = $propertyFields;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /* TextType */
 
@@ -195,19 +191,6 @@ final class WbBarcodeForm extends AbstractType
             }
         );
 
-//        $builder->get('category')->addModelTransformer(
-//            new CallbackTransformer(
-//                function($category) {
-//                    return $category instanceof ProductCategoryUid ? $category->getValue() : $category;
-//                },
-//                function($category) {
-//
-//                    return new ProductCategoryUid($category);
-//                }
-//            )
-//        );
-
-
         /* Сохранить ******************************************************/
         $builder->add
         (
@@ -217,7 +200,7 @@ final class WbBarcodeForm extends AbstractType
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults
         (
