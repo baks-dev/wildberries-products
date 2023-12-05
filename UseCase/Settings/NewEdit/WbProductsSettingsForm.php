@@ -54,7 +54,7 @@ final class WbProductsSettingsForm extends AbstractType
     }
 
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
 
@@ -164,7 +164,7 @@ final class WbProductsSettingsForm extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => WbProductsSettingsDTO::class,

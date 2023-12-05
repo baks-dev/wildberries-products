@@ -54,7 +54,7 @@ final class PreformForm extends AbstractType
     }
 
 
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $currentProfile = $this->tokenByProfile->getCurrentUserProfile();
 
@@ -194,7 +194,7 @@ final class PreformForm extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults
         (

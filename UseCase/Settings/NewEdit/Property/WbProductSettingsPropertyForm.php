@@ -31,7 +31,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class WbProductSettingsPropertyForm extends AbstractType
 {
     
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         /* TextType */
         $builder->add('type', HiddenType::class);
@@ -73,7 +73,7 @@ final class WbProductSettingsPropertyForm extends AbstractType
         });
     }
     
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults
         (
