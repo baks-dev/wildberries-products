@@ -58,8 +58,7 @@ final class PreFormController extends AbstractController
 
             return $this->redirectToRoute(
                 'wildberries-products:admin.settings.newedit.new',
-                ['id' => $data->category, 'parent' => $data->parent],
-                status: 200
+                ['id' => $data->category, 'parent' => $data->parent->getName()]
             );
         }
 

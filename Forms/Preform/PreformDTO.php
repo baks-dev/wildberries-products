@@ -28,6 +28,6 @@ final class PreformDTO
 
     public ?WbObjectDTO $name = null;
 
-    public ?string $parent = null;
+    public ?WbObjectDTO $parent = null;
 
 }
