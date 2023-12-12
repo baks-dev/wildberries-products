@@ -22,6 +22,7 @@ use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObject;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
+use BaksDev\Wildberries\Repository\AnyWbTokenActive\AnyWbTokenActiveInterface;
 use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
 use DomainException;
 use Symfony\Component\Form\AbstractType;
@@ -40,23 +41,28 @@ final class PreformForm extends AbstractType
 
     private WbObject $objectReference;
 
-    private WbTokenByProfileInterface $tokenByProfile;
+    //private WbTokenByProfileInterface $tokenByProfile;
+
+    private AnyWbTokenActiveInterface $anyWbTokenActive;
 
     public function __construct(
         CategoryChoiceInterface $categoryChoice,
-        WbTokenByProfileInterface $tokenByProfile,
+        //WbTokenByProfileInterface $tokenByProfile,
         WbObject $objectReference,
+        AnyWbTokenActiveInterface $anyWbTokenActive
     )
     {
         $this->categoryChoice = $categoryChoice;
         $this->objectReference = $objectReference;
-        $this->tokenByProfile = $tokenByProfile;
+        //$this->tokenByProfile = $tokenByProfile;
+        $this->anyWbTokenActive = $anyWbTokenActive;
     }
 
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $currentProfile = $this->tokenByProfile->getCurrentUserProfile();
+
+        $currentProfile = $this->anyWbTokenActive->findProfile();
 
         $builder
             ->add('category', ChoiceType::class, [
