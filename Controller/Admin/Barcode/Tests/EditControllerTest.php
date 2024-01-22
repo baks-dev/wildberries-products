@@ -60,6 +60,8 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
+
     }
 
     /**
@@ -83,6 +85,7 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
     }
 
     /**
@@ -105,6 +108,8 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
         }
 
+
+        self::assertTrue(true);
     }
 
     /** Доступ по без роли */
@@ -124,10 +129,8 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(401);
         }
 
-    }
 
-    public function testComplete(): void
-    {
         self::assertTrue(true);
     }
+
 }

@@ -39,42 +39,44 @@ final class NewControllerTest extends WebTestCase
     public function testRoleSuccessful(): void
     {
 
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+        foreach(TestUserAccount::getDevice() as $device)
+        {
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $usr = TestUserAccount::getModer(self::ROLE);
+            $usr = TestUserAccount::getModer(self::ROLE);
 
-                $client->loginUser($usr, 'user');
-                $client->request('GET', self::URL);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::URL);
 
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
+        }
 
+        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
 
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+        foreach(TestUserAccount::getDevice() as $device)
+        {
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $usr = TestUserAccount::getAdmin();
+            $usr = TestUserAccount::getAdmin();
 
-                $client->loginUser($usr, 'user');
-                $client->request('GET', self::URL);
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::URL);
 
-                self::assertResponseIsSuccessful();
-            }
+            self::assertResponseIsSuccessful();
+        }
 
+        self::assertTrue(true);
     }
 
     /**
@@ -83,43 +85,41 @@ final class NewControllerTest extends WebTestCase
     public function testRoleUserDeny(): void
     {
 
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+        foreach(TestUserAccount::getDevice() as $device)
+        {
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $usr = TestUserAccount::getUsr();
-                $client->loginUser($usr, 'user');
-                $client->request('GET', self::URL);
+            $usr = TestUserAccount::getUsr();
+            $client->loginUser($usr, 'user');
+            $client->request('GET', self::URL);
 
-                self::assertResponseStatusCodeSame(403);
-            }
+            self::assertResponseStatusCodeSame(403);
+        }
 
+        self::assertTrue(true);
     }
 
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
 
-            self::ensureKernelShutdown();
-            $client = static::createClient();
+        self::ensureKernelShutdown();
+        $client = static::createClient();
 
-            foreach(TestUserAccount::getDevice() as $device)
-            {
-                $client->setServerParameter('HTTP_USER_AGENT', $device);
+        foreach(TestUserAccount::getDevice() as $device)
+        {
+            $client->setServerParameter('HTTP_USER_AGENT', $device);
 
-                $client->request('GET', self::URL);
+            $client->request('GET', self::URL);
 
-                // Full authentication is required to access this resource
-                self::assertResponseStatusCodeSame(401);
-            }
+            // Full authentication is required to access this resource
+            self::assertResponseStatusCodeSame(401);
+        }
 
-    }
-
-    public function testComplete(): void
-    {
         self::assertTrue(true);
     }
+
 }

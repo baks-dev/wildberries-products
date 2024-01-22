@@ -60,6 +60,8 @@ final class UpdateControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
+
+        self::assertTrue(true);
     }
 
     /**
@@ -83,6 +85,8 @@ final class UpdateControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
+
     }
 
     /**
@@ -105,6 +109,8 @@ final class UpdateControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
         }
 
+        self::assertTrue(true);
+
     }
 
     /** Доступ по без роли */
@@ -124,10 +130,8 @@ final class UpdateControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(401);
         }
 
+        self::assertTrue(true);
+
     }
 
-    public function testComplete(): void
-    {
-        self::assertTrue(true);
-    }
 }

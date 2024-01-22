@@ -53,6 +53,8 @@ final class GetControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_ADMIN */
@@ -72,6 +74,8 @@ final class GetControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_USER */
@@ -90,6 +94,8 @@ final class GetControllerTest extends WebTestCase
 
             self::assertResponseStatusCodeSame(403);
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по без роли */
@@ -107,11 +113,8 @@ final class GetControllerTest extends WebTestCase
             // Full authentication is required to access this resource
             self::assertResponseStatusCodeSame(401);
         }
-    }
 
-
-    public function testComplete(): void
-    {
         self::assertTrue(true);
     }
+
 }
