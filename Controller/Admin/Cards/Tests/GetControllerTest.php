@@ -39,7 +39,10 @@ final class GetControllerTest extends WebTestCase
      */
     public function testRoleSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -60,7 +63,11 @@ final class GetControllerTest extends WebTestCase
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
-        self::ensureKernelShutdown();
+
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -81,7 +88,10 @@ final class GetControllerTest extends WebTestCase
     /** Доступ по роли ROLE_USER */
     public function testRoleUserFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -101,7 +111,10 @@ final class GetControllerTest extends WebTestCase
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)

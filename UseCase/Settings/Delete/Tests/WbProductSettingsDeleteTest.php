@@ -157,6 +157,9 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         self::assertNull($WbProductSettings);
 
+        $em->clear();
+        //$em->close();
+
     }
 
 }

@@ -25,11 +25,14 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
 use BaksDev\Users\UsersTable\Type\Actions\Id\UsersTableActionsUid;
+use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
@@ -49,7 +52,6 @@ final class WbProductSettingsNewTest extends KernelTestCase
 
     public static function setUpBeforeClass(): void
     {
-
         /** @var EntityManagerInterface $em */
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
@@ -59,8 +61,6 @@ final class WbProductSettingsNewTest extends KernelTestCase
 
         if($WbProductSettings)
         {
-            $em->remove($WbProductSettings);
-
             $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
                 ->findBy(['settings' => ProductCategoryUid::TEST]);
 
@@ -69,8 +69,13 @@ final class WbProductSettingsNewTest extends KernelTestCase
                 $em->remove($remove);
             }
 
+            $em->remove($WbProductSettings);
+
             $em->flush();
         }
+
+        $em->clear();
+        //$em->close();
     }
 
 
@@ -135,9 +140,16 @@ final class WbProductSettingsNewTest extends KernelTestCase
         self::bootKernel();
         $container = self::getContainer();
 
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-        $WbProductSettings = $em->getRepository(WbProductSettings::class)->find(ProductCategoryUid::TEST);
-        self::assertNotNull($WbProductSettings);
+        /** @var DBALQueryBuilder $dbal */
+        $dbal = $container->get(DBALQueryBuilder::class);
+
+        $dbal->createQueryBuilder(self::class);
+        $dbal
+            ->from(WbProductSettings::class, 'test')
+            ->where('test.id = :id')
+            ->setParameter('id', ProductCategoryUid::TEST)
+        ;
+
+        self::assertTrue($dbal->fetchExist());
     }
 }

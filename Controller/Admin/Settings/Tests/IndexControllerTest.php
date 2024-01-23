@@ -36,7 +36,7 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по роли */
     public function testRoleSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -50,12 +50,14 @@ final class IndexControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -69,12 +71,14 @@ final class IndexControllerTest extends WebTestCase
 
             self::assertResponseIsSuccessful();
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по роли ROLE_USER */
     public function testRoleUserFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -87,27 +91,26 @@ final class IndexControllerTest extends WebTestCase
 
             self::assertResponseStatusCodeSame(403);
         }
+
+        self::assertTrue(true);
     }
 
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
         {
             $client->setServerParameter('HTTP_USER_AGENT', $device);
-
             $client->request('GET', self::URL);
 
             // Full authentication is required to access this resource
             self::assertResponseStatusCodeSame(401);
         }
-    }
 
-    public function testComplete(): void
-    {
         self::assertTrue(true);
     }
+
 }

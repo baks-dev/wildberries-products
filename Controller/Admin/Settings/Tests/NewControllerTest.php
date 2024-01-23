@@ -44,10 +44,17 @@ final class NewControllerTest extends WebTestCase
         // Получаем одно из событий Продукта
         $em = self::getContainer()->get(EntityManagerInterface::class);
         self::$identifier = $em->getRepository(ProductCategory::class)->findOneBy([], ['id' => 'DESC'])?->getId();
+
+        $em->clear();
+        //$em->close();
     }
 
     public function testRoleSuccessful(): void
     {
+
+        //self::assertTrue(true);
+        //return;
+
         // Получаем одно из событий
         $identifier = self::$identifier;
 
@@ -68,21 +75,24 @@ final class NewControllerTest extends WebTestCase
                 self::assertResponseIsSuccessful();
             }
         }
-        else
-        {
+
             self::assertTrue(true);
-        }
+
     }
 
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
+
+        //self::assertTrue(true);
+        //return;
+
         // Получаем одно из событий
         $identifier = self::$identifier;
 
         if($identifier)
         {
-            self::ensureKernelShutdown();
+            //self::ensureKernelShutdown();
             $client = static::createClient();
 
             foreach(TestUserAccount::getDevice() as $device)
@@ -97,10 +107,9 @@ final class NewControllerTest extends WebTestCase
                 self::assertResponseIsSuccessful();
             }
         }
-        else
-        {
-            self::assertTrue(true);
-        }
+
+        self::assertTrue(true);
+
     }
 
     /**
@@ -108,12 +117,15 @@ final class NewControllerTest extends WebTestCase
      */
     public function testRoleUserDeny(): void
     {
+        //self::assertTrue(true);
+        //return;
+
         // Получаем одно из событий
         $identifier = self::$identifier;
 
         if($identifier)
         {
-            self::ensureKernelShutdown();
+            //self::ensureKernelShutdown();
             $client = static::createClient();
 
             foreach(TestUserAccount::getDevice() as $device)
@@ -127,21 +139,24 @@ final class NewControllerTest extends WebTestCase
                 self::assertResponseStatusCodeSame(403);
             }
         }
-        else
-        {
-            self::assertTrue(true);
-        }
+
+        self::assertTrue(true);
+
     }
 
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
+
+        //self::assertTrue(true);
+        //return;
+
         // Получаем одно из событий
         $identifier = self::$identifier;
 
         if($identifier)
         {
-            self::ensureKernelShutdown();
+            //self::ensureKernelShutdown();
             $client = static::createClient();
 
             foreach(TestUserAccount::getDevice() as $device)
@@ -154,14 +169,13 @@ final class NewControllerTest extends WebTestCase
                 self::assertResponseStatusCodeSame(401);
             }
         }
-        else
-        {
-            self::assertTrue(true);
-        }
+
+        self::assertTrue(true);
+
     }
 
-    public function testComplete(): void
-    {
-        self::assertTrue(true);
-    }
+//    public function testComplete(): void
+//    {
+//        self::assertTrue(true);
+//    }
 }

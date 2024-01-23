@@ -29,6 +29,8 @@ use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSetting
 /**
  * @group wildberries-products
  * @group wildberries-products-settings
+ *
+ * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest::class
  */
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
@@ -38,14 +40,10 @@ final class DeleteControllerTest extends WebTestCase
     private const ROLE = 'ROLE_WB_PRODUCTS_SETTING_DELETE';
 
 
-    /**
-     * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest::class
-     * @see WbProductSettingsNewTest
-     */
     public function testRoleSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -60,13 +58,15 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
+
     }
 
     // доступ по роли ROLE_ADMIN
     public function testRoleAdminSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -81,13 +81,15 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
+
     }
 
     // доступ по роли ROLE_USER
     public function testRoleUserDeny(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -101,13 +103,14 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
         }
 
+        self::assertTrue(true);
     }
 
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -120,10 +123,11 @@ final class DeleteControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(401);
         }
 
-    }
-
-    public function testComplete(): void
-    {
         self::assertTrue(true);
     }
+//
+//    public function testComplete(): void
+//    {
+//        self::assertTrue(true);
+//    }
 }

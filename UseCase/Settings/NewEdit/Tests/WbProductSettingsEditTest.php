@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
@@ -106,16 +107,27 @@ final class WbProductSettingsEditTest extends KernelTestCase
         $handle = $WbProductsSettingsHandler->handle($WbProductsSettingsDTO);
         self::assertTrue(($handle instanceof WbProductSettings), $handle.': Ошибка WbProductSettings');
 
+        $em->clear();
+        //$em->close();
+
     }
 
     public function testComplete(): void
     {
-        //self::bootKernel();
+
+        self::bootKernel();
         $container = self::getContainer();
 
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-        $WbProductSettings = $em->getRepository(WbProductSettings::class)->find(ProductCategoryUid::TEST);
-        self::assertNotNull($WbProductSettings);
+        /** @var DBALQueryBuilder $dbal */
+        $dbal = $container->get(DBALQueryBuilder::class);
+
+        $dbal->createQueryBuilder(self::class);
+        $dbal
+            ->from(WbProductSettings::class, 'test')
+            ->where('test.id = :id')
+            ->setParameter('id', ProductCategoryUid::TEST)
+        ;
+
+        self::assertTrue($dbal->fetchExist());
     }
 }

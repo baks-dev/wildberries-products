@@ -39,7 +39,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -61,7 +61,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleAdminSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -85,7 +85,7 @@ final class NewControllerTest extends WebTestCase
     public function testRoleUserDeny(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -106,7 +106,7 @@ final class NewControllerTest extends WebTestCase
     public function testGuestFiled(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)

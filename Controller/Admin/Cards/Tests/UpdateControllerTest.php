@@ -29,6 +29,9 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /**
  * @group wildberries-products
  * @group wildberries-products-card
+ *
+ * @see IndexControllerTest
+ * @depends BaksDev\Wildberries\Products\Controller\Admin\Cards\Tests\IndexControllerTest::class
  */
 #[When(env: 'test')]
 final class UpdateControllerTest extends WebTestCase
@@ -39,14 +42,13 @@ final class UpdateControllerTest extends WebTestCase
 
     /**
      * Доступ по роли
-     *
-     * @depends BaksDev\Wildberries\Products\Controller\Admin\Cards\Tests\IndexControllerTest::testComplete
-     * @see IndexControllerTest
-     *
      */
     public function testRoleSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -70,7 +72,10 @@ final class UpdateControllerTest extends WebTestCase
     public function testRoleAdminSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -95,7 +100,10 @@ final class UpdateControllerTest extends WebTestCase
     public function testRoleUserDeny(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -117,7 +125,10 @@ final class UpdateControllerTest extends WebTestCase
     public function testGuestFiled(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -133,5 +144,10 @@ final class UpdateControllerTest extends WebTestCase
         self::assertTrue(true);
 
     }
+//
+//    public function testComplete(): void
+//    {
+//        self::assertTrue(true);
+//    }
 
 }

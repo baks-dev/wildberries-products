@@ -26,6 +26,10 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /**
  * @group wildberries-products
  * @group wildberries-products-card
+ *
+ * @see WbProductCardNewTest
+ * @depends BaksDev\Wildberries\Products\UseCase\Cards\NewEdit\Tests\WbProductCardNewTest::class
+ *
  */
 #[When(env: 'test')]
 final class IndexControllerTest extends WebTestCase
@@ -36,14 +40,14 @@ final class IndexControllerTest extends WebTestCase
 
     /**
      * Доступ по роли
-     *
-     * @depends BaksDev\Wildberries\Products\UseCase\Cards\NewEdit\Tests\WbProductCardNewTest::testComplete
-     * @see WbProductCardNewTest
      */
     public function testRoleSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -64,7 +68,10 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -85,7 +92,10 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по роли ROLE_USER */
     public function testRoleUserFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -105,7 +115,10 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::assertTrue(true);
+        //return;
+
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -120,5 +133,10 @@ final class IndexControllerTest extends WebTestCase
 
         self::assertTrue(true);
     }
+
+//    public function testComplete(): void
+//    {
+//        self::assertTrue(true);
+//    }
 
 }

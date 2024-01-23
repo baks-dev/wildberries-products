@@ -33,6 +33,7 @@ final class IndexControllerTest extends WebTestCase
 
     private const ROLE = 'ROLE_WB_BARCODE';
 
+
     /** Доступ по роли */
     public function testRoleSuccessful(): void
     {
@@ -57,7 +58,7 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по роли ROLE_ADMIN */
     public function testRoleAdminSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -78,7 +79,7 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по роли ROLE_USER */
     public function testRoleUserFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)
@@ -98,7 +99,7 @@ final class IndexControllerTest extends WebTestCase
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach (TestUserAccount::getDevice() as $device)

@@ -125,6 +125,9 @@ final class WbBarcodeDeleteTest extends KernelTestCase
             ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
         self::assertNull($WbBarcode);
 
+        $em->clear();
+        //$em->close();
+
     }
 
     /**
@@ -157,9 +160,12 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         }
 
         $em->flush();
-
+        $em->clear();
+        //$em->close();
 
         self::assertNull($WbBarcode);
+
+
     }
 
 }

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
@@ -72,6 +73,9 @@ final class NewHandleTest extends KernelTestCase
 
             $em->flush();
         }
+
+        $em->clear();
+        //$em->close();
     }
 
 
@@ -149,17 +153,36 @@ final class NewHandleTest extends KernelTestCase
 
     public function testComplete(): void
     {
-
         self::bootKernel();
         $container = self::getContainer();
 
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-        $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
-        self::assertNotNull($WbBarcode);
+        /** @var DBALQueryBuilder $dbal */
+        $dbal = $container->get(DBALQueryBuilder::class);
 
+        $dbal->createQueryBuilder(self::class);
+        $dbal
+            ->from(WbBarcode::class, 'barcode')
+            ->where('barcode.id = :id')
+            ->setParameter('id', ProductCategoryUid::TEST)
+            ->andWhere('barcode.profile = :profile')
+            ->setParameter('profile', UserProfileUid::TEST)
+        ;
+
+        self::assertTrue($dbal->fetchExist());
+
+
+        //
+        //        /** @var EntityManagerInterface $em */
+        //        $em = $container->get(EntityManagerInterface::class);
+        //        $WbBarcode = $em->getRepository(WbBarcode::class)
+        //            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
+        //        self::assertNotNull($WbBarcode);
+        //
+        //        self::assertTrue(true);
+        //
+        //        $em->clear();
 
         self::assertTrue(true);
+
     }
 }

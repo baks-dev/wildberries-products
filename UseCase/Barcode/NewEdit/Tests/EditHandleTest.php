@@ -127,6 +127,9 @@ final class EditHandleTest extends KernelTestCase
         $handle = $WbBarcodeHandler->handle($WbBarcodeDTO, $UserProfileUid);
 
         self::assertTrue(($handle instanceof WbBarcode), $handle.': Ошибка WbBarcode');
+
+        $em->clear();
+        //$em->close();
     }
 
 
@@ -143,7 +146,9 @@ final class EditHandleTest extends KernelTestCase
             ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
         self::assertNotNull($WbBarcode);
 
-
         self::assertTrue(true);
+
+        $em->clear();
+        //$em->close();
     }
 }

@@ -24,10 +24,13 @@ use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
+use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest;
 
 /**
  * @group wildberries-products
  * @group wildberries-products-settings
+ *
+ * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest::class
  */
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
@@ -37,12 +40,9 @@ final class EditControllerTest extends WebTestCase
     private const ROLE = 'ROLE_WB_PRODUCTS_SETTING_EDIT';
 
 
-    /**
-     * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest::testComplete
-     */
     public function testRoleSuccessful(): void
     {
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -57,6 +57,7 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
     }
 
     /**
@@ -65,7 +66,7 @@ final class EditControllerTest extends WebTestCase
     public function testRoleAdminSuccessful(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -80,6 +81,8 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseIsSuccessful();
         }
 
+        self::assertTrue(true);
+
     }
 
     /**
@@ -88,7 +91,7 @@ final class EditControllerTest extends WebTestCase
     public function testRoleUserDeny(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -102,13 +105,15 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(403);
         }
 
+        self::assertTrue(true);
+
     }
 
     /** Доступ по без роли */
     public function testGuestFiled(): void
     {
 
-        self::ensureKernelShutdown();
+        //self::ensureKernelShutdown();
         $client = static::createClient();
 
         foreach(TestUserAccount::getDevice() as $device)
@@ -121,10 +126,12 @@ final class EditControllerTest extends WebTestCase
             self::assertResponseStatusCodeSame(401);
         }
 
+        self::assertTrue(true);
+
     }
 
-    public function testComplete(): void
-    {
-        self::assertTrue(true);
-    }
+//    public function testComplete(): void
+//    {
+//        self::assertTrue(true);
+//    }
 }

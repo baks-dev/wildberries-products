@@ -51,17 +51,18 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
+use BaksDev\Wildberries\Products\Controller\Admin\Cards\Tests\UpdateControllerTest;
 
 /**
  * @group wildberries-products
  * @group wildberries-products-card
+ *
+ * @depends BaksDev\Wildberries\Products\Controller\Admin\Cards\Tests\UpdateControllerTest::class
  */
 #[When(env: 'test')]
 final class WbProductCardDeleteTest extends KernelTestCase
 {
-    /**
-     * @depends BaksDev\Wildberries\Products\Controller\Admin\Cards\Tests\UpdateControllerTest::testComplete
-     */
+
     public function testUseCase(): void
     {
         self::bootKernel();
@@ -123,6 +124,8 @@ final class WbProductCardDeleteTest extends KernelTestCase
         $em->remove($WbProductCard);
         $em->flush();
 
+        $em->clear();
+        //$em->close();
     }
 
     /**
@@ -144,6 +147,7 @@ final class WbProductCardDeleteTest extends KernelTestCase
 
         self::assertNull($WbProductCard);
 
-
+        $em->clear();
+        //$em->close();
     }
 }

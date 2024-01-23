@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Cards\NewEdit\Tests;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
 use BaksDev\Products\Product\Type\Id\ProductUid;
@@ -33,6 +34,7 @@ use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use BaksDev\Wildberries\Products\Entity\Cards\WbProductCard;
+use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUid;
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Custom\WbBarcodeCustomDTO;
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property\WbBarcodePropertyDTO;
@@ -115,12 +117,21 @@ final class WbProductCardNewTest extends KernelTestCase
 
     public function testComplete(): void
     {
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
+        self::bootKernel();
+        $container = self::getContainer();
 
-        $WbProductCard = $em->getRepository(WbProductCard::class)
-            ->find(WbCardUid::TEST);
+        /** @var DBALQueryBuilder $dbal */
+        $dbal = $container->get(DBALQueryBuilder::class);
 
-        self::assertNotNull($WbProductCard);
+        $dbal->createQueryBuilder(self::class);
+        $dbal
+            ->from(WbProductCard::class, 'test')
+            ->where('test.id = :id')
+            ->setParameter('id', WbCardUid::TEST)
+        ;
+
+        self::assertTrue($dbal->fetchExist());
+
     }
+
 }
