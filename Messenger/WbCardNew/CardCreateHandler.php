@@ -85,7 +85,7 @@ final class CardCreateHandler
     private ProductSettingsByParentAndNameInterface $productSettingsByParentAndName;
     private OfferByCategoryInterface $offerByCategory;
     private VariationByOfferInterface $variationByOffer;
-    private LoggerInterface $messageDispatchLogger;
+    private LoggerInterface $logger;
     private WildberriesCardImage $wildberriesCardImage;
     private PricesInfo $wildberriesPricesInfo;
     private WildberriesStocks $wildberriesStocks;
@@ -99,7 +99,7 @@ final class CardCreateHandler
         ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
         OfferByCategoryInterface $offerByCategory,
         VariationByOfferInterface $variationByOffer,
-        LoggerInterface $messageDispatchLogger,
+        LoggerInterface $wildberriesProductsLogger,
         WildberriesCardImage $wildberriesCardImage,
         PricesInfo $wildberriesPricesInfo,
         WildberriesStocks $wildberriesStocks,
@@ -113,7 +113,7 @@ final class CardCreateHandler
         $this->offerByCategory = $offerByCategory;
         $this->variationByOffer = $variationByOffer;
         $this->reference = $reference;
-        $this->messageDispatchLogger = $messageDispatchLogger;
+        $this->logger = $wildberriesProductsLogger;
         $this->wildberriesCardImage = $wildberriesCardImage;
         $this->wildberriesPricesInfo = $wildberriesPricesInfo;
         $this->wildberriesStocks = $wildberriesStocks;
@@ -426,7 +426,7 @@ final class CardCreateHandler
                 {
                     $error = sprintf('%s: В библиотеке отсутствует значение', $this->Card->getProfile());
 
-                    $this->messageDispatchLogger->warning($error,
+                    $this->logger->warning($error,
                         [
                             'class' => $referenceClass,
                             'value' => $this->Card->getColor(),

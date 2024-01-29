@@ -40,16 +40,16 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 final class DeleteCardByProductDelete
 {
     private AppCacheInterface $cache;
-    private LoggerInterface $messageDispatchLogger;
+    private LoggerInterface $logger;
     private EntityManagerInterface $entityManager;
 
     public function __construct(
         AppCacheInterface $cache,
-        LoggerInterface $messageDispatchLogger,
+        LoggerInterface $wildberriesProductsLogger,
         EntityManagerInterface $entityManager
     ) {
         $this->cache = $cache;
-        $this->messageDispatchLogger = $messageDispatchLogger;
+        $this->logger = $wildberriesProductsLogger;
         $this->entityManager = $entityManager;
     }
 
@@ -81,11 +81,11 @@ final class DeleteCardByProductDelete
         $this->entityManager->remove($WbProductCard);
         $this->entityManager->flush();
 
-        $this->messageDispatchLogger->info(sprintf('Удалили карточку Wildberries (product: %s)', $message->getId()), [__FILE__.':'.__LINE__]);
+        $this->logger->info(sprintf('Удалили карточку Wildberries (product: %s)', $message->getId()), [__FILE__.':'.__LINE__]);
 
         /* Чистим кеш модуля */
         $this->cache->init('wildberries-products')->clear();
-        $this->messageDispatchLogger->info('Очистили кеш WildberriesProducts', [__FILE__.':'.__LINE__]);
+        $this->logger->info('Очистили кеш WildberriesProducts', [__FILE__.':'.__LINE__]);
 
     }
 }

@@ -56,7 +56,7 @@ final class WbCardNewHandler
     private PartnerWarehouses $wildberriesWarehouses;
     private WildberriesStocks $wildberriesStocks;
     private MessageDispatchInterface $messageDispatch;
-    private LoggerInterface $messageDispatchLogger;
+    private LoggerInterface $logger;
     private UserProfileUid $profile;
     private ProductEventByArticleInterface $productEventByArticle;
     private ProductDeleteHandler $productDeleteHandler;
@@ -68,7 +68,7 @@ final class WbCardNewHandler
         PartnerWarehouses $wildberriesWarehouses,
         WildberriesStocks $wildberriesStocks,
         MessageDispatchInterface $messageDispatch,
-        LoggerInterface $messageDispatchLogger,
+        LoggerInterface $wildberriesProductsLogger,
         ProductEventByArticleInterface $productEventByArticle,
         ProductDeleteHandler $productDeleteHandler
 
@@ -81,7 +81,7 @@ final class WbCardNewHandler
         $this->wildberriesWarehouses = $wildberriesWarehouses;
         $this->wildberriesStocks = $wildberriesStocks;
         $this->messageDispatch = $messageDispatch;
-        $this->messageDispatchLogger = $messageDispatchLogger;
+        $this->logger = $wildberriesProductsLogger;
         $this->productEventByArticle = $productEventByArticle;
         $this->productDeleteHandler = $productDeleteHandler;
     }
@@ -119,7 +119,7 @@ final class WbCardNewHandler
                         $Card->getArticle(),
                     );
 
-                    $this->messageDispatchLogger->warning($error);
+                    $this->logger->warning($error);
                 }
 
                 /* Если имеется торговое предложение имеется */
@@ -147,7 +147,7 @@ final class WbCardNewHandler
                         $Card->getCategory(),
                     );
 
-                    $this->messageDispatchLogger->warning($error);
+                    $this->logger->warning($error);
 
                     continue;
                 }
@@ -168,7 +168,7 @@ final class WbCardNewHandler
                     $message->getProfile()
                 );
 
-                $this->messageDispatchLogger->info($error);
+                $this->logger->info($error);
                 break;
             }
         }
