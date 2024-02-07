@@ -104,6 +104,8 @@ final class WbProductCardNewTest extends KernelTestCase
         $WbProductCardDTO->addVariation($WbProductCardVariationDTO);
         self::assertTrue($WbProductCardDTO->getVariation()->contains($WbProductCardVariationDTO));
 
+
+
         self::bootKernel();
 
         /** @var WbProductCardHandler $WbProductCardHandler */
