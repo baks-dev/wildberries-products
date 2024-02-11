@@ -77,7 +77,7 @@ final class PrintController extends AbstractController
 
         if($BarcodeSettings)
         {
-           $ProductConst = $productByVariation->getProductByVariationConstOrNull($WbProductCardVariation->getVariation());
+           $ProductConst = $productByVariation->getProductByVariationOrNull($WbProductCardVariation->getVariation());
 
            if($ProductConst)
            {
