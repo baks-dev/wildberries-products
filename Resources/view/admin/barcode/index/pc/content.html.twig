@@ -23,7 +23,7 @@
                 {% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
                     <a
                             data-href="{{ path('wildberries-products:admin.barcode.newedit.new') }}"
-                            class="btn btn-primary modal-link"
+                            class="btn btn-primary modal-link disabled"
                             data-bs-toggle="modal"
                             data-bs-target="#modal"
                     >
