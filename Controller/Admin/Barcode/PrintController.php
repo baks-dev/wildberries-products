@@ -58,16 +58,12 @@ final class PrintController extends AbstractController
 
         /** Получаем настройки стикера */
 
-       $WbProductCard = $WbProductCardVariation->getCard();
-       $BarcodeSettings = $barcodeSettings->findWbBarcodeSettings($WbProductCard->getProduct());
-
-
-        //dd($BarcodeSettings);
+        $WbProductCard = $WbProductCardVariation->getCard();
+        $BarcodeSettings = $barcodeSettings->findWbBarcodeSettings($WbProductCard->getProduct());
 
         /* Генерируем боковые стикеры */
         $gen = new BarcodeGeneratorSVG();
         $barcode = $gen->getBarcode($WbProductCardVariation->getBarcode(), $gen::TYPE_CODE_128, 2, 60);
-
 
 
         /** Получаем информацию о продукте */
@@ -77,31 +73,31 @@ final class PrintController extends AbstractController
 
         if($BarcodeSettings)
         {
-           $ProductConst = $productByVariation->getProductByVariationOrNull($WbProductCardVariation->getVariation());
+            $ProductConst = $productByVariation->getProductByVariationOrNull($WbProductCardVariation->getVariation());
 
-           if($ProductConst)
-           {
-              $Product = $productDetailByUid->fetchProductDetailByEventAssociative(
-                  $ProductConst['event_id'],
-                  $ProductConst['offer_id'],
-                  $ProductConst['variation_id']
-               );
+            if($ProductConst)
+            {
+                $Product = $productDetailByUid->fetchProductDetailByEventAssociative(
+                    $ProductConst['event_id'],
+                    $ProductConst['offer_id'],
+                    $ProductConst['variation_id']
+                );
 
-              /** Получаем дополнительные свойства */
-              $property = $wbBarcodeProperty->getPropertyCollection($ProductConst['event_id']);
+                /** Получаем дополнительные свойства */
+                $property = $wbBarcodeProperty->getPropertyCollection($ProductConst['event_id']);
 
-           }
+            }
         }
 
 
         return $this->render(
             [
-                'item'  => $WbProductCardVariation,
-                'barcode'  => base64_encode($barcode),
-                'counter'  => $BarcodeSettings['counter'] ?? 1,
+                'item' => $WbProductCardVariation,
+                'barcode' => base64_encode($barcode),
+                'counter' => $BarcodeSettings['counter'] ?? 1,
                 'settings' => $BarcodeSettings,
-                'card'  => $Product,
-                'property'  => $property,
+                'card' => $Product,
+                'property' => $property,
             ],
         );
     }
