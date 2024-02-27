@@ -36,32 +36,26 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PreformForm extends AbstractType
 {
-
     private CategoryChoiceInterface $categoryChoice;
 
     private WbObject $objectReference;
-
-    //private WbTokenByProfileInterface $tokenByProfile;
 
     private AnyWbTokenActiveInterface $anyWbTokenActive;
 
     public function __construct(
         CategoryChoiceInterface $categoryChoice,
-        //WbTokenByProfileInterface $tokenByProfile,
         WbObject $objectReference,
         AnyWbTokenActiveInterface $anyWbTokenActive
     )
     {
         $this->categoryChoice = $categoryChoice;
         $this->objectReference = $objectReference;
-        //$this->tokenByProfile = $tokenByProfile;
         $this->anyWbTokenActive = $anyWbTokenActive;
     }
 
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $currentProfile = $this->anyWbTokenActive->findProfile();
 
         $builder
