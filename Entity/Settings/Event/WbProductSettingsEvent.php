@@ -72,14 +72,14 @@ class WbProductSettingsEvent extends EntityEvent
      * Модификатор
      */
     #[Assert\Valid]
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: WbProductSettingsModify::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbProductSettingsModify::class, mappedBy: 'event', cascade: ['all'])]
     private WbProductSettingsModify $modify;
 
     /**
      * Свойства карточки
      */
     #[Assert\Valid]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: WbProductSettingsProperty::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbProductSettingsProperty::class, mappedBy: 'event', cascade: ['all'])]
     private Collection $property;
 
     public function __construct()

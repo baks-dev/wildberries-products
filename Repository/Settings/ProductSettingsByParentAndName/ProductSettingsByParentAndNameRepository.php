@@ -23,7 +23,7 @@ use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use Doctrine\ORM\EntityManagerInterface;
 
-final class ProductSettingsByParentAndName implements ProductSettingsByParentAndNameInterface
+final class ProductSettingsByParentAndNameRepository implements ProductSettingsByParentAndNameInterface
 {
     private EntityManagerInterface $entityManager;
     

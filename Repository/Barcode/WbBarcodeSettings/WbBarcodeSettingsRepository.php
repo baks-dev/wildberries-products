@@ -33,7 +33,7 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
-final class WbBarcodeSettings implements WbBarcodeSettingsInterface
+final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 {
     private DBALQueryBuilder $DBALQueryBuilder;
 

@@ -50,7 +50,7 @@ use BaksDev\Wildberries\Products\Entity\Cards\WbProductCard;
 use BaksDev\Wildberries\Products\Entity\Cards\WbProductCardOffer;
 use BaksDev\Wildberries\Products\Entity\Cards\WbProductCardVariation;
 
-final class AllWbProductCard implements AllWbProductCardInterface
+final class AllWbProductCardRepository implements AllWbProductCardInterface
 {
     private PaginatorInterface $paginator;
     private DBALQueryBuilder $DBALQueryBuilder;

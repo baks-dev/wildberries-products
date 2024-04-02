@@ -62,13 +62,13 @@ class WbProductCard extends EntityState
     /**
      * Торговые предложения
      */
-    #[ORM\OneToMany(mappedBy: 'card', targetEntity: WbProductCardOffer::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbProductCardOffer::class, mappedBy: 'card', cascade: ['all'])]
     private Collection $offer;
 
     /**
      * Множественные варианты торгового предложения
      */
-    #[ORM\OneToMany(mappedBy: 'card', targetEntity: WbProductCardVariation::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbProductCardVariation::class, mappedBy: 'card', cascade: ['all'])]
     private Collection $variation;
 
 

@@ -74,17 +74,17 @@ class WbBarcodeEvent extends EntityEvent
 
     /** Коллекция свойств продукта */
     #[Assert\Valid]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: WbBarcodeProperty::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbBarcodeProperty::class, mappedBy: 'event', cascade: ['all'])]
     private Collection $property;
 
     /** Коллекция пользовательских свойств */
     #[Assert\Valid]
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: WbBarcodeCustom::class, cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbBarcodeCustom::class, mappedBy: 'event', cascade: ['all'])]
     private Collection $custom;
 
     /** Модификатор */
     #[Assert\Valid]
-    #[ORM\OneToOne(mappedBy: 'event', targetEntity: WbBarcodeModify::class, cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeModify::class, mappedBy: 'event', cascade: ['all'])]
     private WbBarcodeModify $modify;
 
     public function __construct()

@@ -29,7 +29,7 @@ use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use Doctrine\DBAL\Connection;
 
-final class WbBarcodePropertyByProductEvent implements WbBarcodePropertyByProductEventInterface
+final class WbBarcodePropertyByProductEventRepository implements WbBarcodePropertyByProductEventInterface
 {
 
     private Connection $connection;

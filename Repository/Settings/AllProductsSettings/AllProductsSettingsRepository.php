@@ -38,7 +38,7 @@ use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-final class AllProductsSettings implements AllProductsSettingsInterface
+final class AllProductsSettingsRepository implements AllProductsSettingsInterface
 {
 
     private PaginatorInterface $paginator;

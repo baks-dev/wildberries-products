@@ -29,7 +29,7 @@ use BaksDev\Wildberries\Products\Entity\Cards\WbProductCardOffer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 
-final class ExistCardOfferByNomenclature implements ExistCardOfferByNomenclatureInterface
+final class ExistCardOfferByNomenclatureRepository implements ExistCardOfferByNomenclatureInterface
 {
 
     private Connection $connection;

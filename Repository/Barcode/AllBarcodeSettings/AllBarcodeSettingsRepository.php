@@ -29,7 +29,7 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
-final class AllBarcodeSettings implements AllBarcodeSettingsInterface
+final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 {
 
     private PaginatorInterface $paginator;
