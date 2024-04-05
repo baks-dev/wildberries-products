@@ -39,7 +39,8 @@ use BaksDev\Wildberries\Api\Token\Card\WildberriesCards\Card;
 use BaksDev\Wildberries\Api\Token\Card\WildberriesCards\WildberriesCards;
 use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\Stocks;
 use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\WildberriesStocks;
-use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\PartnerWarehouses;
+use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouses;
+use BaksDev\Wildberries\Api\Token\Warehouse\ProfileWarehouses\ProfileWarehousesClient;
 use BaksDev\Wildberries\Products\Messenger\WbCardNew\Card\WbCardMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\ExistCardOfferByNomenclature\ExistCardOfferByNomenclatureInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsByParentAndName\ProductSettingsByParentAndNameInterface;
@@ -53,7 +54,7 @@ final class WbCardNewHandler
     private WildberriesCards $wildberriesCards;
     private ProductSettingsByParentAndNameInterface $productSettingsByParentAndName;
     private ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature;
-    private PartnerWarehouses $wildberriesWarehouses;
+    private ProfileWarehousesClient $wildberriesWarehouses;
     private WildberriesStocks $wildberriesStocks;
     private MessageDispatchInterface $messageDispatch;
     private LoggerInterface $logger;
@@ -65,7 +66,7 @@ final class WbCardNewHandler
         WildberriesCards $wildberriesCards,
         ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
         ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature,
-        PartnerWarehouses $wildberriesWarehouses,
+        ProfileWarehousesClient $wildberriesWarehouses,
         WildberriesStocks $wildberriesStocks,
         MessageDispatchInterface $messageDispatch,
         LoggerInterface $wildberriesProductsLogger,
