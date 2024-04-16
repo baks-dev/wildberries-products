@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
@@ -55,7 +55,7 @@ final class NewHandleTest extends KernelTestCase
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
         $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
+            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
 
         if($WbBarcode)
         {
@@ -64,7 +64,7 @@ final class NewHandleTest extends KernelTestCase
             /* WbBarcodeEvent */
 
             $WbBarcodeEventCollection = $em->getRepository(WbBarcodeEvent::class)
-                ->findBy(['category' => ProductCategoryUid::TEST]);
+                ->findBy(['category' => CategoryProductUid::TEST]);
 
             foreach($WbBarcodeEventCollection as $remove)
             {
@@ -84,9 +84,9 @@ final class NewHandleTest extends KernelTestCase
         $WbBarcodeDTO = new WbBarcodeDTO();
 
         // setCategory
-        $ProductCategoryUid = new ProductCategoryUid();
-        $WbBarcodeDTO->setCategory($ProductCategoryUid);
-        self::assertSame($ProductCategoryUid, $WbBarcodeDTO->getCategory());
+        $CategoryProductUid = new CategoryProductUid();
+        $WbBarcodeDTO->setCategory($CategoryProductUid);
+        self::assertSame($CategoryProductUid, $WbBarcodeDTO->getCategory());
 
         // setOffer
         $WbBarcodeDTO->setOffer(true);
@@ -104,7 +104,7 @@ final class NewHandleTest extends KernelTestCase
         $WbBarcodePropertyDTO = new WbBarcodePropertyDTO();
 
         // setOffer
-        $ProductCategorySectionFieldUid = new  ProductCategorySectionFieldUid();
+        $ProductCategorySectionFieldUid = new  CategoryProductSectionFieldUid();
         $WbBarcodePropertyDTO->setOffer($ProductCategorySectionFieldUid);
         self::assertSame($ProductCategorySectionFieldUid, $WbBarcodePropertyDTO->getOffer());
 
@@ -163,7 +163,7 @@ final class NewHandleTest extends KernelTestCase
         $dbal
             ->from(WbBarcode::class, 'barcode')
             ->where('barcode.id = :id')
-            ->setParameter('id', ProductCategoryUid::TEST)
+            ->setParameter('id', CategoryProductUid::TEST)
             ->andWhere('barcode.profile = :profile')
             ->setParameter('profile', UserProfileUid::TEST)
         ;
@@ -171,16 +171,6 @@ final class NewHandleTest extends KernelTestCase
         self::assertTrue($dbal->fetchExist());
 
 
-        //
-        //        /** @var EntityManagerInterface $em */
-        //        $em = $container->get(EntityManagerInterface::class);
-        //        $WbBarcode = $em->getRepository(WbBarcode::class)
-        //            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
-        //        self::assertNotNull($WbBarcode);
-        //
-        //        self::assertTrue(true);
-        //
-        //        $em->clear();
 
         self::assertTrue(true);
 

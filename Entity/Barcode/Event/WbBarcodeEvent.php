@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\Entity\Barcode\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustom;
 use BaksDev\Wildberries\Products\Entity\Barcode\Modify\WbBarcodeModify;
 use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
@@ -49,8 +49,8 @@ class WbBarcodeEvent extends EntityEvent
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $category;
+    #[ORM\Column(type: CategoryProductUid::TYPE)]
+    private CategoryProductUid $category;
 
     /**
      * Добавить Торговое предложение в стикер
@@ -136,7 +136,7 @@ class WbBarcodeEvent extends EntityEvent
         return $this->id;
     }
 
-    public function getCategory(): ProductCategoryUid
+    public function getCategory(): CategoryProductUid
     {
         return $this->category;
     }

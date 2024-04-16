@@ -19,8 +19,8 @@
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
 
 
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEventInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,7 +41,7 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private readonly ProductCategoryUid $settings;
+    private readonly CategoryProductUid $settings;
 
     /** Категория Wildberries */
     #[Assert\NotBlank]
@@ -90,15 +90,15 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
     /**
      * ID настройки
      */
-    public function getSettings(): ?ProductCategoryUid
+    public function getSettings(): ?CategoryProductUid
     {
         return $this->settings;
     }
 
 
-    public function setSettings(ProductCategoryUid|ProductCategory $settings): void
+    public function setSettings(CategoryProductUid|CategoryProduct $settings): void
     {
-        $this->settings = $settings instanceof ProductCategory ? $settings->getId() : $settings;
+        $this->settings = $settings instanceof CategoryProduct ? $settings->getId() : $settings;
     }
 
 

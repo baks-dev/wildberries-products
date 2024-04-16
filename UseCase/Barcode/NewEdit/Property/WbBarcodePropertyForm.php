@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property;
 
 
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -52,11 +52,11 @@ final class WbBarcodePropertyForm extends AbstractType
                   $form
                     ->add('offer', ChoiceType::class, [
                       'choices' => $options['offer_fields'],  // array_flip(Main::LANG),
-                      'choice_value' => function (?ProductCategorySectionFieldUid $type)
+                      'choice_value' => function (?CategoryProductSectionFieldUid $type)
                       {
                           return $type?->getValue();
                       },
-                      'choice_label' => function (ProductCategorySectionFieldUid $type)
+                      'choice_label' => function (CategoryProductSectionFieldUid $type)
                       {
                           return $type->getAttr();
                       },

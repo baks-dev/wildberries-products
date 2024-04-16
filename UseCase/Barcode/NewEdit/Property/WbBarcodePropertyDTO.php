@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property;
 
 
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodePropertyInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -44,7 +44,7 @@ final class WbBarcodePropertyDTO implements WbBarcodePropertyInterface
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private ProductCategorySectionFieldUid $offer;
+    private CategoryProductSectionFieldUid $offer;
     
 
     public function getSort() : ?int
@@ -69,13 +69,13 @@ final class WbBarcodePropertyDTO implements WbBarcodePropertyInterface
     }
     
 
-    public function getOffer() : ProductCategorySectionFieldUid
+    public function getOffer() : CategoryProductSectionFieldUid
     {
         return $this->offer;
     }
     
 
-    public function setOffer(ProductCategorySectionFieldUid $offer) : void
+    public function setOffer(CategoryProductSectionFieldUid $offer) : void
     {
         $this->offer = $offer;
     }

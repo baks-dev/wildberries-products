@@ -28,12 +28,12 @@ namespace BaksDev\Wildberries\Products\Messenger\WbCardNew;
 use BaksDev\Core\Type\Field\InputField;
 use BaksDev\Products\Category\Repository\OfferByCategory\OfferByCategoryInterface;
 use BaksDev\Products\Category\Repository\VariationByCategory\VariationByOfferInterface;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Offers\Id\ProductCategoryOffersUid;
-use BaksDev\Products\Category\Type\Offers\Variation\ProductCategoryVariationUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\ProductCategoryOffersDTO;
-use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\ProductCategoryVariationDTO;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\CategoryProductOffersDTO;
+use BaksDev\Products\Category\UseCase\Admin\NewEdit\Offers\Variation\CategoryProductVariationDTO;
 use BaksDev\Products\Product\Entity\Event\ProductEvent;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\Variation\Image\ProductVariationImage;
@@ -373,7 +373,7 @@ final class CardCreateHandler
     }
 
 
-    public function createProductOffer(?ProductCategoryOffersUid $offer): ProductOffersCollectionDTO
+    public function createProductOffer(?CategoryProductOffersUid $offer): ProductOffersCollectionDTO
     {
         $OffersCollectionDTO = new ProductOffersCollectionDTO();
         $OffersCollectionDTO->setCategoryOffer($offer);
@@ -391,7 +391,7 @@ final class CardCreateHandler
     public function createProductVariation(
         ProductOffersCollectionDTO $ProductOffer,
         int|string $barcode,
-        ?ProductCategoryVariationUid $variation = null
+        ?CategoryProductVariationUid $variation = null
     ): ProductOffersVariationCollectionDTO
     {
         $ProductOffersVariationCollectionDTO = new ProductOffersVariationCollectionDTO();
@@ -410,7 +410,7 @@ final class CardCreateHandler
     }
 
 
-    public function createProductRootCategory(ProductCategoryUid $category): void
+    public function createProductRootCategory(CategoryProductUid $category): void
     {
         /* Корневая категория */
         $CategoryCollectionDTO = new CategoryCollectionDTO();
@@ -419,16 +419,16 @@ final class CardCreateHandler
         $this->ProductDTO->addCategory($CategoryCollectionDTO);
     }
 
-    public function getSettingsCategoryOffers(ProductCategoryUid $category): ?ProductCategoryOffersDTO
+    public function getSettingsCategoryOffers(CategoryProductUid $category): ?CategoryProductOffersDTO
     {
         /** Настройка торгового предложения категории  */
         $ProductCategoryOffer = $this->offerByCategory
             ->findProductCategoryOffer($category);
 
-        return $ProductCategoryOffer?->getDto(ProductCategoryOffersDTO::class);
+        return $ProductCategoryOffer?->getDto(CategoryProductOffersDTO::class);
     }
 
-    public function getSettingsCategoryVariation(ProductCategoryUid $category): ?ProductCategoryVariationDTO
+    public function getSettingsCategoryVariation(CategoryProductUid $category): ?CategoryProductVariationDTO
     {
         /** Настройка торгового предложения категории  */
         $ProductCategoryOffer = $this->offerByCategory
@@ -437,11 +437,11 @@ final class CardCreateHandler
         if($ProductCategoryOffer)
         {
             $ProductCategoryVariation =
-                $this->variationByOffer->findProductCategoryVariation(
+                $this->variationByOffer->findByOffer(
                     $ProductCategoryOffer->getId(),
                 );
 
-            return $ProductCategoryVariation?->getDto(ProductCategoryVariationDTO::class);
+            return $ProductCategoryVariation?->getDto(CategoryProductVariationDTO::class);
 
         }
 
@@ -619,7 +619,7 @@ final class CardCreateHandler
         }
     }
 
-    private function createProductProperty(ProductCategorySectionFieldUid $field, mixed $value): void
+    private function createProductProperty(CategoryProductSectionFieldUid $field, mixed $value): void
     {
         $ProductPropertyDto = new PropertyCollectionDTO();
         $ProductPropertyDto->setField($field);

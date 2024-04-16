@@ -18,9 +18,9 @@
 
 namespace BaksDev\Wildberries\Products\Entity\Settings\Property;
 
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 
 interface WbProductSettingsPropertyInterface
 {
-    public function getField(): ?ProductCategorySectionFieldUid;
+    public function getField(): ?CategoryProductSectionFieldUid;
 }

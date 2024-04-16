@@ -18,7 +18,7 @@
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property;
 
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsPropertyInterface;
 use ReflectionProperty;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -37,7 +37,7 @@ final class WbProductSettingsPropertyDTO implements WbProductSettingsPropertyInt
      * Связь на свойство продукта в категории
      */
     #[Assert\Uuid]
-    private ?ProductCategorySectionFieldUid $field = null;
+    private ?CategoryProductSectionFieldUid $field = null;
 
 
     /* Вспомогательные свойства */
@@ -70,13 +70,13 @@ final class WbProductSettingsPropertyDTO implements WbProductSettingsPropertyInt
     }
 
 
-    public function getField(): ?ProductCategorySectionFieldUid
+    public function getField(): ?CategoryProductSectionFieldUid
     {
         return $this->field;
     }
 
 
-    public function setField(?ProductCategorySectionFieldUid $field): void
+    public function setField(?CategoryProductSectionFieldUid $field): void
     {
         $this->field = $field;
     }

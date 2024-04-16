@@ -27,7 +27,7 @@ namespace BaksDev\Wildberries\Products\Messenger\WbCardNew;
 
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Product\Repository\ProductByArticle\ProductEventByArticleInterface;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteDTO;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteHandler;

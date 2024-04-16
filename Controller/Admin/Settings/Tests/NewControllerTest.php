@@ -18,8 +18,8 @@
 
 namespace BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests;
 
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -37,13 +37,13 @@ final class NewControllerTest extends WebTestCase
     private const ROLE = 'ROLE_WB_PRODUCTS_SETTING_NEW';
 
 
-    private static ?ProductCategoryUid $identifier;
+    private static ?CategoryProductUid $identifier;
 
     public static function setUpBeforeClass(): void
     {
         // Получаем одно из событий Продукта
         $em = self::getContainer()->get(EntityManagerInterface::class);
-        self::$identifier = $em->getRepository(ProductCategory::class)->findOneBy([], ['id' => 'DESC'])?->getId();
+        self::$identifier = $em->getRepository(CategoryProduct::class)->findOneBy([], ['id' => 'DESC'])?->getId();
 
         $em->clear();
         //$em->close();

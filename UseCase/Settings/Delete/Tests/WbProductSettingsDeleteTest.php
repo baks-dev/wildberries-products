@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\UseCase\Settings\Delete\Tests;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControllerTest;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
@@ -63,12 +63,12 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         /** @var ORMQueryBuilder $ORMQueryBuilder */
         $ORMQueryBuilder = $container->get(ORMQueryBuilder::class);
         $qb = $ORMQueryBuilder->createQueryBuilder(self::class);
-        $ProductCategoryUid = new ProductCategoryUid();
+        $CategoryProductUid = new CategoryProductUid();
 
         $qb
             ->from(WbProductSettings::class, 'main')
             ->where('main.id = :category')
-            ->setParameter('category', $ProductCategoryUid, ProductCategoryUid::TYPE);
+            ->setParameter('category', $CategoryProductUid, CategoryProductUid::TYPE);
 
         $qb
             ->select('event')
@@ -95,7 +95,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
          * WbProductCardDTO
          */
 
-        self::assertEquals(ProductCategoryUid::TEST, (string) $WbProductCardDTO->getSettings());
+        self::assertEquals(CategoryProductUid::TEST, (string) $WbProductCardDTO->getSettings());
         self::assertEquals('GCRIVEHZUY', $WbProductCardDTO->getName());
 
         /**
@@ -105,7 +105,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         $WbProductSettingsPropertyDTO = $WbProductCardDTO->getProperty()->current();
 
         self::assertEquals('fTXTGyZxIr', $WbProductSettingsPropertyDTO->getType());
-        self::assertEquals(ProductCategorySectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
+        self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
 
 
 
@@ -135,7 +135,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         /** WbProductSettings */
 
         $WbProductSettings = $em->getRepository(WbProductSettings::class)
-            ->find(ProductCategoryUid::TEST);
+            ->find(CategoryProductUid::TEST);
 
         if($WbProductSettings)
         {
@@ -146,7 +146,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         /** WbProductSettingsEvent */
 
         $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
-            ->findBy(['settings' => ProductCategoryUid::TEST]);
+            ->findBy(['settings' => CategoryProductUid::TEST]);
 
         foreach($WbProductSettingsEventCollection as $remove)
         {

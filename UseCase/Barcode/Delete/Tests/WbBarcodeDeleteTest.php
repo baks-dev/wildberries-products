@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\Delete\Tests;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
@@ -66,7 +66,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         $qb
             ->from(WbBarcode::class, 'barcode')
             ->where('barcode.id = :category')
-            ->setParameter('category', ProductCategoryUid::TEST, ProductCategoryUid::TYPE);
+            ->setParameter('category', CategoryProductUid::TEST, CategoryProductUid::TYPE);
 
         $qb
             ->select('event')
@@ -93,7 +93,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         /** @var WbBarcodePropertyDTO $WbBarcodePropertyDTO */
         $WbBarcodePropertyDTO = $WbBarcodeDTO->getProperty()->current();
 
-        self::assertEquals(ProductCategorySectionFieldUid::TEST, (string) $WbBarcodePropertyDTO->getOffer());
+        self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbBarcodePropertyDTO->getOffer());
         self::assertEquals(50, $WbBarcodePropertyDTO->getSort());
         self::assertEquals('Property Edit', $WbBarcodePropertyDTO->getName());
 
@@ -122,7 +122,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         $em = $container->get(EntityManagerInterface::class);
 
         $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
+            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
         self::assertNull($WbBarcode);
 
         $em->clear();
@@ -142,7 +142,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         /* WbBarcode */
 
         $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
+            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
 
         if($WbBarcode)
         {
@@ -152,7 +152,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         /* WbBarcodeEvent */
 
         $WbBarcodeEventCollection = $em->getRepository(WbBarcodeEvent::class)
-            ->findBy(['category' => ProductCategoryUid::TEST]);
+            ->findBy(['category' => CategoryProductUid::TEST]);
 
         foreach($WbBarcodeEventCollection as $remove)
         {

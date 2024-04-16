@@ -18,8 +18,8 @@
 
 namespace BaksDev\Wildberries\Products\Controller\Admin\Barcode\Tests;
 
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;

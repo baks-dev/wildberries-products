@@ -20,7 +20,7 @@ namespace BaksDev\Wildberries\Products\Entity\Settings\Property;
 
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -58,8 +58,8 @@ class WbProductSettingsProperty extends EntityEvent
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: ProductCategorySectionFieldUid::TYPE)]
-    private ProductCategorySectionFieldUid $field;
+    #[ORM\Column(type: CategoryProductSectionFieldUid::TYPE)]
+    private CategoryProductSectionFieldUid $field;
     
 
     public function __construct(WbProductSettingsEvent $event) {

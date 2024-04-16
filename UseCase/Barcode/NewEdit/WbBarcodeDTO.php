@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
 
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEventInterface;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
@@ -41,7 +41,7 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
      */
     #[Assert\Uuid]
     #[Assert\NotBlank]
-    private ?ProductCategoryUid $category = null;
+    private ?CategoryProductUid $category = null;
 
     /**
      * Флаг для запрета редактирования категории
@@ -97,16 +97,16 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     }
     
 
-    public function getCategory() : ?ProductCategoryUid
+    public function getCategory() : ?CategoryProductUid
     {
         return $this->category;
     }
     
 
-    public function setCategory(string|ProductCategoryUid $category) : void
+    public function setCategory(string|CategoryProductUid $category) : void
     {
 
-        $this->category = $category instanceof ProductCategoryUid ? $category : new ProductCategoryUid($category);
+        $this->category = $category instanceof CategoryProductUid ? $category : new CategoryProductUid($category);
     }
 
     public function hiddenCategory() : void

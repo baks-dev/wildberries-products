@@ -29,11 +29,12 @@ namespace BaksDev\Wildberries\Products\Repository\Cards\AllWbProductCard;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
-use BaksDev\Products\Category\Entity\Offers\ProductCategoryOffers;
-use BaksDev\Products\Category\Entity\Offers\Variation\ProductCategoryVariation;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Entity\Offers\CategoryProductOffers;
+use BaksDev\Products\Category\Entity\Offers\Variation\CategoryProductVariation;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Product\Entity\Category\ProductCategory;
 use BaksDev\Products\Product\Entity\Info\ProductInfo;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\ProductOffer;
@@ -170,7 +171,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         $qb->addSelect('category_offer.reference as product_offer_reference');
         $qb->leftJoin(
             'product_offer',
-            ProductCategoryOffers::TABLE,
+            CategoryProductOffers::TABLE,
             'category_offer',
             'category_offer.id = product_offer.category_offer'
         );
@@ -201,7 +202,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         $qb->addSelect('category_offer_variation.reference as product_variation_reference');
         $qb->leftJoin(
             'product_variation',
-            ProductCategoryVariation::TABLE,
+            CategoryProductVariation::TABLE,
             'category_offer_variation',
             'category_offer_variation.id = product_variation.category_variation'
         );
@@ -295,7 +296,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         /* Категория */
         $qb->join(
             'product',
-            \BaksDev\Products\Product\Entity\Category\ProductCategory::TABLE,
+            ProductCategory::TABLE,
             'product_event_category',
             'product_event_category.event = product.event AND product_event_category.root = true'
         );
@@ -303,12 +304,12 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         if($filter->getCategory())
         {
             $qb->andWhere('product_event_category.category = :category');
-            $qb->setParameter('category', $filter->getCategory(), ProductCategoryUid::TYPE);
+            $qb->setParameter('category', $filter->getCategory(), CategoryProductUid::TYPE);
         }
 
         $qb->join(
             'product_event_category',
-            ProductCategory::TABLE,
+            CategoryProduct::TABLE,
             'category',
             'category.id = product_event_category.category'
         );
@@ -317,7 +318,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
 
         $qb->leftJoin(
             'category',
-            ProductCategoryTrans::TABLE,
+            CategoryProductTrans::TABLE,
             'category_trans',
             'category_trans.event = category.event AND category_trans.local = :local'
         );

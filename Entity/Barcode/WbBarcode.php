@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\Entity\Barcode;
 
 use BaksDev\Core\Entity\EntityState;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
@@ -36,8 +36,8 @@ class WbBarcode extends EntityState
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $id;
+    #[ORM\Column(type: CategoryProductUid::TYPE)]
+    private CategoryProductUid $id;
 
 
     /** ID профиля */
@@ -66,7 +66,7 @@ class WbBarcode extends EntityState
         return (string) $this->id;
     }
 
-    public function getId(): ProductCategoryUid
+    public function getId(): CategoryProductUid
     {
         return $this->id;
     }

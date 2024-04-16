@@ -19,7 +19,7 @@
 namespace BaksDev\Wildberries\Products\Forms\Preform;
 
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObject;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
 use BaksDev\Wildberries\Repository\AnyWbTokenActive\AnyWbTokenActiveInterface;
@@ -61,10 +61,10 @@ final class PreformForm extends AbstractType
         $builder
             ->add('category', ChoiceType::class, [
                 'choices' => $this->categoryChoice->getCategoryCollection(),
-                'choice_value' => function(?ProductCategoryUid $type) {
+                'choice_value' => function(?CategoryProductUid $type) {
                     return $type?->getValue();
                 },
-                'choice_label' => function(ProductCategoryUid $type) {
+                'choice_label' => function(CategoryProductUid $type) {
                     return $type?->getOptions();
                 },
 

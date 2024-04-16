@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Barcode;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 
 final class WbBarcodeMessage
@@ -34,7 +34,7 @@ final class WbBarcodeMessage
     /**
      * Идентификатор
      */
-    private ProductCategoryUid $id;
+    private CategoryProductUid $id;
 
     /**
      * Идентификатор события
@@ -48,7 +48,7 @@ final class WbBarcodeMessage
 
 
     public function __construct(
-        ProductCategoryUid $id,
+        CategoryProductUid $id,
         WbBarcodeEventUid $event,
         ?WbBarcodeEventUid $last = null,
     )
@@ -62,7 +62,7 @@ final class WbBarcodeMessage
     /**
      * Идентификатор
      */
-    public function getId(): ProductCategoryUid
+    public function getId(): CategoryProductUid
     {
         return $this->id;
     }

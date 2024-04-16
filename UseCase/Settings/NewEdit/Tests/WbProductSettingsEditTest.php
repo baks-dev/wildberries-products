@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
@@ -67,8 +67,7 @@ final class WbProductSettingsEditTest extends KernelTestCase
         $WbProductSettingsEvent->getDto($WbProductsSettingsDTO);
 
 
-        self::assertEquals(ProductCategoryUid::TEST, (string) $WbProductsSettingsDTO->getSettings());
-        //$WbProductsSettingsDTO->setSettings(new ProductCategoryUid());
+        self::assertEquals(CategoryProductUid::TEST, (string) $WbProductsSettingsDTO->getSettings());
 
         self::assertEquals('ffxZnGTCbd', $WbProductsSettingsDTO->getName());
         $WbProductsSettingsDTO->setName('GCRIVEHZUY');
@@ -81,8 +80,8 @@ final class WbProductSettingsEditTest extends KernelTestCase
         self::assertEquals('MsUPpqkQHD', $WbProductSettingsPropertyDTO->getType());
         $WbProductSettingsPropertyDTO->setType('fTXTGyZxIr');
 
-        self::assertEquals(ProductCategorySectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
-        $WbProductSettingsPropertyDTO->setField(new ProductCategorySectionFieldUid());
+        self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
+        $WbProductSettingsPropertyDTO->setField(new CategoryProductSectionFieldUid());
 
 
 
@@ -125,7 +124,7 @@ final class WbProductSettingsEditTest extends KernelTestCase
         $dbal
             ->from(WbProductSettings::class, 'test')
             ->where('test.id = :id')
-            ->setParameter('id', ProductCategoryUid::TEST)
+            ->setParameter('id', CategoryProductUid::TEST)
         ;
 
         self::assertTrue($dbal->fetchExist());

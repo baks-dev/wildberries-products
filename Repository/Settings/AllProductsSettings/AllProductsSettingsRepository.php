@@ -30,10 +30,10 @@ use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Services\Paginator\PaginatorInterface;
 use BaksDev\Core\Services\Switcher\SwitcherInterface;
 use BaksDev\Core\Type\Locale\Locale;
-use BaksDev\Products\Category\Entity\Cover\ProductCategoryCover;
-use BaksDev\Products\Category\Entity\Event\ProductCategoryEvent;
-use BaksDev\Products\Category\Entity\ProductCategory;
-use BaksDev\Products\Category\Entity\Trans\ProductCategoryTrans;
+use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
+use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -89,7 +89,7 @@ final class AllProductsSettingsRepository implements AllProductsSettingsInterfac
         /** Категория */
         $qb->addSelect('category.id as category_id');
         $qb->addSelect('category.event as category_event'); /* ID события */
-        $qb->join('settings', ProductCategory::TABLE, 'category', 'category.id = settings.id');
+        $qb->join('settings', CategoryProduct::TABLE, 'category', 'category.id = settings.id');
 
         /** События категории */
         $qb->addSelect('category_event.sort');
@@ -97,7 +97,7 @@ final class AllProductsSettingsRepository implements AllProductsSettingsInterfac
         $qb->join
         (
             'category',
-            ProductCategoryEvent::TABLE,
+            CategoryProductEvent::TABLE,
             'category_event',
             'category_event.id = category.event',
         );
@@ -107,7 +107,7 @@ final class AllProductsSettingsRepository implements AllProductsSettingsInterfac
         $qb->addSelect('category_cover.cdn');
         $qb->leftJoin(
             'category_event',
-            ProductCategoryCover::TABLE,
+            CategoryProductCover::TABLE,
             'category_cover',
             'category_cover.event = category_event.id',
         );
@@ -116,7 +116,7 @@ final class AllProductsSettingsRepository implements AllProductsSettingsInterfac
         $qb->addSelect("
 			CASE
 			   WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".ProductCategoryCover::TABLE."' , '/', category_cover.name)
+					CONCAT ( '/upload/".CategoryProductCover::TABLE."' , '/', category_cover.name)
 			   ELSE NULL
 			END AS cover
 		"
@@ -129,7 +129,7 @@ final class AllProductsSettingsRepository implements AllProductsSettingsInterfac
 
         $qb->leftJoin(
             'category_event',
-            ProductCategoryTrans::TABLE,
+            CategoryProductTrans::TABLE,
             'category_trans',
             'category_trans.event = category_event.id AND category_trans.local = :local',
         );

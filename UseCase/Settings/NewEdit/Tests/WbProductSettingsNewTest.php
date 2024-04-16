@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\UsersTable\Entity\Actions\Event\UsersTableActionsEvent;
 use BaksDev\Users\UsersTable\Entity\Actions\UsersTableActions;
@@ -56,13 +56,13 @@ final class WbProductSettingsNewTest extends KernelTestCase
         $em = self::getContainer()->get(EntityManagerInterface::class);
 
         $WbProductSettings = $em->getRepository(WbProductSettings::class)
-            ->find(ProductCategoryUid::TEST);
+            ->find(CategoryProductUid::TEST);
 
 
         if($WbProductSettings)
         {
             $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
-                ->findBy(['settings' => ProductCategoryUid::TEST]);
+                ->findBy(['settings' => CategoryProductUid::TEST]);
 
             foreach($WbProductSettingsEventCollection as $remove)
             {
@@ -87,9 +87,9 @@ final class WbProductSettingsNewTest extends KernelTestCase
 
         $WbProductCardDTO = new WbProductsSettingsDTO();
 
-        $ProductCategoryUid = new ProductCategoryUid();
-        $WbProductCardDTO->setSettings($ProductCategoryUid);
-        self::assertSame($ProductCategoryUid, $WbProductCardDTO->getSettings());
+        $CategoryProductUid = new CategoryProductUid();
+        $WbProductCardDTO->setSettings($CategoryProductUid);
+        self::assertSame($CategoryProductUid, $WbProductCardDTO->getSettings());
 
         $WbProductCardDTO->setName('ffxZnGTCbd');
         self::assertEquals('ffxZnGTCbd', $WbProductCardDTO->getName());
@@ -117,7 +117,7 @@ final class WbProductSettingsNewTest extends KernelTestCase
         $WbProductSettingsPropertyDTO->setRequired(true);
         self::assertTrue($WbProductSettingsPropertyDTO->isRequired());
 
-        $field = new ProductCategorySectionFieldUid();
+        $field = new CategoryProductSectionFieldUid();
         $WbProductSettingsPropertyDTO->setField($field);
         self::assertSame($field, $WbProductSettingsPropertyDTO->getField());
 
@@ -147,7 +147,7 @@ final class WbProductSettingsNewTest extends KernelTestCase
         $dbal
             ->from(WbProductSettings::class, 'test')
             ->where('test.id = :id')
-            ->setParameter('id', ProductCategoryUid::TEST)
+            ->setParameter('id', CategoryProductUid::TEST)
         ;
 
         self::assertTrue($dbal->fetchExist());

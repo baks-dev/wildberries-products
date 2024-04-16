@@ -23,8 +23,8 @@ namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
 //use App\Module\Products\Category\Type\Id\CategoryUid;
 use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -61,10 +61,10 @@ final class WbBarcodeForm extends AbstractType
 
         $builder->add('category', ChoiceType::class, [
             'choices' => $this->categoryChoice->getCategoryCollection(),
-            'choice_value' => function(?ProductCategoryUid $category) {
+            'choice_value' => function(?CategoryProductUid $category) {
                 return $category?->getValue();
             },
-            'choice_label' => function(ProductCategoryUid $category) {
+            'choice_label' => function(CategoryProductUid $category) {
                 return $category->getOptions();
             },
         ]);
@@ -113,7 +113,7 @@ final class WbBarcodeForm extends AbstractType
             ['label_html' => true, 'attr' => ['class' => 'btn-sm btn-outline-primary border-0']]);
 
 
-        $formModifier = function(FormInterface $form, ?ProductCategoryUid $category = null) {
+        $formModifier = function(FormInterface $form, ?CategoryProductUid $category = null) {
             if($category)
             {
                 $choice = $this->propertyFields->getPropertyFieldsCollection($category);
@@ -121,10 +121,10 @@ final class WbBarcodeForm extends AbstractType
                 $form
                     ->add('offer_prototype', ChoiceType::class, [
                         'choices' => $choice,
-                        'choice_value' => function(?ProductCategorySectionFieldUid $type) {
+                        'choice_value' => function(?CategoryProductSectionFieldUid $type) {
                             return $type?->getValue();
                         },
-                        'choice_label' => function(ProductCategorySectionFieldUid $type) {
+                        'choice_label' => function(CategoryProductSectionFieldUid $type) {
                             return $type->getAttr();
                         },
 
@@ -195,17 +195,6 @@ final class WbBarcodeForm extends AbstractType
             }
         );
 
-//        $builder->get('category')->addModelTransformer(
-//            new CallbackTransformer(
-//                function($category) {
-//                    return $category instanceof ProductCategoryUid ? $category->getValue() : $category;
-//                },
-//                function($category) {
-//
-//                    return new ProductCategoryUid($category);
-//                }
-//            )
-//        );
 
 
         /* Сохранить ******************************************************/

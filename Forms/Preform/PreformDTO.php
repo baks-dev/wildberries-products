@@ -18,13 +18,13 @@
 
 namespace BaksDev\Wildberries\Products\Forms\Preform;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
 
 final class PreformDTO
 {
 
-    public ?ProductCategoryUid $category = null;
+    public ?CategoryProductUid $category = null;
 
     public ?WbObjectDTO $name = null;
 

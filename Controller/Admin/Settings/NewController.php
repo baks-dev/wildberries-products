@@ -25,7 +25,7 @@ namespace BaksDev\Wildberries\Products\Controller\Admin\Settings;
 
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
-use BaksDev\Products\Category\Entity\ProductCategory;
+use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsForm;
@@ -45,7 +45,7 @@ final class NewController extends AbstractController
     public function new(
         Request $request,
         WbProductsSettingsHandler $productsSettingsHandler,
-        #[MapEntity] ProductCategory $Category,
+        #[MapEntity] CategoryProduct $Category,
         string $parent,
     ): Response
     {

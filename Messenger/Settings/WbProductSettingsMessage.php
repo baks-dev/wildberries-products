@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Settings;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 
 final class WbProductSettingsMessage
@@ -34,7 +34,7 @@ final class WbProductSettingsMessage
     /**
      * Идентификатор
      */
-    private ProductCategoryUid $id;
+    private CategoryProductUid $id;
 
     /**
      * Идентификатор события
@@ -48,7 +48,7 @@ final class WbProductSettingsMessage
 
 
     public function __construct(
-        ProductCategoryUid $id,
+        CategoryProductUid $id,
         WbProductSettingsEventUid $event,
         ?WbProductSettingsEventUid $last = null,
     )
@@ -62,7 +62,7 @@ final class WbProductSettingsMessage
     /**
      * Идентификатор
      */
-    public function getId(): ProductCategoryUid
+    public function getId(): CategoryProductUid
     {
         return $this->id;
     }

@@ -24,7 +24,7 @@
 namespace BaksDev\Wildberries\Products\Entity\Settings;
 
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use Doctrine\ORM\Mapping as ORM;
@@ -41,8 +41,8 @@ class WbProductSettings
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $id;
+    #[ORM\Column(type: CategoryProductUid::TYPE)]
+    private CategoryProductUid $id;
 
     /** ID События */
     #[Assert\NotBlank]
@@ -56,7 +56,7 @@ class WbProductSettings
         return (string) $this->id;
     }
 
-    public function getId(): ProductCategoryUid
+    public function getId(): CategoryProductUid
     {
         return $this->id;
     }

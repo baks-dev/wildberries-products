@@ -25,8 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests;
 
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
@@ -66,7 +66,7 @@ final class EditHandleTest extends KernelTestCase
                 ->select('event')
                 ->from(WbBarcode::class, 'barcode')
                 ->where('barcode.id = :id')
-                ->setParameter('id', ProductCategoryUid::TEST, ProductCategoryUid::TYPE)
+                ->setParameter('id', CategoryProductUid::TEST, CategoryProductUid::TYPE)
                 ->leftJoin(WbBarcodeEvent::class, 'event', 'WITH', 'event.id = barcode.event')
                 ->getQuery()
                 ->getOneOrNullResult();
@@ -87,7 +87,7 @@ final class EditHandleTest extends KernelTestCase
         /** @var WbBarcodePropertyDTO $WbBarcodePropertyDTO */
         $WbBarcodePropertyDTO = $WbBarcodeDTO->getProperty()->current();
 
-        self::assertEquals(ProductCategorySectionFieldUid::TEST, (string) $WbBarcodePropertyDTO->getOffer());
+        self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbBarcodePropertyDTO->getOffer());
         self::assertEquals(100, $WbBarcodePropertyDTO->getSort());
         self::assertEquals('Property', $WbBarcodePropertyDTO->getName());
 
@@ -110,7 +110,7 @@ final class EditHandleTest extends KernelTestCase
         $WbBarcodeDTO->setCounter(5);
 
         // Property
-        $WbBarcodePropertyDTO->setOffer(new  ProductCategorySectionFieldUid());
+        $WbBarcodePropertyDTO->setOffer(new  CategoryProductSectionFieldUid());
         $WbBarcodePropertyDTO->setSort(50);
         $WbBarcodePropertyDTO->setName('Property Edit');
 
@@ -143,7 +143,7 @@ final class EditHandleTest extends KernelTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
         $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => ProductCategoryUid::TEST, 'profile' => UserProfileUid::TEST]);
+            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
         self::assertNotNull($WbBarcode);
 
         self::assertTrue(true);

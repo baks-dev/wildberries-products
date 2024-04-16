@@ -20,7 +20,7 @@ namespace BaksDev\Wildberries\Products\Entity\Settings\Event;
 
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Modify\Modify;
 use BaksDev\Wildberries\Products\Entity\Settings\Modify\WbProductSettingsModify;
 use BaksDev\Wildberries\Products\Entity\Settings\Offer\WbProductSettingsOffer;
@@ -58,8 +58,8 @@ class WbProductSettingsEvent extends EntityEvent
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: ProductCategoryUid::TYPE)]
-    private ProductCategoryUid $settings;
+    #[ORM\Column(type: CategoryProductUid::TYPE)]
+    private CategoryProductUid $settings;
 
     /**
      * Категория Wildberries
@@ -133,7 +133,7 @@ class WbProductSettingsEvent extends EntityEvent
         return $this->id;
     }
 
-    public function getSettings(): ProductCategoryUid
+    public function getSettings(): CategoryProductUid
     {
         return $this->settings;
     }

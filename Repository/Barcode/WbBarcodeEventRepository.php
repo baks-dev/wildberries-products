@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Repository\Barcode;
 
 use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\ProductCategoryUid;
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
@@ -39,14 +39,14 @@ final class WbBarcodeEventRepository
         $this->ORMQueryBuilder = $ORMQueryBuilder;
     }
 
-    public function getWbBarcodeEventByCategory(ProductCategoryUid $category): ?WbBarcodeEvent
+    public function getWbBarcodeEventByCategory(CategoryProductUid $category): ?WbBarcodeEvent
     {
         $qb = $this->ORMQueryBuilder->createQueryBuilder(self::class);
 
         $qb
             ->from(WbBarcode::class, 'barcode')
             ->where('barcode.id = :category')
-            ->setParameter('category', $category, ProductCategoryUid::TYPE);
+            ->setParameter('category', $category, CategoryProductUid::TYPE);
 
         $qb
             ->select('event')

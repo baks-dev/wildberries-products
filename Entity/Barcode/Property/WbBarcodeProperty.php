@@ -20,7 +20,7 @@ namespace BaksDev\Wildberries\Products\Entity\Barcode\Property;
 
 
 use BaksDev\Core\Entity\EntityEvent;
-use BaksDev\Products\Category\Type\Section\Field\Id\ProductCategorySectionFieldUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -44,8 +44,8 @@ class WbBarcodeProperty extends EntityEvent
     /** ID свойства продукта в категории */
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\Column(type: ProductCategorySectionFieldUid::TYPE)]
-    private ProductCategorySectionFieldUid $offer;
+    #[ORM\Column(type: CategoryProductSectionFieldUid::TYPE)]
+    private CategoryProductSectionFieldUid $offer;
     
     /** Сортировка */
     #[Assert\Range(min: 1, max: 999)]
