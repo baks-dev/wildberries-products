@@ -30,7 +30,6 @@ use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 
 final class WbBarcodeMessage
 {
-
     /**
      * Идентификатор
      */

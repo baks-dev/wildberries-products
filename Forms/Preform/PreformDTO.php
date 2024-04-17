@@ -23,7 +23,6 @@ use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
 
 final class PreformDTO
 {
-
     public ?CategoryProductUid $category = null;
 
     public ?WbObjectDTO $name = null;

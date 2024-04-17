@@ -25,23 +25,13 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\WbCardNew;
 
-
 use BaksDev\Core\Messenger\MessageDispatchInterface;
-use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Product\Repository\ProductByArticle\ProductEventByArticleInterface;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteDTO;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteHandler;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Category\CategoryCollectionDTO;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Description\ProductDescriptionDTO;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Api\Token\Card\WildberriesCards\Card;
 use BaksDev\Wildberries\Api\Token\Card\WildberriesCards\WildberriesCards;
-use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\Stocks;
-use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\WildberriesStocks;
-use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouses;
-use BaksDev\Wildberries\Api\Token\Warehouse\ProfileWarehouses\ProfileWarehousesClient;
-use BaksDev\Wildberries\Products\Messenger\WbCardNew\Card\WbCardMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\ExistCardOfferByNomenclature\ExistCardOfferByNomenclatureInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsByParentAndName\ProductSettingsByParentAndNameInterface;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
@@ -54,8 +44,6 @@ final class WbCardNewHandler
     private WildberriesCards $wildberriesCards;
     private ProductSettingsByParentAndNameInterface $productSettingsByParentAndName;
     private ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature;
-    private ProfileWarehousesClient $wildberriesWarehouses;
-    private WildberriesStocks $wildberriesStocks;
     private MessageDispatchInterface $messageDispatch;
     private LoggerInterface $logger;
     private UserProfileUid $profile;
@@ -66,8 +54,6 @@ final class WbCardNewHandler
         WildberriesCards $wildberriesCards,
         ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
         ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature,
-        ProfileWarehousesClient $wildberriesWarehouses,
-        WildberriesStocks $wildberriesStocks,
         MessageDispatchInterface $messageDispatch,
         LoggerInterface $wildberriesProductsLogger,
         ProductEventByArticleInterface $productEventByArticle,
@@ -79,8 +65,6 @@ final class WbCardNewHandler
         $this->wildberriesCards = $wildberriesCards;
         $this->productSettingsByParentAndName = $productSettingsByParentAndName;
         $this->existCardOfferByNomenclature = $existCardOfferByNomenclature;
-        $this->wildberriesWarehouses = $wildberriesWarehouses;
-        $this->wildberriesStocks = $wildberriesStocks;
         $this->messageDispatch = $messageDispatch;
         $this->logger = $wildberriesProductsLogger;
         $this->productEventByArticle = $productEventByArticle;

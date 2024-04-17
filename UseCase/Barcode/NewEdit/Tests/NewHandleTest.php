@@ -46,9 +46,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class NewHandleTest extends KernelTestCase
 {
-    /**
-     * This method is called before the first test of this test class is run.
-     */
+
     public static function setUpBeforeClass(): void
     {
         /** @var EntityManagerInterface $em */

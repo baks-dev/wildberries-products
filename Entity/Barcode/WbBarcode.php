@@ -79,7 +79,6 @@ class WbBarcode extends EntityState
         return $this->profile;
     }
 
-
     public function getEvent(): WbBarcodeEventUid
     {
         return $this->event;
@@ -90,5 +89,4 @@ class WbBarcode extends EntityState
         $this->event = $event->getId();
         $this->id = $event->getCategory();
     }
-
 }

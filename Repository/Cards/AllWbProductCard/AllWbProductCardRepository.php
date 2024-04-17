@@ -344,5 +344,4 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
 
         return $this->paginator->fetchAllAssociative($qb);
     }
-
 }

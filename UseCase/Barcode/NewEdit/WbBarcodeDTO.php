@@ -20,7 +20,6 @@ namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
 
 
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEventInterface;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -101,7 +100,6 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     {
         return $this->category;
     }
-    
 
     public function setCategory(string|CategoryProductUid $category) : void
     {
@@ -118,11 +116,6 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     {
         return $this->hidden;
     }
-
-
-
-
-
 
     public function getProperty() : ArrayCollection
     {

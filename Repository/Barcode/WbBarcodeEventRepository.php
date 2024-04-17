@@ -58,4 +58,5 @@ final class WbBarcodeEventRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
 }

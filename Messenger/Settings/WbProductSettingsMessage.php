@@ -30,7 +30,6 @@ use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 
 final class WbProductSettingsMessage
 {
-
     /**
      * Идентификатор
      */

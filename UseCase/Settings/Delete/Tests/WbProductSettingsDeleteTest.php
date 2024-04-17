@@ -90,7 +90,6 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         $WbProductCardDTO = new WbProductsSettingsDTO();
         $WbProductSettingsEvent->getDto($WbProductCardDTO);
 
-
         /**
          * WbProductCardDTO
          */
@@ -106,8 +105,6 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         self::assertEquals('fTXTGyZxIr', $WbProductSettingsPropertyDTO->getType());
         self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
-
-
 
 
         /** DELETE */

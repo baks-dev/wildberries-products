@@ -36,7 +36,6 @@ final class NewControllerTest extends WebTestCase
 
     private const ROLE = 'ROLE_WB_PRODUCTS_SETTING_NEW';
 
-
     private static ?CategoryProductUid $identifier;
 
     public static function setUpBeforeClass(): void
@@ -51,7 +50,6 @@ final class NewControllerTest extends WebTestCase
 
     public function testRoleSuccessful(): void
     {
-
         self::assertTrue(true);
         return;
 

@@ -25,23 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Cards\Delete\Tests;
 
-use BaksDev\Core\Doctrine\ORMQueryBuilder;
-use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
-use BaksDev\Products\Product\Entity\Product;
+
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
-use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use BaksDev\Wildberries\Products\Entity\Cards\WbProductCard;
 use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUid;
-use BaksDev\Wildberries\Products\UseCase\Barcode\Delete\WbBarcodeDeleteDTO;
-use BaksDev\Wildberries\Products\UseCase\Barcode\Delete\WbBarcodeDeleteHandler;
-use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Custom\WbBarcodeCustomDTO;
-use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property\WbBarcodePropertyDTO;
-use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\WbBarcodeDTO;
 use BaksDev\Wildberries\Products\UseCase\Cards\Delete\WbProductCardDeleteDTO;
 use BaksDev\Wildberries\Products\UseCase\Cards\Delete\WbProductCardDeleteHandler;
 use BaksDev\Wildberries\Products\UseCase\Cards\NewEdit\Offer\WbProductCardOfferDTO;
@@ -98,7 +87,6 @@ final class WbProductCardDeleteTest extends KernelTestCase
         self::assertEquals(67890, $WbProductCardOfferDTO->getNomenclature());
 
 
-
         /**
          * WbProductCardVariationDTO
          */
@@ -148,6 +136,5 @@ final class WbProductCardDeleteTest extends KernelTestCase
         self::assertNull($WbProductCard);
 
         $em->clear();
-        //$em->close();
     }
 }

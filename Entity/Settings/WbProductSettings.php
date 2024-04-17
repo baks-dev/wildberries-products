@@ -23,7 +23,6 @@
 
 namespace BaksDev\Wildberries\Products\Entity\Settings;
 
-
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;

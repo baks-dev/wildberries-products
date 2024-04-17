@@ -23,7 +23,6 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObject;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
 use BaksDev\Wildberries\Repository\AnyWbTokenActive\AnyWbTokenActiveInterface;
-use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
 use DomainException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -74,9 +73,7 @@ final class PreformForm extends AbstractType
                 'required' => true,
             ]);
 
-
         $section = [];
-
 
         if($currentProfile)
         {
@@ -94,7 +91,6 @@ final class PreformForm extends AbstractType
                 $section = [];
             }
         }
-
 
         $builder
             ->add('name', ChoiceType::class, [

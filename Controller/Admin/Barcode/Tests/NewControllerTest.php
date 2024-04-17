@@ -38,7 +38,6 @@ final class NewControllerTest extends WebTestCase
 
     public function testRoleSuccessful(): void
     {
-
         //self::ensureKernelShutdown();
         $client = static::createClient();
 

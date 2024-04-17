@@ -76,7 +76,6 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 final class CardCreateHandler
 {
-
     private Card $Card;
     private ProductDTO $ProductDTO;
     private WbProductCardDTO $WbProductCardDTO;
@@ -408,7 +407,6 @@ final class CardCreateHandler
 
         return $ProductOffersVariationCollectionDTO;
     }
-
 
     public function createProductRootCategory(CategoryProductUid $category): void
     {

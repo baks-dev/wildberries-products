@@ -120,7 +120,6 @@ class WbBarcodeEvent extends EntityEvent
         return $this;
     }
 
-
     public function setEntity($dto): mixed
     {
         if($dto instanceof WbBarcodeEventInterface || $dto instanceof self)

@@ -29,7 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** @see WbProductSettingsEvent */
 final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
 {
-
     /**
      * Идентификатор события
      */

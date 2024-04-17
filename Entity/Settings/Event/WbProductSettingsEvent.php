@@ -21,11 +21,8 @@ namespace BaksDev\Wildberries\Products\Entity\Settings\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use BaksDev\Wildberries\Products\Entity\Settings\Modify\Modify;
 use BaksDev\Wildberries\Products\Entity\Settings\Modify\WbProductSettingsModify;
-use BaksDev\Wildberries\Products\Entity\Settings\Offer\WbProductSettingsOffer;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
-use BaksDev\Wildberries\Products\Entity\Settings\Variation\WbProductSettingsVariation;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use Doctrine\Common\Collections\Collection;
@@ -125,8 +122,6 @@ class WbProductSettingsEvent extends EntityEvent
     {
         return $this;
     }
-
-
 
     public function getId(): WbProductSettingsEventUid
     {
