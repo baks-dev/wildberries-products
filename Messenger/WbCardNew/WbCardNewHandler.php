@@ -81,7 +81,7 @@ final class WbCardNewHandler
         /** Все карточки товаров (Wildberries Api) */
         $WildberriesCards = $this
             ->wildberriesCards
-            ->limit(1000)
+            ->limit(100)
             ->profile($this->profile);
 
 
