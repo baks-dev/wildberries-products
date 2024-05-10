@@ -60,7 +60,7 @@ final class WbBarcodeForm extends AbstractType
         /* TextType */
 
         $builder->add('category', ChoiceType::class, [
-            'choices' => $this->categoryChoice->getCategoryCollection(),
+            'choices' => $this->categoryChoice->findAll(),
             'choice_value' => function(?CategoryProductUid $category) {
                 return $category?->getValue();
             },
@@ -172,7 +172,10 @@ final class WbBarcodeForm extends AbstractType
 
                 if($data->getCategory() && $data->isHiddenCategory())
                 {
-                    $category = $this->categoryChoice->getProductCategory($data->getCategory());
+                    $category = $this
+                        ->categoryChoice
+                        ->category($data->getCategory())
+                        ->find();
 
                     $builder->add('category', HiddenType::class, [
                         'label' => $category?->getOptions()

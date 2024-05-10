@@ -59,7 +59,7 @@ final class PreformForm extends AbstractType
 
         $builder
             ->add('category', ChoiceType::class, [
-                'choices' => $this->categoryChoice->getCategoryCollection(),
+                'choices' => $this->categoryChoice->findAll(),
                 'choice_value' => function(?CategoryProductUid $type) {
                     return $type?->getValue();
                 },
