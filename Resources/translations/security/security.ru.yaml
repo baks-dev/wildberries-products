@@ -26,7 +26,6 @@ ROLE_WB_PRODUCTS_SETTING_DELETE:
 
 
 ROLE_WB_CARDS:
-  header: 'Wildberries'
   name: 'Карточки товаров'
   desc: 'Карточки товаров Wildberries'
 

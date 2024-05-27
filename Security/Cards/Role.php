@@ -27,8 +27,8 @@ namespace BaksDev\Wildberries\Products\Security\Cards;
 
 use BaksDev\Menu\Admin\Command\Upgrade\MenuAdminInterface;
 use BaksDev\Menu\Admin\Type\SectionGroup\Group\Collection\MenuAdminSectionGroupCollectionInterface;
-use BaksDev\Orders\Order\Security\MenuGroupMarketplace;
 use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Wildberries\Security\MenuGroupWildberries;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.security.role')]
@@ -58,7 +58,7 @@ final class Role implements RoleInterface, MenuAdminInterface
      */
     public function getGroupMenu(): MenuAdminSectionGroupCollectionInterface|bool
     {
-        return new MenuGroupMarketplace();
+        return new MenuGroupWildberries();
     }
 
     /**
@@ -66,7 +66,7 @@ final class Role implements RoleInterface, MenuAdminInterface
      */
     public function getSortMenu(): int
     {
-        return 301;
+        return 100;
     }
 
     /**

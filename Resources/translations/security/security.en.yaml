@@ -32,7 +32,6 @@ ROLE_WB_CARDS_GET:
 
 
 ROLE_WB_CARDS:
-  header: 'Wildberries'
   name: 'Product cards'
   desc: 'Wildberries Product Cards'
 
