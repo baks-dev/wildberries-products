@@ -50,10 +50,10 @@ final class PreFormController extends AbstractController
 
         $form->handleRequest($request);
 
-
-
         if($form->isSubmitted() && $form->isValid() && $form->has('preform'))
         {
+            $this->refreshTokenForm($form);
+
             $data = $form->getData();
 
             return $this->redirectToRoute(

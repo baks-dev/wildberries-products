@@ -61,6 +61,8 @@ final class DeleteController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('wb_barcode_delete'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $WbBarcodeDeleteHandler->handle($WbBarcodeDeleteDTO);
 
             $this->addFlash

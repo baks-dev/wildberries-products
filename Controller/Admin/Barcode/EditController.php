@@ -59,6 +59,8 @@ final class EditController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid() && $form->has('wb_barcode'))
         {
+            $this->refreshTokenForm($form);
+
             $handle = $wbBarcodeHandler->handle($WbBarcodeDTO, $this->getProfileUid());
 
             $this->addFlash
