@@ -64,7 +64,9 @@ final class WbProductsSettingsForm extends AbstractType
             $form = $event->getForm();
 
             /** Коллекция свойств категории для выпадающего списка */
-            $property_fields = $this->propertyFields->getPropertyFieldsCollection($data->getSettings());
+            $property_fields = $this->propertyFields
+                ->category($data->getSettings())
+                ->getPropertyFieldsCollection();
 
             $profile = $this->wbTokenByProfile->getCurrentUserProfile();
 

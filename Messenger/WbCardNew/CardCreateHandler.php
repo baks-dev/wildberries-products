@@ -108,8 +108,7 @@ final class CardCreateHandler
         ProductHandler $productHandler,
         WbProductCardHandler $wbProductCardHandler,
         EntityManagerInterface $entityManager
-    )
-    {
+    ) {
         $this->productSettingsByParentAndName = $productSettingsByParentAndName;
         $this->offerByCategory = $offerByCategory;
         $this->variationByOffer = $variationByOffer;
@@ -391,8 +390,7 @@ final class CardCreateHandler
         ProductOffersCollectionDTO $ProductOffer,
         int|string $barcode,
         ?CategoryProductVariationUid $variation = null
-    ): ProductOffersVariationCollectionDTO
-    {
+    ): ProductOffersVariationCollectionDTO {
         $ProductOffersVariationCollectionDTO = new ProductOffersVariationCollectionDTO();
         $ProductOffersVariationCollectionDTO->setCategoryVariation($variation);
         $ProductOffer->addVariation($ProductOffersVariationCollectionDTO);
@@ -421,7 +419,8 @@ final class CardCreateHandler
     {
         /** Настройка торгового предложения категории  */
         $ProductCategoryOffer = $this->offerByCategory
-            ->findProductCategoryOffer($category);
+            ->category($category)
+            ->findCategoryProductOffers();
 
         return $ProductCategoryOffer?->getDto(CategoryProductOffersDTO::class);
     }
@@ -430,14 +429,14 @@ final class CardCreateHandler
     {
         /** Настройка торгового предложения категории  */
         $ProductCategoryOffer = $this->offerByCategory
-            ->findProductCategoryOffer($category);
+            ->category($category)
+            ->findCategoryProductOffers();
 
         if($ProductCategoryOffer)
         {
-            $ProductCategoryVariation =
-                $this->variationByOffer->findByOffer(
-                    $ProductCategoryOffer->getId(),
-                );
+            $ProductCategoryVariation = $this->variationByOffer
+                ->offer($ProductCategoryOffer->getId())
+                ->findCategoryProductVariation();
 
             return $ProductCategoryVariation?->getDto(CategoryProductVariationDTO::class);
 
@@ -452,8 +451,7 @@ final class CardCreateHandler
         ProductOffersCollectionDTO|ProductOffersVariationCollectionDTO $object,
         InputField $inputFieldReference,
         mixed $value
-    ): void
-    {
+    ): void {
         foreach($this->reference as $reference)
         {
             if($reference->type() === $inputFieldReference->getType())
@@ -466,13 +464,15 @@ final class CardCreateHandler
                 {
                     $error = sprintf('%s: В библиотеке отсутствует значение', $this->Card->getProfile());
 
-                    $this->messageDispatchLogger->warning($error,
+                    $this->messageDispatchLogger->warning(
+                        $error,
                         [
                             'class' => $referenceClass,
                             'value' => $this->Card->getColor(),
                             __FILE__.':'.__LINE__
 
-                        ]);
+                        ]
+                    );
 
                     continue;
                 }
@@ -488,8 +488,7 @@ final class CardCreateHandler
         ProductOffersCollectionDTO|ProductOffersVariationCollectionDTO $parent,
         string $table,
         string $class
-    ): void
-    {
+    ): void {
         $root = true;
 
         foreach($this->Card->getMedia() as $mediaFile)
@@ -600,8 +599,7 @@ final class CardCreateHandler
     private function createProductVariationQuantity(
         ProductOffersVariationCollectionDTO $ProductVariation,
         int|string $barcode
-    ): void
-    {
+    ): void {
         /** Остатки продукции по всем баркодам (Wildberries Api) */
         $wildberriesStocks = $this->getWildberriesStocks();
 

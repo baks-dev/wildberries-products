@@ -116,7 +116,9 @@ final class WbBarcodeForm extends AbstractType
         $formModifier = function(FormInterface $form, ?CategoryProductUid $category = null) {
             if($category)
             {
-                $choice = $this->propertyFields->getPropertyFieldsCollection($category);
+                $choice = $this->propertyFields
+                    ->category($category)
+                    ->getPropertyFieldsCollection();
 
                 $form
                     ->add('offer_prototype', ChoiceType::class, [
