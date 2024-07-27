@@ -45,16 +45,16 @@ final class IndexController extends AbstractController
         Request $request,
         AllWbProductCardInterface $allWbProductCard,
         int $page = 0,
-    ): Response
-    {
+    ): Response {
 
         /* Поиск */
         $search = new SearchDTO($request);
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('wildberries-products:admin.card.index')]
         );
         $searchForm->handleRequest($request);
-
 
         /**
          * Фильтр продукции по ТП
@@ -77,7 +77,7 @@ final class IndexController extends AbstractController
 
         return $this->render(
             [
-                'query'  => $query,
+                'query' => $query,
                 'search' => $searchForm->createView(),
                 'filter' => $filterForm->createView(),
             ],
