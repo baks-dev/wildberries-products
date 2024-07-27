@@ -18,7 +18,6 @@
 
 namespace BaksDev\Wildberries\Products\Controller\Admin\Barcode;
 
-
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Form\Search\SearchDTO;
 use BaksDev\Core\Form\Search\SearchForm;
@@ -29,21 +28,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 #[AsController]
 #[RoleSecurity('ROLE_WB_BARCODE')]
 final class IndexController extends AbstractController
 {
     #[Route('/admin/wb/barcodes/{page<\d+>}', name: 'admin.barcode.index', methods: ['GET', 'POST'])]
     public function index(
-      Request $request,
-      AllBarcodeSettingsInterface $allSticker,
-      int $page = 0
-    ) : Response
-    {
+        Request $request,
+        AllBarcodeSettingsInterface $allSticker,
+        int $page = 0
+    ): Response {
         /* Поиск */
         $search = new SearchDTO($request);
-        $searchForm = $this->createForm(SearchForm::class, $search,
+        $searchForm = $this->createForm(
+            SearchForm::class,
+            $search,
             ['action' => $this->generateUrl('wildberries-products:admin.barcode.index')]
         );
         $searchForm->handleRequest($request);
@@ -54,10 +53,11 @@ final class IndexController extends AbstractController
 
 
         return $this->render(
-          [
-            'query' => $query,
-            'search' => $searchForm->createView(),
-          ]);
+            [
+                'query' => $query,
+                'search' => $searchForm->createView(),
+            ]
+        );
     }
-    
+
 }
