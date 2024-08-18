@@ -81,11 +81,11 @@ final class DeleteCardByProductDelete
         $this->entityManager->remove($WbProductCard);
         $this->entityManager->flush();
 
-        $this->logger->info(sprintf('Удалили карточку Wildberries (product: %s)', $message->getId()), [__FILE__.':'.__LINE__]);
+        $this->logger->info(sprintf('Удалили карточку Wildberries (product: %s)', $message->getId()), [self::class.':'.__LINE__]);
 
         /* Чистим кеш модуля */
         $this->cache->init('wildberries-products')->clear();
-        $this->logger->info('Очистили кеш WildberriesProducts', [__FILE__.':'.__LINE__]);
+        $this->logger->info('Очистили кеш WildberriesProducts', [self::class.':'.__LINE__]);
 
     }
 }

@@ -27,29 +27,28 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class WbBarcodeCustomForm extends AbstractType
 {
-    
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('sort', IntegerType::class);
         $builder->add('name', TextType::class);
         $builder->add('value', TextType::class);
-    
-        $builder->add
-        (
-          'DeleteCustom',
-          ButtonType::class,
-          [
-            'label_html' => true,
-            'attr' =>
-              ['class' => 'btn btn-outline-danger border-0 del-item-custom'],
-          ]);
+
+        $builder->add(
+            'DeleteCustom',
+            ButtonType::class,
+            [
+                'label_html' => true,
+                'attr' =>
+                    ['class' => 'btn btn-outline-danger border-0 del-item-custom'],
+            ]
+        );
     }
-    
-    public function configureOptions(OptionsResolver $resolver)
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => WbBarcodeCustomDTO::class
-          ]);
+        ]);
     }
-    
+
 }

@@ -18,7 +18,6 @@
 
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property;
 
-
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -32,68 +31,64 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class WbBarcodePropertyForm extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('sort', IntegerType::class);
         $builder->add('name', TextType::class);
-        
-        $builder->add('offer', ChoiceType::class);
-    
-    
-    
-        $builder->addEventListener(
-          FormEvents::PRE_SET_DATA,
-          function (FormEvent $event) use ($options)
-          {
-              if(!empty($options['offer_fields']))
-              {
-                  $form = $event->getForm();
 
-                  $form
-                    ->add('offer', ChoiceType::class, [
-                      'choices' => $options['offer_fields'],  // array_flip(Main::LANG),
-                      'choice_value' => function (?CategoryProductSectionFieldUid $type)
-                      {
-                          return $type?->getValue();
-                      },
-                      'choice_label' => function (CategoryProductSectionFieldUid $type)
-                      {
-                          return $type->getAttr();
-                      },
-        
-                      'label' => false,
-                      'expanded' => false,
-                      'multiple' => false
-                    ]);
-    
-              }
-          }
+        $builder->add('offer', ChoiceType::class);
+
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($options) {
+                if(!empty($options['offer_fields']))
+                {
+                    $form = $event->getForm();
+
+                    $form
+                        ->add('offer', ChoiceType::class, [
+                            'choices' => $options['offer_fields'],  // array_flip(Main::LANG),
+                            'choice_value' => function (?CategoryProductSectionFieldUid $type) {
+                                return $type?->getValue();
+                            },
+                            'choice_label' => function (CategoryProductSectionFieldUid $type) {
+                                return $type->getAttr();
+                            },
+
+                            'label' => false,
+                            'expanded' => false,
+                            'multiple' => false
+                        ]);
+
+                }
+            }
         );
-        
-        
-        $builder->add
-        (
-          'DeleteProperty',
-          ButtonType::class,
-          [
-            'label_html' => true,
-            'attr' =>
-              ['class' => 'btn btn-outline-danger border-0 del-item-property'],
-          ]);
-        
+
+
+        $builder->add(
+            'DeleteProperty',
+            ButtonType::class,
+            [
+                'label_html' => true,
+                'attr' =>
+                    ['class' => 'btn btn-outline-danger border-0 del-item-property'],
+            ]
+        );
+
     }
-    
-    public function configureOptions(OptionsResolver $resolver)
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => WbBarcodePropertyDTO::class,
-            'method' => 'POST',
-            'attr' => ['class' => 'w-100'],
-            'category' => null,
-            'offer_fields' => null,
-          ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => WbBarcodePropertyDTO::class,
+                'method' => 'POST',
+                'attr' => ['class' => 'w-100'],
+                'category' => null,
+                'offer_fields' => null,
+            ]
+        );
     }
-    
+
 }

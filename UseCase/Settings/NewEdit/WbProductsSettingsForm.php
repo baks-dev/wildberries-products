@@ -19,7 +19,6 @@
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
 
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
-
 use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectName;
 use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectNameDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
@@ -46,17 +45,16 @@ final class WbProductsSettingsForm extends AbstractType
         PropertyFieldsCategoryChoiceInterface $propertyFields,
         WbCharacteristicByObjectName $wbCharacteristic,
         WbTokenByProfileInterface $wbTokenByProfile,
-    )
-    {
+    ) {
         $this->propertyFields = $propertyFields;
         $this->wbCharacteristic = $wbCharacteristic;
         $this->wbTokenByProfile = $wbTokenByProfile;
     }
 
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
 
             /** @var WbProductsSettingsDTO $data */
             $data = $event->getData();
@@ -73,7 +71,6 @@ final class WbProductsSettingsForm extends AbstractType
             $characteristics = [];
 
 
-
             if($profile)
             {
                 try
@@ -84,8 +81,8 @@ final class WbProductsSettingsForm extends AbstractType
                         ->findCharacteristics();
 
 
-
-                } catch(DomainException $e)
+                }
+                catch(DomainException $e)
                 {
                     /** Если токен авторизации не найден */
                     $characteristics = [];
@@ -156,8 +153,7 @@ final class WbProductsSettingsForm extends AbstractType
 
 
         /* Сохранить ******************************************************/
-        $builder->add
-        (
+        $builder->add(
             'product_settings',
             SubmitType::class,
             ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']],
@@ -166,13 +162,13 @@ final class WbProductsSettingsForm extends AbstractType
     }
 
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => WbProductsSettingsDTO::class,
             'method' => 'POST',
             'attr' => ['class' => 'w-100'],
-        ],);
+        ], );
     }
 
 }

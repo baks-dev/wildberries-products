@@ -18,8 +18,6 @@
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property;
 
-//use App\Module\Products\Category\Repository\PropertyFieldsByCategoryChoiceForm\PropertyFieldsByCategoryChoiceFormInterface;
-//use App\Module\Products\Category\Type\Id\CategoryUid;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -30,57 +28,53 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class WbProductSettingsPropertyForm extends AbstractType
 {
-    
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /* TextType */
         $builder->add('type', HiddenType::class);
-        
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options)
-        {
-            
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
+
             /** @var WbProductSettingsPropertyDTO $data */
             $data = $event->getData();
             $form = $event->getForm();
-            
+
             if($data)
             {
                 $form
-                  ->add('field', ChoiceType::class, [
-                    'choices' => $options['property_fields'],  // array_flip(Main::LANG),
-                    'choice_value' => function ($type)
-                    {
-                        return $type?->getValue();
-                    },
-                    'choice_label' => function ($type)
-                    {
-                        return $type->getAttr();
-                    },
-                    
-                    'label' => false,
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => $data->isRequired(),
-                    //'disabled' => !$data->isIsset()
-                  ]);
-                
+                    ->add('field', ChoiceType::class, [
+                        'choices' => $options['property_fields'],  // array_flip(Main::LANG),
+                        'choice_value' => function ($type) {
+                            return $type?->getValue();
+                        },
+                        'choice_label' => function ($type) {
+                            return $type->getAttr();
+                        },
+
+                        'label' => false,
+                        'expanded' => false,
+                        'multiple' => false,
+                        'required' => $data->isRequired(),
+                        //'disabled' => !$data->isIsset()
+                    ]);
+
                 if(!$data->getType())
                 {
                     $form->remove('field');
                 }
-                
+
             }
         });
     }
-    
-    public function configureOptions(OptionsResolver $resolver)
+
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults
-        (
-          [
-            'data_class' => WbProductSettingsPropertyDTO::class,
-            'property_fields' => null,
-          ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => WbProductSettingsPropertyDTO::class,
+                'property_fields' => null,
+            ]
+        );
     }
-    
+
 }

@@ -42,29 +42,27 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class WbBarcodeForm extends AbstractType
 {
-
     private CategoryChoiceInterface $categoryChoice;
     private PropertyFieldsCategoryChoiceInterface $propertyFields;
 
     public function __construct(
         CategoryChoiceInterface $categoryChoice,
         PropertyFieldsCategoryChoiceInterface $propertyFields,
-    )
-    {
+    ) {
         $this->categoryChoice = $categoryChoice;
         $this->propertyFields = $propertyFields;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /* TextType */
 
         $builder->add('category', ChoiceType::class, [
             'choices' => $this->categoryChoice->findAll(),
-            'choice_value' => function(?CategoryProductUid $category) {
+            'choice_value' => function (?CategoryProductUid $category) {
                 return $category?->getValue();
             },
-            'choice_label' => function(CategoryProductUid $category) {
+            'choice_label' => function (CategoryProductUid $category) {
                 return $category->getOptions();
             },
         ]);
@@ -98,22 +96,22 @@ final class WbBarcodeForm extends AbstractType
 
 
         /* Добавить коллекцию ******************************************************/
-        $builder->add
-        (
+        $builder->add(
             'addProperty',
             ButtonType::class,
-            ['label_html' => true, 'attr' => ['class' => 'btn-sm btn-outline-primary border-0'], 'disabled' => true]);
+            ['label_html' => true, 'attr' => ['class' => 'btn-sm btn-outline-primary border-0'], 'disabled' => true]
+        );
 
 
         /* Добавить коллекцию ******************************************************/
-        $builder->add
-        (
+        $builder->add(
             'addCustom',
             ButtonType::class,
-            ['label_html' => true, 'attr' => ['class' => 'btn-sm btn-outline-primary border-0']]);
+            ['label_html' => true, 'attr' => ['class' => 'btn-sm btn-outline-primary border-0']]
+        );
 
 
-        $formModifier = function(FormInterface $form, ?CategoryProductUid $category = null) {
+        $formModifier = function (FormInterface $form, ?CategoryProductUid $category = null) {
             if($category)
             {
                 $choice = $this->propertyFields
@@ -123,10 +121,10 @@ final class WbBarcodeForm extends AbstractType
                 $form
                     ->add('offer_prototype', ChoiceType::class, [
                         'choices' => $choice,
-                        'choice_value' => function(?CategoryProductSectionFieldUid $type) {
+                        'choice_value' => function (?CategoryProductSectionFieldUid $type) {
                             return $type?->getValue();
                         },
-                        'choice_label' => function(CategoryProductSectionFieldUid $type) {
+                        'choice_label' => function (CategoryProductSectionFieldUid $type) {
                             return $type->getAttr();
                         },
 
@@ -151,8 +149,7 @@ final class WbBarcodeForm extends AbstractType
 
 
                 /* Добавить коллекцию ******************************************************/
-                $form->add
-                (
+                $form->add(
                     'addProperty',
                     ButtonType::class,
                     [
@@ -160,14 +157,15 @@ final class WbBarcodeForm extends AbstractType
                         'label_html' => true,
                         'attr' => ['class' => 'btn-sm btn-outline-primary border-0'],
                         'disabled' => empty($choice)
-                    ]);
+                    ]
+                );
             }
 
         };
 
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            function(FormEvent $event) use ($formModifier) {
+            function (FormEvent $event) use ($formModifier) {
                 /** @var WbBarcodeDTO $data */
                 $data = $event->getData();
                 $builder = $event->getForm();
@@ -180,7 +178,7 @@ final class WbBarcodeForm extends AbstractType
                         ->find();
 
                     $builder->add('category', HiddenType::class, [
-                        'label' => $category?->getOptions()
+                        'label' => $category ? $category->getOptions() : false
                     ]);
                 }
 
@@ -190,7 +188,7 @@ final class WbBarcodeForm extends AbstractType
 
         $builder->get('category')->addEventListener(
             FormEvents::POST_SUBMIT,
-            function(FormEvent $event) use ($formModifier) {
+            function (FormEvent $event) use ($formModifier) {
                 $category = $event->getForm()->getData();
 
                 if($category)
@@ -201,25 +199,24 @@ final class WbBarcodeForm extends AbstractType
         );
 
 
-
         /* Сохранить ******************************************************/
-        $builder->add
-        (
+        $builder->add(
             'wb_barcode',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]);
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-primary']]
+        );
 
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults
-        (
+        $resolver->setDefaults(
             [
                 'data_class' => WbBarcodeDTO::class,
                 'method' => 'POST',
                 'attr' => ['class' => 'w-100'],
-            ]);
+            ]
+        );
     }
 
 }

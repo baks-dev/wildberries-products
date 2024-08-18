@@ -65,7 +65,7 @@ final class WbProductCardDeleteHandler
             ->getRepository(WbProductCard::class)
             ->find($command->getId());
 
-        if(false === $this->validatorCollection->add($WbProductCard, context: [__FILE__.':'.__LINE__]))
+        if(false === $this->validatorCollection->add($WbProductCard, context: [self::class.':'.__LINE__]))
         {
             return $this->validatorCollection->getErrorUniqid();
         }
@@ -92,7 +92,7 @@ final class WbProductCardDeleteHandler
         $ProductEvent = $qb->getQuery()->getOneOrNullResult();
 
         /** Нет продукции для удаления */
-        if(false === $this->validatorCollection->add($ProductEvent, context: [__FILE__.':'.__LINE__]))
+        if(false === $this->validatorCollection->add($ProductEvent, context: [self::class.':'.__LINE__]))
         {
             return $this->validatorCollection->getErrorUniqid();
         }

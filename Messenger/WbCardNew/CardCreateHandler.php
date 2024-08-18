@@ -70,7 +70,7 @@ use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSett
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
@@ -96,7 +96,7 @@ final class CardCreateHandler
     private ProfileWarehousesClient $profileWarehousesClient;
 
     public function __construct(
-        #[TaggedIterator('baks.reference.choice')] iterable $reference,
+        #[AutowireIterator('baks.reference.choice')] iterable $reference,
         ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
         OfferByCategoryInterface $offerByCategory,
         VariationByOfferInterface $variationByOffer,
@@ -469,7 +469,7 @@ final class CardCreateHandler
                         [
                             'class' => $referenceClass,
                             'value' => $this->Card->getColor(),
-                            __FILE__.':'.__LINE__
+                            self::class.':'.__LINE__
 
                         ]
                     );
