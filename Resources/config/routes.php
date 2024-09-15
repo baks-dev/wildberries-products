@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2023.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -21,27 +21,19 @@
  *  THE SOFTWARE.
  */
 
-namespace Symfony\Component\DependencyInjection\Loader\Configurator;
-
 use BaksDev\Wildberries\Products\BaksDevWildberriesProductsBundle;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 
-return static function(ContainerConfigurator $configurator) {
+return static function (RoutingConfigurator $routes) {
 
-    $services = $configurator->services()
-        ->defaults()
-        ->autowire()
-        ->autoconfigure()
-    ;
+    $MODULE = BaksDevWildberriesProductsBundle::PATH;
 
-    $NAMESPACE = BaksDevWildberriesProductsBundle::NAMESPACE;
-    $PATH = BaksDevWildberriesProductsBundle::PATH;
-
-    $services->load($NAMESPACE, $PATH)
-        ->exclude([
-            $PATH.'{Entity,Resources,Type}',
-            $PATH.'**/*Message.php',
-            $PATH.'**/*DTO.php',
-        ])
-    ;
-
+    $routes->import(
+        $MODULE.'Controller',
+        'attribute',
+        false,
+        $MODULE.implode(DIRECTORY_SEPARATOR, ['Controller', '**', '*Test.php'])
+    )
+        ->prefix(\BaksDev\Core\Type\Locale\Locale::routes())
+        ->namePrefix('wildberries-products:');
 };

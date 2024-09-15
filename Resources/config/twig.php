@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -24,29 +24,13 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use BaksDev\Wildberries\Products\BaksDevWildberriesProductsBundle;
-use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
-use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUidType;
-use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUid;
-use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUidType;
-use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventType;
-use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
-use Symfony\Config\DoctrineConfig;
+use Symfony\Config\TwigConfig;
 
-return static function(DoctrineConfig $doctrine): void {
+return static function (TwigConfig $twig) {
 
-    $doctrine->dbal()->type(WbProductSettingsEventUid::TYPE)->class(WbProductSettingsEventType::class);
+    $twig->path(
+        BaksDevWildberriesProductsBundle::PATH.implode(DIRECTORY_SEPARATOR, ['Resources', 'view', '']), // .'Resources/view',
+        'wildberries-products'
+    );
 
-    $doctrine->dbal()->type(WbCardUid::TYPE)->class(WbCardUidType::class);
-
-    $doctrine->dbal()->type(WbBarcodeEventUid::TYPE)->class(WbBarcodeEventUidType::class);
-
-
-    $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
-
-    $emDefault->mapping('wildberries-products')
-        ->type('attribute')
-        ->dir(BaksDevWildberriesProductsBundle::PATH.'Entity')
-        ->isBundle(false)
-        ->prefix('BaksDev\Wildberries\Products\Entity')
-        ->alias('wildberries-products');
 };
