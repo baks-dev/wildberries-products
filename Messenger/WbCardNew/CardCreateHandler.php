@@ -46,7 +46,7 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\ProductOffersCollectio
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Quantity\ProductOfferQuantityDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Image\ProductVariationImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Price\ProductVariationPriceDTO;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductOffersVariationCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductVariationCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Quantity\ProductVariationQuantityDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Price\PriceDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
@@ -390,8 +390,8 @@ final class CardCreateHandler
         ProductOffersCollectionDTO $ProductOffer,
         int|string $barcode,
         ?CategoryProductVariationUid $variation = null
-    ): ProductOffersVariationCollectionDTO {
-        $ProductOffersVariationCollectionDTO = new ProductOffersVariationCollectionDTO();
+    ): ProductVariationCollectionDTO {
+        $ProductOffersVariationCollectionDTO = new ProductVariationCollectionDTO();
         $ProductOffersVariationCollectionDTO->setCategoryVariation($variation);
         $ProductOffer->addVariation($ProductOffersVariationCollectionDTO);
 
@@ -448,7 +448,7 @@ final class CardCreateHandler
 
     /** Присваивает значение из справочника */
     public function setReference(
-        ProductOffersCollectionDTO|ProductOffersVariationCollectionDTO $object,
+        ProductOffersCollectionDTO|ProductVariationCollectionDTO $object,
         InputField $inputFieldReference,
         mixed $value
     ): void {
@@ -485,7 +485,7 @@ final class CardCreateHandler
 
 
     public function createMediaFile(
-        ProductOffersCollectionDTO|ProductOffersVariationCollectionDTO $parent,
+        ProductOffersCollectionDTO|ProductVariationCollectionDTO $parent,
         string $table,
         string $class
     ): void {
@@ -539,7 +539,7 @@ final class CardCreateHandler
     }
 
 
-    private function createProductVariationPrice(ProductOffersVariationCollectionDTO $ProductVariation): void
+    private function createProductVariationPrice(ProductVariationCollectionDTO $ProductVariation): void
     {
         $Price = $this->ProductDTO->getPrice()->getPrice();
 
@@ -597,7 +597,7 @@ final class CardCreateHandler
 
 
     private function createProductVariationQuantity(
-        ProductOffersVariationCollectionDTO $ProductVariation,
+        ProductVariationCollectionDTO $ProductVariation,
         int|string $barcode
     ): void {
         /** Остатки продукции по всем баркодам (Wildberries Api) */
