@@ -1,19 +1,24 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Wildberries\Products\Forms\Preform;
@@ -45,7 +50,8 @@ final class PreformForm extends AbstractType
         CategoryChoiceInterface $categoryChoice,
         WbObject $objectReference,
         AnyWbTokenActiveInterface $anyWbTokenActive
-    ) {
+    )
+    {
         $this->categoryChoice = $categoryChoice;
         $this->objectReference = $objectReference;
         $this->anyWbTokenActive = $anyWbTokenActive;
@@ -59,10 +65,10 @@ final class PreformForm extends AbstractType
         $builder
             ->add('category', ChoiceType::class, [
                 'choices' => $this->categoryChoice->findAll(),
-                'choice_value' => function (?CategoryProductUid $type) {
+                'choice_value' => function(?CategoryProductUid $type) {
                     return $type?->getValue();
                 },
-                'choice_label' => function (CategoryProductUid $type) {
+                'choice_label' => function(CategoryProductUid $type) {
                     return $type?->getOptions();
                 },
 
@@ -94,10 +100,10 @@ final class PreformForm extends AbstractType
         $builder
             ->add('name', ChoiceType::class, [
                 'choices' => $section,
-                'choice_value' => function (?WbObjectDTO $type) {
+                'choice_value' => function(?WbObjectDTO $type) {
                     return $type?->getCategory();
                 },
-                'choice_label' => function (WbObjectDTO $type) {
+                'choice_label' => function(WbObjectDTO $type) {
                     return $type->getCategory();
                 },
                 'label' => false,
@@ -113,7 +119,7 @@ final class PreformForm extends AbstractType
             ['disabled' => true, 'placeholder' => 'Выберите раздел для списка категорий'],
         );
 
-        $formModifier = function (FormInterface $form, WbObjectDTO $name = null) use ($section) {
+        $formModifier = function(FormInterface $form, WbObjectDTO $name = null) use ($section) {
 
             if($name)
             {
@@ -125,7 +131,7 @@ final class PreformForm extends AbstractType
                 {
                     $parent = $section;
 
-                    $parent = array_filter($parent, function ($k) use ($name) {
+                    $parent = array_filter($parent, function($k) use ($name) {
                         return $k->getCategory() === $name->getCategory();
                     });
                 }
@@ -138,10 +144,10 @@ final class PreformForm extends AbstractType
                     $form
                         ->add('parent', ChoiceType::class, [
                             'choices' => $parent,
-                            'choice_value' => function (?WbObjectDTO $type) {
+                            'choice_value' => function(?WbObjectDTO $type) {
                                 return $type?->getName();
                             },
-                            'choice_label' => function (WbObjectDTO $type) {
+                            'choice_label' => function(WbObjectDTO $type) {
                                 return $type->getName();
                             },
                             'label' => false,
@@ -154,7 +160,7 @@ final class PreformForm extends AbstractType
             }
         };
 
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($formModifier) {
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($formModifier) {
 
 
             if(null === $event->getData()->name)
@@ -168,7 +174,7 @@ final class PreformForm extends AbstractType
         $builder->get('name')
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
-                function (FormEvent $event) use ($formModifier) {
+                function(FormEvent $event) use ($formModifier) {
                     $data = $event->getForm()
                         ->getData();
                     $formModifier(

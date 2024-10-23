@@ -1,19 +1,24 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
@@ -64,13 +69,13 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     #[Assert\NotBlank]
     #[Assert\Range(min: 1, max: 5)]
     private ?int $counter = 1;
-    
+
     /**
      * Свойства товара
      */
     #[Assert\Valid]
     private ArrayCollection $property;
-    
+
     /**
      * Пользовательские свойства
      */
@@ -78,36 +83,35 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     private ArrayCollection $custom;
 
 
-
-
-    public function __construct() {
+    public function __construct()
+    {
         $this->property = new ArrayCollection();
         $this->custom = new ArrayCollection();
     }
-    
-    public function getEvent() : ?WbBarcodeEventUid
+
+    public function getEvent(): ?WbBarcodeEventUid
     {
         return $this->id;
     }
-    
-    public function setId(WbBarcodeEventUid $id) : void
+
+    public function setId(WbBarcodeEventUid $id): void
     {
         $this->id = $id;
     }
-    
 
-    public function getCategory() : ?CategoryProductUid
+
+    public function getCategory(): ?CategoryProductUid
     {
         return $this->category;
     }
 
-    public function setCategory(string|CategoryProductUid $category) : void
+    public function setCategory(string|CategoryProductUid $category): void
     {
 
         $this->category = $category instanceof CategoryProductUid ? $category : new CategoryProductUid($category);
     }
 
-    public function hiddenCategory() : void
+    public function hiddenCategory(): void
     {
         $this->hidden = true;
     }
@@ -117,34 +121,34 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
         return $this->hidden;
     }
 
-    public function getProperty() : ArrayCollection
+    public function getProperty(): ArrayCollection
     {
         return $this->property;
     }
 
-    public function addProperty(Property\WbBarcodePropertyDTO $property) : void
+    public function addProperty(Property\WbBarcodePropertyDTO $property): void
     {
         $this->property->add($property);
     }
-    
-    public function removeProperty(Property\WbBarcodePropertyDTO $property) : void
+
+    public function removeProperty(Property\WbBarcodePropertyDTO $property): void
     {
         $this->property->removeElement($property);
     }
-    
-    public function getPropertyClass() : Property\WbBarcodePropertyDTO
+
+    public function getPropertyClass(): Property\WbBarcodePropertyDTO
     {
         return new Property\WbBarcodePropertyDTO();
     }
-    
+
     /** OFFER */
-    
-    public function getOffer() : bool
+
+    public function getOffer(): bool
     {
         return $this->offer;
     }
-    
-    public function setOffer(bool $offer) : void
+
+    public function setOffer(bool $offer): void
     {
         $this->offer = $offer;
     }
@@ -164,33 +168,32 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     }
 
 
-    
     /** COUNTER */
-    
-    public function getCounter() : ?int
+
+    public function getCounter(): ?int
     {
         return $this->counter;
     }
 
-    public function setCounter(?int $counter = 1) : void
+    public function setCounter(?int $counter = 1): void
     {
         $this->counter = $counter;
     }
-    
-    
+
+
     /** CUSTOM */
-    
-    public function getCustom() : ArrayCollection
+
+    public function getCustom(): ArrayCollection
     {
         return $this->custom;
     }
 
-    public function addCustom(Custom\WbBarcodeCustomDTO $custom) : void
+    public function addCustom(Custom\WbBarcodeCustomDTO $custom): void
     {
         $this->custom->add($custom);
     }
 
-    public function removeCustom(Custom\WbBarcodeCustomDTO $custom) : void
+    public function removeCustom(Custom\WbBarcodeCustomDTO $custom): void
     {
         $this->custom->removeElement($custom);
     }

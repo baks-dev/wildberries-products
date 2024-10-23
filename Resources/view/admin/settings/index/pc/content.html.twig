@@ -19,7 +19,6 @@
             <div class="w-100 d-flex align-items-center gap-3 justify-content-end">
 
 
-
                 {# Добавить #}
                 {% if is_granted(ROLE~'_NEW') or is_granted('ROLE_ADMIN') %}
                     <a href="{{ path('wildberries-products:admin.settings.preform') }}"

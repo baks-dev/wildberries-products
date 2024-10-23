@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -35,6 +35,7 @@ use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsHandler;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest;
+use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -47,17 +48,15 @@ use Symfony\Component\DependencyInjection\Attribute\When;
  * @depends BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControllerTest::class
  * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest::class
  *
- * @see WbProductSettingsEditTest
- * @see DeleteControllerTest
+ * @see     WbProductSettingsEditTest
+ * @see     DeleteControllerTest
  *
  */
 #[When(env: 'test')]
 final class WbProductSettingsDeleteTest extends KernelTestCase
 {
-
     public function testUseCase(): void
     {
-        self::bootKernel();
         $container = self::getContainer();
 
         /** @var ORMQueryBuilder $ORMQueryBuilder */
@@ -72,7 +71,8 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         $qb
             ->select('event')
-            ->leftJoin(WbProductSettingsEvent::class,
+            ->leftJoin(
+                WbProductSettingsEvent::class,
                 'event',
                 'WITH',
                 'event.id = main.event'
@@ -81,7 +81,6 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         /** @var WbBarcodeEvent $WbProductSettingsEvent */
         $WbProductSettingsEvent = $qb->getQuery()->getOneOrNullResult();
-
 
 
         /**  WbBarcodeDTO  */
@@ -119,44 +118,10 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
     }
 
-
-    /**
-     * @depends testUseCase
-     */
-    public function testComplete(): void
+    public static function tearDownAfterClass(): void
     {
-        /** @var EntityManagerInterface $em */
-        $em = self::getContainer()->get(EntityManagerInterface::class);
-
-
-        /** WbProductSettings */
-
-        $WbProductSettings = $em->getRepository(WbProductSettings::class)
-            ->find(CategoryProductUid::TEST);
-
-        if($WbProductSettings)
-        {
-            $em->remove($WbProductSettings);
-        }
-
-
-        /** WbProductSettingsEvent */
-
-        $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
-            ->findBy(['settings' => CategoryProductUid::TEST]);
-
-        foreach($WbProductSettingsEventCollection as $remove)
-        {
-            $em->remove($remove);
-        }
-
-        $em->flush();
-
-        self::assertNull($WbProductSettings);
-
-        $em->clear();
-        //$em->close();
-
+        WbProductSettingsNewTest::setUpBeforeClass();
     }
+
 
 }

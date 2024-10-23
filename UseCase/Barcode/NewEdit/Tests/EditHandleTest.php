@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -37,14 +37,13 @@ use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\WbBarcodeHandler;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
-use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest;
 
 /**
  * @group wildberries-products
  * @group wildberries-products-barcode
  *
  * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::class
- * @see NewHandleTest
+ * @see     NewHandleTest
  */
 #[When(env: 'test')]
 final class EditHandleTest extends KernelTestCase
@@ -100,8 +99,6 @@ final class EditHandleTest extends KernelTestCase
         self::assertEquals('Value', $WbBarcodeCustomDTO->getValue());
 
 
-
-
         /** EDIT */
 
         // Barcode
@@ -120,7 +117,6 @@ final class EditHandleTest extends KernelTestCase
         $WbBarcodeCustomDTO->setValue('Value Edit');
 
 
-
         $UserProfileUid = new UserProfileUid();
         /** @var WbBarcodeHandler $WbBarcodeHandler */
         $WbBarcodeHandler = $container->get(WbBarcodeHandler::class);
@@ -131,7 +127,6 @@ final class EditHandleTest extends KernelTestCase
         $em->clear();
         //$em->close();
     }
-
 
 
     public function testComplete(): void

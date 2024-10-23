@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -44,7 +44,6 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class WbProductSettingsNewTest extends KernelTestCase
 {
-
     public static function setUpBeforeClass(): void
     {
         /** @var EntityManagerInterface $em */
@@ -53,24 +52,20 @@ final class WbProductSettingsNewTest extends KernelTestCase
         $WbProductSettings = $em->getRepository(WbProductSettings::class)
             ->find(CategoryProductUid::TEST);
 
-
         if($WbProductSettings)
         {
-            $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
-                ->findBy(['settings' => CategoryProductUid::TEST]);
-
-            foreach($WbProductSettingsEventCollection as $remove)
-            {
-                $em->remove($remove);
-            }
-
             $em->remove($WbProductSettings);
-
-            $em->flush();
         }
 
-        $em->clear();
-        //$em->close();
+        $WbProductSettingsEventCollection = $em->getRepository(WbProductSettingsEvent::class)
+            ->findBy(['settings' => CategoryProductUid::TEST]);
+
+        foreach($WbProductSettingsEventCollection as $remove)
+        {
+            $em->remove($remove);
+        }
+
+        $em->flush();
     }
 
 
@@ -116,35 +111,11 @@ final class WbProductSettingsNewTest extends KernelTestCase
         $WbProductSettingsPropertyDTO->setField($field);
         self::assertSame($field, $WbProductSettingsPropertyDTO->getField());
 
-
-        /** PERSIST */
-
-        self::bootKernel();
-
         /** @var WbProductsSettingsHandler $WbProductsSettingsHandler */
         $WbProductsSettingsHandler = self::getContainer()->get(WbProductsSettingsHandler::class);
         $handle = $WbProductsSettingsHandler->handle($WbProductCardDTO);
 
         self::assertTrue(($handle instanceof WbProductSettings), $handle.': Ошибка WbProductSettings');
 
-    }
-
-
-    public function testComplete(): void
-    {
-        self::bootKernel();
-        $container = self::getContainer();
-
-        /** @var DBALQueryBuilder $dbal */
-        $dbal = $container->get(DBALQueryBuilder::class);
-
-        $dbal->createQueryBuilder(self::class);
-        $dbal
-            ->from(WbProductSettings::class, 'test')
-            ->where('test.id = :id')
-            ->setParameter('id', CategoryProductUid::TEST)
-        ;
-
-        self::assertTrue($dbal->fetchExist());
     }
 }

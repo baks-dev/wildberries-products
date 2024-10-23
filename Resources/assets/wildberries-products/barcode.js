@@ -1,18 +1,23 @@
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 // initOfferCategory();
@@ -20,45 +25,47 @@
 //
 // function initOfferCategory() {
 
-     category = document.getElementById('wb_barcode_form_category');
+category = document.getElementById('wb_barcode_form_category');
 
 
-        changeObjectOffers(category);
+changeObjectOffers(category);
 
-         addProperty = document.getElementById('wb_barcode_form_addProperty');
-        if (addProperty) {
-            addProperty.addEventListener('click', addPropertyPrototype);
-        }
-
-
-         addCustom = document.getElementById('wb_barcode_form_addCustom');
-        if (addCustom) {
-            addCustom.addEventListener('click', addCustomPrototype);
-        }
+addProperty = document.getElementById('wb_barcode_form_addProperty');
+if(addProperty)
+{
+    addProperty.addEventListener('click', addPropertyPrototype);
+}
 
 
+addCustom = document.getElementById('wb_barcode_form_addCustom');
+if(addCustom)
+{
+    addCustom.addEventListener('click', addCustomPrototype);
+}
 
-    //
-    // let add_incoming_object_material_defect = document.getElementById('incoming_material_defect_form_addIncoming');
-    //
-    // if (add_incoming_object_material_defect) {
-    //
-    //     add_incoming_object_material_defect.addEventListener('click', addMaterialIncomingPrototype);
-    //
-    // } else {
-    //     eventEmitter.addEventListener('complete', function () {
-    //         let add_incoming_object_material_defect = document.getElementById('incoming_material_defect_form_addIncoming');
-    //         if (add_incoming_object_material_defect) {
-    //             add_incoming_object_material_defect.addEventListener('click', addMaterialIncomingPrototype);
-    //         }
-    //     });
-    // }
+
+//
+// let add_incoming_object_material_defect = document.getElementById('incoming_material_defect_form_addIncoming');
+//
+// if (add_incoming_object_material_defect) {
+//
+//     add_incoming_object_material_defect.addEventListener('click', addMaterialIncomingPrototype);
+//
+// } else {
+//     eventEmitter.addEventListener('complete', function () {
+//         let add_incoming_object_material_defect = document.getElementById('incoming_material_defect_form_addIncoming');
+//         if (add_incoming_object_material_defect) {
+//             add_incoming_object_material_defect.addEventListener('click', addMaterialIncomingPrototype);
+//         }
+//     });
+// }
 //}
 
 $blockCollection = document.getElementById('collectionProperty');
 
 /* Удаляем при клике колекцию СЕКЦИЙ */
-$blockCollection.querySelector('.del-item-custom').addEventListener('click', function () {
+$blockCollection.querySelector('.del-item-custom').addEventListener('click', function()
+{
 
     this.closest('.item-collection-custom').remove();
     index = addCustom.dataset.index * 1;
@@ -67,7 +74,8 @@ $blockCollection.querySelector('.del-item-custom').addEventListener('click', fun
 
 
 /* Удаляем при клике колекцию */
-$blockCollection.querySelector('.del-item-property').addEventListener('click', function () {
+$blockCollection.querySelector('.del-item-property').addEventListener('click', function()
+{
 
     this.closest('.item-collection-property').remove();
     index = addProperty.dataset.index * 1;
@@ -76,9 +84,8 @@ $blockCollection.querySelector('.del-item-property').addEventListener('click', f
 });
 
 
-
-
-function addCustomPrototype() {
+function addCustomPrototype()
+{
     let $blockCollection = document.getElementById('collectionProperty');
 
     /* получаем прототип коллекции  */
@@ -88,7 +95,7 @@ function addCustomPrototype() {
     let index = $addButtonCustom.dataset.index * 1;
 
     /* Замена '__name__' в HTML-коде прототипа на
-    вместо этого будет число, основанное на том, сколько коллекций */
+     вместо этого будет число, основанное на том, сколько коллекций */
     newForm = newForm.replace(/__custom__/g, index);
     //newForm = newForm.replace(/__FIELD__/g, index);
 
@@ -100,7 +107,8 @@ function addCustomPrototype() {
     $blockCollection.append(div);
 
     /* Удаляем при клике колекцию СЕКЦИЙ */
-    div.querySelector('.del-item-custom').addEventListener('click', function () {
+    div.querySelector('.del-item-custom').addEventListener('click', function()
+    {
 
         this.closest('.item-collection-custom').remove();
         index = $addButtonCustom.dataset.index * 1;
@@ -114,11 +122,11 @@ function addCustomPrototype() {
     $addButtonCustom.dataset.index = (index + 1).toString();
 
 
-
 }
 
 
-function addPropertyPrototype() {
+function addPropertyPrototype()
+{
 
 
     let $blockCollection = document.getElementById('collectionProperty');
@@ -130,7 +138,7 @@ function addPropertyPrototype() {
     let index = $addButtonProperty.dataset.index * 1;
 
     /* Замена '__name__' в HTML-коде прототипа на
-    вместо этого будет число, основанное на том, сколько коллекций */
+     вместо этого будет число, основанное на том, сколько коллекций */
     newForm = newForm.replace(/__property__/g, index);
     //newForm = newForm.replace(/__FIELD__/g, index);
 
@@ -147,7 +155,8 @@ function addPropertyPrototype() {
 
 
     /* Удаляем при клике колекцию */
-    div.querySelector('.del-item-property').addEventListener('click', function () {
+    div.querySelector('.del-item-property').addEventListener('click', function()
+    {
 
         this.closest('.item-collection-property').remove();
         index = $addButtonProperty.dataset.index * 1;
@@ -158,7 +167,7 @@ function addPropertyPrototype() {
 
     /*div.querySelector('#wb_barcode_form_property_'+index+'_offer').addEventListener('click', function () {
 
-    }*/
+     }*/
 
     /* Получаем прототип списка свойств */
 
@@ -173,13 +182,14 @@ function addPropertyPrototype() {
 
     /* Заполняем список новыми элеиентами */
     $prototypeOffer = document.getElementById('wb_barcode_form_offer_prototype');
-    Array.from($prototypeOffer.children).forEach((option) => {
+    Array.from($prototypeOffer.children).forEach((option) =>
+    {
         $offer.appendChild(option.cloneNode(true));
     });
 
     /*    Array.prototype.slice.call( $prototypeOffer.children ).map((optionData) => {
-            $offer.appendChild(optionData);
-        });*/
+     $offer.appendChild(optionData);
+     });*/
 
 
     //console.log($offer.replaceChild($prototypeOffer.children, null));
@@ -189,7 +199,8 @@ function addPropertyPrototype() {
     $addButtonProperty.dataset.index = (index + 1).toString();
 
 
-    div.querySelectorAll('[data-select="select2"]').forEach(function (item) {
+    div.querySelectorAll('[data-select="select2"]').forEach(function(item)
+    {
         new NiceSelect(item, {searchable: true});
     });
 
@@ -200,15 +211,18 @@ function addPropertyPrototype() {
 
 
 /** Обновляем список торговых предложений в SELECT */
-function changeObjectOffers(category, index = 0) {
+function changeObjectOffers(category, index = 0)
+{
 
-    category.addEventListener('change', function () {
+    category.addEventListener('change', function()
+    {
 
 
         let replaceId = 'wb_barcode_form_offer_prototype';
 
         let replaceElement = document.getElementById(replaceId + '_select2');
-        if (replaceElement) {
+        if(replaceElement)
+        {
             replaceElement.classList.add('disabled');
         }
 
@@ -226,9 +240,11 @@ function changeObjectOffers(category, index = 0) {
         requestModalName.open(incomingForm.getAttribute('method'), incomingForm.getAttribute('action'), true);
 
         /* Получаем ответ от сервера на запрос*/
-        requestModalName.addEventListener("readystatechange", function () {
+        requestModalName.addEventListener("readystatechange", function()
+        {
             /* request.readyState - возвращает текущее состояние объекта XHR(XMLHttpRequest) */
-            if (requestModalName.readyState === 4 && requestModalName.status === 200) {
+            if(requestModalName.readyState === 4 && requestModalName.status === 200)
+            {
 
                 let result = requestModalName.response.getElementById('wb_barcode_form_offer_prototype');
 

@@ -1,17 +1,17 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -108,7 +108,8 @@ final class CardCreateHandler
         ProductHandler $productHandler,
         WbProductCardHandler $wbProductCardHandler,
         EntityManagerInterface $entityManager
-    ) {
+    )
+    {
         $this->productSettingsByParentAndName = $productSettingsByParentAndName;
         $this->offerByCategory = $offerByCategory;
         $this->variationByOffer = $variationByOffer;
@@ -390,7 +391,8 @@ final class CardCreateHandler
         ProductOffersCollectionDTO $ProductOffer,
         int|string $barcode,
         ?CategoryProductVariationUid $variation = null
-    ): ProductVariationCollectionDTO {
+    ): ProductVariationCollectionDTO
+    {
         $ProductOffersVariationCollectionDTO = new ProductVariationCollectionDTO();
         $ProductOffersVariationCollectionDTO->setCategoryVariation($variation);
         $ProductOffer->addVariation($ProductOffersVariationCollectionDTO);
@@ -451,7 +453,8 @@ final class CardCreateHandler
         ProductOffersCollectionDTO|ProductVariationCollectionDTO $object,
         InputField $inputFieldReference,
         mixed $value
-    ): void {
+    ): void
+    {
         foreach($this->reference as $reference)
         {
             if($reference->type() === $inputFieldReference->getType())
@@ -488,7 +491,8 @@ final class CardCreateHandler
         ProductOffersCollectionDTO|ProductVariationCollectionDTO $parent,
         string $table,
         string $class
-    ): void {
+    ): void
+    {
         $root = true;
 
         foreach($this->Card->getMedia() as $mediaFile)
@@ -599,7 +603,8 @@ final class CardCreateHandler
     private function createProductVariationQuantity(
         ProductVariationCollectionDTO $ProductVariation,
         int|string $barcode
-    ): void {
+    ): void
+    {
         /** Остатки продукции по всем баркодам (Wildberries Api) */
         $wildberriesStocks = $this->getWildberriesStocks();
 
