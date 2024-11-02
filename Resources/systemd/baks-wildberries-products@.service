@@ -10,7 +10,7 @@
 # systemctl stop baks-wildberries-products@1.service
 
 [Unit]
-Description=Symfony messenger wildberries-products %i
+Description=wildberries-products
 StartLimitBurst=5
 StartLimitIntervalSec=0
 
