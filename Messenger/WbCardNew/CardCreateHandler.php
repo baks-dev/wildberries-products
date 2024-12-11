@@ -69,7 +69,10 @@ use BaksDev\Wildberries\Products\UseCase\Cards\NewEdit\WbProductCardHandler;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Table;
 use Psr\Log\LoggerInterface;
+use ReflectionAttribute;
+use ReflectionClass;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -204,7 +207,13 @@ final class CardCreateHandler
                 /* Если торговое предложение с возможностью загрузки пользовательского изображение */
                 if($SettingsCategoryOffers->getImage())
                 {
-                    $this->createMediaFile($ProductOffer, ProductOfferImage::TABLE, ProductOfferImageCollectionDTO::class);
+
+                    $ref = new ReflectionClass(ProductOfferImage::class);
+                    /** @var ReflectionAttribute $current */
+                    $current = current($ref->getAttributes(Table::class));
+                    $TABLE = $current->getArguments()['name'] ?? 'images';
+
+                    $this->createMediaFile($ProductOffer, $TABLE, ProductOfferImageCollectionDTO::class);
                 }
 
                 /* Если торговое предложение с ценой  */
@@ -257,7 +266,12 @@ final class CardCreateHandler
                         /* Если множественный вариант с возможностью загрузки пользовательского изображение */
                         if($SettingsCategoryVariation->getImage())
                         {
-                            $this->createMediaFile($ProductVariation, ProductVariationImage::TABLE, ProductVariationImageCollectionDTO::class);
+                            $ref = new ReflectionClass(ProductVariationImage::class);
+                            /** @var ReflectionAttribute $current */
+                            $current = current($ref->getAttributes(Table::class));
+                            $TABLE = $current->getArguments()['name'] ?? 'images';
+
+                            $this->createMediaFile($ProductVariation, $TABLE, ProductVariationImageCollectionDTO::class);
                         }
 
                         /* Если множественный вариант с ценой  */
