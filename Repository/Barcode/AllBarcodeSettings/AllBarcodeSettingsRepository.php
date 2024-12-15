@@ -33,20 +33,13 @@ use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
-final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
+final readonly class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 {
 
-    private PaginatorInterface $paginator;
-    private DBALQueryBuilder $DBALQueryBuilder;
-
     public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-        PaginatorInterface $paginator,
-    )
-    {
-        $this->paginator = $paginator;
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+        private DBALQueryBuilder $DBALQueryBuilder,
+        private PaginatorInterface $paginator,
+    ) {}
 
     public function fetchAllBarcodeSettings(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface
     {
@@ -56,7 +49,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 
         $qb->select('barcode.event');
 
-        $qb->from(WbBarcode::TABLE, 'barcode');
+        $qb->from(WbBarcode::class, 'barcode');
 
         if($profile)
         {
@@ -65,18 +58,16 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
                 ->setParameter('profile', $profile, UserProfileUid::TYPE);
         }
 
-        //        $qb->join(
-        //            'barcode',
-        //            WbBarcodeEvent::TABLE,
-        //            'event',
-        //            'event.id = barcode.event'
-        //        );
-
 
         /** Категория */
         $qb->addSelect('category.id as category');
         $qb->addSelect('category.event as category_event'); /* ID события */
-        $qb->join('barcode', CategoryProduct::TABLE, 'category', 'category.id = barcode.id');
+        $qb->join(
+            'barcode',
+            CategoryProduct::class,
+            'category',
+            'category.id = barcode.id'
+        );
 
 
         /** События категории */
@@ -85,7 +76,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
         $qb->join
         (
             'category',
-            CategoryProductEvent::TABLE,
+            CategoryProductEvent::class,
             'category_event',
             'category_event.id = category.event'
         );
@@ -97,7 +88,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
         $qb->addSelect('category_cover.cdn');
         $qb->leftJoin(
             'category_event',
-            CategoryProductCover::TABLE,
+            CategoryProductCover::class,
             'category_cover',
             'category_cover.event = category_event.id');
 
@@ -108,7 +99,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 
         $qb->leftJoin(
             'category_event',
-            CategoryProductTrans::TABLE,
+            CategoryProductTrans::class,
             'category_trans',
             'category_trans.event = category_event.id AND category_trans.local = :local');
 

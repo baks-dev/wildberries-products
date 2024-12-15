@@ -23,6 +23,7 @@
 
 namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeProperty;
 
+use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Product\Entity\Category\ProductCategory;
 use BaksDev\Products\Product\Entity\Event\ProductEvent;
 use BaksDev\Products\Product\Entity\Info\ProductInfo;
@@ -32,18 +33,10 @@ use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustom;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
-use Doctrine\DBAL\Connection;
 
-final class WbBarcodePropertyByProductEventRepository implements WbBarcodePropertyByProductEventInterface
+final readonly class WbBarcodePropertyByProductEventRepository implements WbBarcodePropertyByProductEventInterface
 {
-
-    private Connection $connection;
-
-    public function __construct(Connection $connection)
-    {
-        $this->connection = $connection;
-    }
-
+    public function __construct(private DBALQueryBuilder $DBALQueryBuilder) {}
 
     public function getPropertyCollection(ProductEvent|ProductEventUid|string $event): array
     {
@@ -57,11 +50,10 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
             $event = $event->getId();
         }
 
-
         $property = $this->getProperty();
         $custom = $this->getCustom();
 
-        $qb = $this->connection->prepare($property.' UNION '.$custom.' ORDER BY sort ');
+        $qb = $this->DBALQueryBuilder->prepare($property.' UNION '.$custom.' ORDER BY sort ');
         $qb->bindValue('event', $event, ProductEventUid::TYPE);
 
 
@@ -78,7 +70,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
 
         $qb->join(
             'sticker_settings_event',
-            WbBarcodeProperty::TABLE,
+            WbBarcodeProperty::class,
             'sticker_settings_property',
             'sticker_settings_property.event = sticker_settings_event.id'
         );
@@ -87,7 +79,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
 
         $qb->join(
             'sticker_settings_property',
-            ProductProperty::TABLE,
+            ProductProperty::class,
             'product_property',
             'product_property.event = product_event.id AND product_property.field = sticker_settings_property.offer');
 
@@ -105,7 +97,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
         $qb->addSelect('sticker_settings_custom.value');
         $qb->join(
             'sticker_settings_event',
-            WbBarcodeCustom::TABLE,
+            WbBarcodeCustom::class,
             'sticker_settings_custom',
             'sticker_settings_custom.event = sticker_settings_event.id'
         );
@@ -116,17 +108,16 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
 
     private function from()
     {
-        $qb = $this->connection->createQueryBuilder();
+        $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->from(ProductEvent::TABLE, 'product_event');
+        $qb->from(ProductEvent::class, 'product_event');
 
         /* Категория продукта */
         //$qb->select('product_event_category.category');
 
-
         $qb->leftJoin(
             'product_event',
-            ProductInfo::TABLE,
+            ProductInfo::class,
             'product_info',
             'product_info.product = product_event.main'
         );
@@ -134,7 +125,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
 
         $qb->leftJoin(
             'product_event',
-            ProductCategory::TABLE,
+            ProductCategory::class,
             'product_event_category',
             'product_event_category.event = product_event.id AND product_event_category.root = true'
         );
@@ -142,7 +133,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
 
         $qb->join(
             'product_event',
-            WbBarcode::TABLE,
+            WbBarcode::class,
             'sticker_settings',
             'sticker_settings.id = product_event_category.category AND sticker_settings.profile = product_info.profile'
         );
@@ -151,7 +142,7 @@ final class WbBarcodePropertyByProductEventRepository implements WbBarcodeProper
         $qb->addSelect('sticker_settings_event.counter');
         $qb->join(
             'sticker_settings',
-            WbBarcodeEvent::TABLE,
+            WbBarcodeEvent::class,
             'sticker_settings_event',
             'sticker_settings_event.id = sticker_settings.event'
         );

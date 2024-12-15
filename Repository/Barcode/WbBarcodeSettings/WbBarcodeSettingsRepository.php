@@ -35,14 +35,8 @@ use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
 final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 {
-    private DBALQueryBuilder $DBALQueryBuilder;
 
-    public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-    )
-    {
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
-    }
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
 
     public function findWbBarcodeSettings(Product|ProductUid|string $product): ?array
@@ -57,10 +51,9 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             $product = new ProductUid($product);
         }
 
-
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $qb->from(Product::TABLE, 'product');
+        $qb->from(Product::class, 'product');
 
         $qb->where('product.id = :product')
             ->setParameter('product', $product, ProductUid::TYPE);
@@ -68,7 +61,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 
         $qb->leftJoin(
             'product',
-            ProductCategory::TABLE,
+            ProductCategory::class,
             'product_category',
             'product_category.event = product.event AND product_category.root = true'
         );
@@ -76,7 +69,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 
         $qb->leftJoin(
             'product',
-            ProductInfo::TABLE,
+            ProductInfo::class,
             'product_info',
             'product_info.product = product.id'
         );
@@ -85,7 +78,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
         //$qb->addSelect('barcode.event');
         $qb->join(
             'product_category',
-            WbBarcode::TABLE,
+            WbBarcode::class,
             'barcode',
             'barcode.id = product_category.category AND barcode.profile = product_info.profile'
         );
@@ -96,7 +89,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 
         $qb->join(
             'barcode',
-            WbBarcodeEvent::TABLE,
+            WbBarcodeEvent::class,
             'barcode_event',
             'barcode_event.id = barcode.event'
         );
