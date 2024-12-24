@@ -119,7 +119,7 @@ final class PreformForm extends AbstractType
             ['disabled' => true, 'placeholder' => 'Выберите раздел для списка категорий'],
         );
 
-        $formModifier = function(FormInterface $form, WbObjectDTO $name = null) use ($section) {
+        $formModifier = function(FormInterface $form, ?WbObjectDTO $name = null) use ($section) {
 
             if($name)
             {
