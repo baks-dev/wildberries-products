@@ -30,7 +30,7 @@ return static function(FrameworkConfig $framework) {
     $messenger = $framework->messenger();
 
     $messenger
-        ->transport('')
+        ->transport('wildberries-products')
         ->dsn('redis://%env(REDIS_PASSWORD)%@%env(REDIS_HOST)%:%env(REDIS_PORT)%?dbindex=%env(REDIS_TABLE)&auto_setup=true')
         ->options(['stream' => 'wildberries-products'])
         ->failureTransport('failed-wildberries-products')
