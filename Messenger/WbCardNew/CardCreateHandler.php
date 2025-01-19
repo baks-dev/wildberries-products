@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -53,12 +53,12 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductHandler;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Property\PropertyCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
-use BaksDev\Wildberries\Api\Token\Card\WildberriesCardImage;
-use BaksDev\Wildberries\Api\Token\Card\WildberriesCards\Card;
-use BaksDev\Wildberries\Api\Token\Prices\PricesInfo\PricesInfo;
-use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\Stocks;
-use BaksDev\Wildberries\Api\Token\Stocks\GetStocks\WildberriesStocks;
 use BaksDev\Wildberries\Api\Token\Warehouse\ProfileWarehouses\ProfileWarehousesClient;
+use BaksDev\Wildberries\Products\Api\GetStocks\Stocks;
+use BaksDev\Wildberries\Products\Api\GetStocks\WildberriesStocks;
+use BaksDev\Wildberries\Products\Api\PricesInfo\PricesInfo;
+use BaksDev\Wildberries\Products\Api\WildberriesCardImage;
+use BaksDev\Wildberries\Products\Api\WildberriesCards\Card;
 use BaksDev\Wildberries\Products\Entity\Cards\WbProductCard;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsByParentAndName\ProductSettingsByParentAndNameInterface;
