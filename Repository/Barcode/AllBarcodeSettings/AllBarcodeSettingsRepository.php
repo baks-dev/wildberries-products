@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -30,18 +30,50 @@ use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Entity\Cover\CategoryProductCover;
 use BaksDev\Products\Category\Entity\Event\CategoryProductEvent;
 use BaksDev\Products\Category\Entity\Trans\CategoryProductTrans;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 
-final readonly class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
+final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 {
 
+    private ?SearchDTO $search = null;
+
+    private UserProfileUid|false $profile = false;
+
     public function __construct(
-        private DBALQueryBuilder $DBALQueryBuilder,
-        private PaginatorInterface $paginator,
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly PaginatorInterface $paginator,
     ) {}
 
-    public function fetchAllBarcodeSettings(SearchDTO $search, ?UserProfileUid $profile): PaginatorInterface
+
+    public function search(SearchDTO $search): self
+    {
+        $this->search = $search;
+        return $this;
+    }
+
+    /**
+     * Profile
+     */
+    public function profile(UserProfile|UserProfileUid|string $profile): self
+    {
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    public function findPaginator(): PaginatorInterface
     {
         $qb = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
@@ -51,11 +83,11 @@ final readonly class AllBarcodeSettingsRepository implements AllBarcodeSettingsI
 
         $qb->from(WbBarcode::class, 'barcode');
 
-        if($profile)
+        if($this->profile)
         {
             $qb
                 ->where('barcode.profile = :profile')
-                ->setParameter('profile', $profile, UserProfileUid::TYPE);
+                ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
         }
 
 
@@ -105,7 +137,7 @@ final readonly class AllBarcodeSettingsRepository implements AllBarcodeSettingsI
 
 
         /* Поиск */
-        if($search->getQuery())
+        if($this->search->getQuery())
         {
             $this->DBALQueryBuilder
                 //  ->createSearchQueryBuilder($search)

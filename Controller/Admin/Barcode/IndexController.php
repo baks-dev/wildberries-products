@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -46,17 +46,21 @@ final class IndexController extends AbstractController
     {
         /* Поиск */
         $search = new SearchDTO($request);
-        $searchForm = $this->createForm(
-            SearchForm::class,
-            $search,
-            ['action' => $this->generateUrl('wildberries-products:admin.barcode.index')]
-        );
-        $searchForm->handleRequest($request);
-
+        $searchForm = $this
+            ->createForm(
+                SearchForm::class,
+                $search,
+                ['action' => $this->generateUrl('wildberries-products:admin.barcode.index')]
+            )
+            ->handleRequest($request);
 
         /* Получаем список */
-        $query = $allSticker->fetchAllBarcodeSettings($search, $this->getAdminFilterProfile());
 
+        $this->isAdmin() ?: $allSticker->profile($this->getProfileUid());
+
+        $query = $allSticker
+            ->search($search)
+            ->findPaginator();
 
         return $this->render(
             [

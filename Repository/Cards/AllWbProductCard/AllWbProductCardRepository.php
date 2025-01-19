@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -53,24 +53,54 @@ use BaksDev\Wildberries\Products\Entity\Cards\WbProductCardVariation;
 
 final class AllWbProductCardRepository implements AllWbProductCardInterface
 {
-    private PaginatorInterface $paginator;
-    private DBALQueryBuilder $DBALQueryBuilder;
+
+    private ?SearchDTO $search = null;
+
+    private ?ProductFilterInterface $filter = null;
+
+    private UserProfileUid|false $profile = false;
+
 
     public function __construct(
-        DBALQueryBuilder $DBALQueryBuilder,
-        PaginatorInterface $paginator,
-    )
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly PaginatorInterface $paginator,
+    ) {}
+
+
+    public function search(SearchDTO $search): self
     {
-        $this->paginator = $paginator;
-        $this->DBALQueryBuilder = $DBALQueryBuilder;
+        $this->search = $search;
+        return $this;
+    }
+
+    public function filter(ProductFilterInterface $filter): self
+    {
+        $this->filter = $filter;
+        return $this;
+    }
+
+    /**
+     * Profile
+     */
+    public function profile(UserProfile|UserProfileUid|string $profile): self
+    {
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
     }
 
     /** Метод возвращает пагинатор WbProductCard */
-    public function fetchAllWbProductCardAssociative(
-        SearchDTO $search,
-        ProductFilterInterface $filter,
-        ?UserProfileUid $profile
-    ): PaginatorInterface
+    public function findPaginator(): PaginatorInterface
     {
 
         $dbal = $this->DBALQueryBuilder
@@ -101,10 +131,10 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_trans.event = product.event AND product_trans.local = :local'
         );
 
-        if($profile)
+        if($this->profile)
         {
             $dbal->andWhere('product_info.profile = :profile');
-            $dbal->setParameter('profile', $profile, UserProfileUid::TYPE);
+            $dbal->setParameter('profile', $this->profile, UserProfileUid::TYPE);
         }
 
         /* ProductInfo */
@@ -160,10 +190,10 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         );
 
 
-        if($filter->getOffer())
+        if($this->filter->getOffer())
         {
             $dbal->andWhere('product_offer.value = :offer');
-            $dbal->setParameter('offer', $filter->getOffer());
+            $dbal->setParameter('offer', $this->filter->getOffer());
         }
 
 
@@ -191,10 +221,10 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         );
 
 
-        if($filter->getVariation())
+        if($this->filter->getVariation())
         {
             $dbal->andWhere('product_variation.value = :variation');
-            $dbal->setParameter('variation', $filter->getVariation());
+            $dbal->setParameter('variation', $this->filter->getVariation());
         }
 
 
@@ -301,10 +331,10 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_event_category.event = product.event AND product_event_category.root = true'
         );
 
-        if($filter->getCategory())
+        if($this->filter->getCategory())
         {
             $dbal->andWhere('product_event_category.category = :category');
-            $dbal->setParameter('category', $filter->getCategory(), CategoryProductUid::TYPE);
+            $dbal->setParameter('category', $this->filter->getCategory(), CategoryProductUid::TYPE);
         }
 
         $dbal->join(
@@ -324,11 +354,11 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
         );
 
 
-        if($search->getQuery())
+        if($this->search->getQuery())
         {
 
             $dbal
-                ->createSearchQueryBuilder($search)
+                ->createSearchQueryBuilder($this->search)
                 ->addSearchEqualUid('product.id')
                 ->addSearchEqualUid('product.event')
                 ->addSearchEqualUid('product_variation.id')
@@ -344,4 +374,6 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
 
         return $this->paginator->fetchAllAssociative($dbal);
     }
+
+
 }
