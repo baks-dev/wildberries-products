@@ -29,60 +29,40 @@ use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Repository\ProductByArticle\ProductEventByArticleInterface;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteDTO;
 use BaksDev\Products\Product\UseCase\Admin\Delete\ProductDeleteHandler;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\WildberriesCards\Card;
 use BaksDev\Wildberries\Products\Api\WildberriesCards\WildberriesCards;
 use BaksDev\Wildberries\Products\Repository\Cards\ExistCardOfferByNomenclature\ExistCardOfferByNomenclatureInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsByParentAndName\ProductSettingsByParentAndNameInterface;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class WbCardNewHandler
+final readonly class WbCardNewHandler
 {
-    private WildberriesCards $wildberriesCards;
-    private ProductSettingsByParentAndNameInterface $productSettingsByParentAndName;
-    private ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature;
-    private MessageDispatchInterface $messageDispatch;
-    private LoggerInterface $logger;
-    private UserProfileUid $profile;
-    private ProductEventByArticleInterface $productEventByArticle;
-    private ProductDeleteHandler $productDeleteHandler;
-
     public function __construct(
-        WildberriesCards $wildberriesCards,
-        ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
-        ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature,
-        MessageDispatchInterface $messageDispatch,
-        LoggerInterface $wildberriesProductsLogger,
-        ProductEventByArticleInterface $productEventByArticle,
-        ProductDeleteHandler $productDeleteHandler
-
-    )
-    {
-
-        $this->wildberriesCards = $wildberriesCards;
-        $this->productSettingsByParentAndName = $productSettingsByParentAndName;
-        $this->existCardOfferByNomenclature = $existCardOfferByNomenclature;
-        $this->messageDispatch = $messageDispatch;
-        $this->logger = $wildberriesProductsLogger;
-        $this->productEventByArticle = $productEventByArticle;
-        $this->productDeleteHandler = $productDeleteHandler;
-    }
+        #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
+        private WildberriesCards $wildberriesCards,
+        private ProductSettingsByParentAndNameInterface $productSettingsByParentAndName,
+        private ExistCardOfferByNomenclatureInterface $existCardOfferByNomenclature,
+        private MessageDispatchInterface $messageDispatch,
+        private ProductEventByArticleInterface $productEventByArticle,
+        private ProductDeleteHandler $productDeleteHandler
+    ) {}
 
     /**
      * Получаем карточки товаров и добавляем отсутствующие
      */
     public function __invoke(WbCardNewMessage $message)
     {
-        $this->profile = $message->getProfile();
+        $profile = $message->getProfile();
 
         /** Все карточки товаров (Wildberries Api) */
         $WildberriesCards = $this
             ->wildberriesCards
             ->limit(100)
-            ->profile($this->profile);
+            ->profile($profile);
 
 
         $count = 0;
@@ -139,7 +119,7 @@ final class WbCardNewHandler
 
                 $this->messageDispatch->dispatch(
                     $Card,
-                    transport: (string) $this->profile
+                    transport: (string) $profile
                 );
 
 
