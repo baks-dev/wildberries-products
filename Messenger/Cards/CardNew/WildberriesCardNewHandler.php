@@ -50,7 +50,6 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\ProductOffersCollectio
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Image\ProductVariationImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\Image\ProductModificationImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\ProductModificationCollectionDTO;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductOffersVariationCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductVariationCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Photo\PhotoCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
@@ -85,12 +84,9 @@ final readonly class WildberriesCardNewHandler
         private WildberriesCardImage $WildberriesCardImage,
         private ProductHandler $ProductHandler,
         private DeliveryPackageProductParameterHandler $DeliveryPackageProductParameterHandler,
-
-
         private ProductSettingsCategoryInterface $ProductSettingsCategory,
         private ProductSettingsCategoryPropertyInterface $ProductSettingsCategoryProperty,
         private ProductSettingsCategoryParametersInterface $ProductSettingsCategoryParameters,
-
         private ProductEventByArticleInterface $ProductEventByArticle,
     ) {}
 
