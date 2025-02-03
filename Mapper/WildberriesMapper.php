@@ -25,7 +25,9 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Mapper;
 
+use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Yandex\Market\Products\Mapper\Properties\Collection\YaMarketProductPropertyInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 final readonly class WildberriesMapper

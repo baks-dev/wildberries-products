@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2023.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -33,8 +33,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'wb_card_settings')]
 class WbProductSettings
 {
-
-    const TABLE = 'wb_card_settings';
 
     /** ID */
     #[Assert\NotBlank]
@@ -69,7 +67,7 @@ class WbProductSettings
     public function setEvent(WbProductSettingsEvent $event): void
     {
         $this->event = $event->getId();
-        $this->id = $event->getSettings();
+        $this->id = $event->getMain();
     }
 
 }

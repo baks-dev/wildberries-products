@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -30,15 +30,14 @@ use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUid;
 use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUidType;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventType;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
 use Symfony\Config\DoctrineConfig;
 
 return static function(DoctrineConfig $doctrine): void {
 
     $doctrine->dbal()->type(WbProductSettingsEventUid::TYPE)->class(WbProductSettingsEventType::class);
-
-    $doctrine->dbal()->type(WbCardUid::TYPE)->class(WbCardUidType::class);
-
-    $doctrine->dbal()->type(WbBarcodeEventUid::TYPE)->class(WbBarcodeEventUidType::class);
+    $doctrine->dbal()->type(WildberriesProductProperty::TYPE)->class(WildberriesProductPropertyType::class);
 
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);

@@ -48,7 +48,7 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
 
     public function required(): bool
     {
-        return false;
+        return true;
     }
 
     public function choices(): ?array
@@ -61,7 +61,7 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
      */
     public static function priority(): int
     {
-        return 100;
+        return 501;
     }
 
     /**
@@ -78,26 +78,22 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
         return true;
     }
 
-    public function isCard(): bool
-    {
-        return true;
-    }
-
     public function getData(array $data): mixed
     {
-        //        if(isset($data['product_property']))
-        //        {
-        //            $property = json_decode($data['product_property']);
-        //
-        //            $filter = current(array_filter($property, static function($element) {
-        //                return self::equals($element->type);
-        //            }));
-        //
-        //            if($filter && $filter->value)
-        //            {
-        //                return $filter->value;
-        //            }
-        //        }
+        if(isset($data['product_property']))
+        {
+            $property = json_decode($data['product_property'], false, 512, JSON_THROW_ON_ERROR);
+
+            $filter = current(array_filter($property, static function($element) {
+                return self::equals($element->type);
+            }));
+
+            if($filter && !empty($filter->value))
+            {
+                return $filter->value;
+            }
+        }
+
 
         if(isset($data['category_name']))
         {

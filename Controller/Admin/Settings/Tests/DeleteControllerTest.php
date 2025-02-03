@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -39,9 +39,9 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
 {
-    private const URL = '/admin/wb/product/setting/delete/%s';
+    private const string URL = '/admin/wb/product/setting/delete/%s';
 
-    private const ROLE = 'ROLE_WB_PRODUCTS_SETTING_DELETE';
+    private const string ROLE = 'ROLE_WB_PRODUCTS_SETTING_DELETE';
 
 
     public function testRoleSuccessful(): void

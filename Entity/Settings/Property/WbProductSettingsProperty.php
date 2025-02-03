@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,7 @@ namespace BaksDev\Wildberries\Products\Entity\Settings\Property;
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -38,7 +39,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'wb_card_settings_property')]
 class WbProductSettingsProperty extends EntityEvent
 {
-    const TABLE = 'wb_card_settings_property';
 
     /**
      * Идентификатор события
@@ -50,21 +50,28 @@ class WbProductSettingsProperty extends EntityEvent
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private WbProductSettingsEvent $event;
 
+
     /**
      * Наименование характеристики
      */
     #[Assert\NotBlank]
     #[ORM\Id]
-    #[ORM\Column(type: Types::STRING)]
-    private string $type;
+    #[ORM\Column(type: WildberriesProductProperty::TYPE)]
+    private WildberriesProductProperty $type;
 
     /**
      * Связь на свойство продукта в категории
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    #[ORM\Column(type: CategoryProductSectionFieldUid::TYPE)]
-    private CategoryProductSectionFieldUid $field;
+    #[ORM\Column(type: CategoryProductSectionFieldUid::TYPE, nullable: true)]
+    private ?CategoryProductSectionFieldUid $field = null;
+
+    /**
+     * Значение по умолчанию
+     */
+    #[ORM\Column(type: Types::STRING, nullable: true)]
+    private ?string $def = null;
 
 
     public function __construct(WbProductSettingsEvent $event)
@@ -94,7 +101,7 @@ class WbProductSettingsProperty extends EntityEvent
     {
         if($dto instanceof WbProductSettingsPropertyInterface || $dto instanceof self)
         {
-            if(empty($dto->getField()))
+            if(empty($dto->getDef()) && $dto->getField() === null)
             {
                 return false;
             }

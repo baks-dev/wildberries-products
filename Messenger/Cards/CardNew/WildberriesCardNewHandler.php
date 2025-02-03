@@ -1,0 +1,599 @@
+<?php
+/*
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+declare(strict_types=1);
+
+namespace BaksDev\Wildberries\Products\Messenger\Cards\CardNew;
+
+
+use BaksDev\DeliveryTransport\BaksDevDeliveryTransportBundle;
+use BaksDev\DeliveryTransport\Entity\ProductParameter\DeliveryPackageProductParameter;
+use BaksDev\DeliveryTransport\Type\ProductParameter\Weight\Kilogram\Kilogram;
+use BaksDev\DeliveryTransport\UseCase\Admin\ProductParameter\DeliveryPackageProductParameterDTO;
+use BaksDev\DeliveryTransport\UseCase\Admin\ProductParameter\DeliveryPackageProductParameterHandler;
+use BaksDev\Products\Category\Repository\SettingsByCategory\SettingsByCategoryInterface;
+use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
+use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
+use BaksDev\Products\Product\Entity\Offers\Variation\Image\ProductVariationImage;
+use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
+use BaksDev\Products\Product\Entity\Product;
+use BaksDev\Products\Product\Repository\ExistProductArticle\ExistProductArticleInterface;
+use BaksDev\Products\Product\Repository\ProductByArticle\ProductEventByArticleInterface;
+use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
+use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
+use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Category\CategoryCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Description\ProductDescriptionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Image\ProductOfferImageCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\ProductOffersCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Image\ProductVariationImageCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\Image\ProductModificationImageCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\ProductModificationCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductOffersVariationCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductVariationCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Photo\PhotoCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductHandler;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Property\PropertyCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
+use BaksDev\Reference\Color\Choice\ReferenceChoiceColor;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\WildberriesCardImage;
+use BaksDev\Wildberries\Products\Mapper\Params\Collection\Shirts\ColorWildberriesProductParameters;
+use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategory\ProductSettingsCategoryInterface;
+use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryParameters\ProductSettingsCategoryParametersInterface;
+use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryProperty\ProductSettingsCategoryPropertyInterface;
+use Doctrine\ORM\Mapping\Table;
+use Psr\Log\LoggerInterface;
+use ReflectionAttribute;
+use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\Target;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler(priority: 999)]
+final readonly class WildberriesCardNewHandler
+{
+    public function __construct(
+        #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
+        #[TaggedIterator('baks.reference.choice')] private iterable $reference,
+        private WildberriesCardsRequest $WildberriesCardsRequest,
+        private SettingsByCategoryInterface $SettingsByCategory,
+        private ExistProductArticleInterface $ExistProductArticle,
+        private WildberriesCardImage $WildberriesCardImage,
+        private ProductHandler $ProductHandler,
+        private DeliveryPackageProductParameterHandler $DeliveryPackageProductParameterHandler,
+
+
+        private ProductSettingsCategoryInterface $ProductSettingsCategory,
+        private ProductSettingsCategoryPropertyInterface $ProductSettingsCategoryProperty,
+        private ProductSettingsCategoryParametersInterface $ProductSettingsCategoryParameters,
+
+        private ProductEventByArticleInterface $ProductEventByArticle,
+    ) {}
+
+    public function __invoke(WildberriesCardNewMassage $message): void
+    {
+
+        $WildberriesCards = $this->WildberriesCardsRequest
+            ->profile($message->getProfile())
+            ->findAll();
+
+        /** @var WildberriesCardDTO $WildberriesCardDTO */
+        foreach($WildberriesCards as $WildberriesCardDTO)
+        {
+            /**
+             * Если передан артикул - применяем фильтр по вхождению
+             */
+            if($message->getArticle() && stripos($WildberriesCardDTO->getArticle(), $message->getArticle()) === false)
+            {
+                continue;
+            }
+
+
+            /* Пропускаем, если карточка без фото */
+            if($WildberriesCardDTO->countMedia() === 0)
+            {
+                $this->logger->warning(
+                    sprintf('Торговое предложение с артикулом %s без фото', $WildberriesCardDTO->getArticle())
+                );
+
+                continue;
+            }
+
+
+            /**
+             * Получаем идентификатор системной категории
+             */
+            $CategoryProductUid = $this->ProductSettingsCategory
+                ->category($WildberriesCardDTO->getCategory())
+                ->find();
+
+            if(false === $CategoryProductUid)
+            {
+                $this->logger->warning(
+                    sprintf('Для товара с артикулом %s не найдено настройки соотношений',
+                        $WildberriesCardDTO->getArticle()));
+                continue;
+            }
+
+
+            /**
+             * Получаем настройки системной категории
+             */
+            $SettingsByCategory = $this->SettingsByCategory
+                ->category($CategoryProductUid)
+                ->find();
+
+            match (true)
+            {
+                $SettingsByCategory['offer_article'] => $this->ExistProductArticle->onlyOffer(),
+                $SettingsByCategory['variation_article'] => $this->ExistProductArticle->onlyVariation(),
+                $SettingsByCategory['modification_article'] => $this->ExistProductArticle->onlyModification(),
+            };
+
+
+            /**
+             * Проверка имеющейся карточки
+             */
+
+            //            while(true)
+            //            {
+            //                $posting = explode('-', $order->getNumber());
+            //                array_pop($posting);
+            //                $number = implode("-", $posting);
+            //            }
+
+
+            $article = $WildberriesCardDTO->getArticle();
+
+            while(true)
+            {
+                /** Проверяем карточку с соответствующим корневым артикулом */
+                $ProductEvent = $this->ProductEventByArticle
+                    ->onlyCard()
+                    ->findProductEventByArticle($article);
+
+                if($ProductEvent !== false)
+                {
+                    break;
+                }
+
+                $article = explode('-', $article);
+                array_pop($article);
+                $article = implode('-', $article);
+
+                if(empty($article))
+                {
+                    break;
+                }
+            }
+
+
+            /**
+             * Проверяем новые артикулы
+             */
+
+            $newSize = null;
+
+            foreach($WildberriesCardDTO->getOffersCollection() as $key => $offer)
+            {
+                $article = $WildberriesCardDTO->getArticle().'-'.$offer;
+
+                $isExistArticle = $ProductEvent !== false && $this->ExistProductArticle->exist($article);
+
+
+                if(true === $isExistArticle)
+                {
+                    continue;
+                }
+
+                $newSize[$key] = $offer;
+            }
+
+            if(empty($newSize))
+            {
+                continue;
+            }
+
+            $ProductDTO = new ProductDTO();
+            !$ProductEvent ?: $ProductEvent->getDto($ProductDTO);
+
+            /** Всегда переопределяем категорию */
+
+            $CategoryCollectionDTO = new CategoryCollectionDTO();
+            $CategoryCollectionDTO->setCategory($CategoryProductUid);
+            $CategoryCollectionDTO->setRoot(true);
+            $ProductDTO->resetCategory()->addCategory($CategoryCollectionDTO);
+
+
+            /**
+             * Присваиваем неизменную информацию о продукте
+             * @see InfoDTO
+             */
+            $ProductInfo = $ProductDTO->getInfo();
+            $ProductDTO->setInfo($ProductInfo);
+            $ProductInfo->getUrl() ?: $ProductInfo->setUrl(uniqid('', false));
+            $ProductInfo->getProfile() ?: $ProductInfo->setProfile($message->getProfile());
+
+            /** Обновляем Артикул карточки товара  */
+
+            $article = $WildberriesCardDTO->getArticle();
+            $article = explode('-', $article);
+
+            if($SettingsByCategory['offer_article'])
+            {
+                //array_pop($article);
+            }
+
+            if($SettingsByCategory['variation_article'])
+            {
+                //count($article) === 1 ?: array_pop($article);
+                count($article) === 1 ?: array_pop($article);
+            }
+
+            if($SettingsByCategory['modification_article'])
+            {
+                //count($article) === 1 ?: array_pop($article);
+                count($article) === 1 ?: array_pop($article);
+                count($article) === 1 ?: array_pop($article);
+            }
+
+            $article = implode('-', $article);
+            $ProductInfo->setArticle($article);
+
+
+            /**
+             * Название файла
+             * @var ProductTransDTO $ProductTransDTO
+             */
+            foreach($ProductDTO->getTranslate() as $ProductTransDTO)
+            {
+                $ProductTransDTO->getName() ?: $ProductTransDTO->setName($WildberriesCardDTO->getName());
+            }
+
+            /**
+             * Описание файла
+             * @var ProductDescriptionDTO $ProductDescriptionDTO
+             */
+            foreach($ProductDTO->getDescription() as $ProductDescriptionDTO)
+            {
+                $ProductDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
+            }
+
+            $reference = iterator_to_array($this->reference);
+
+
+            /**
+             * Торговые предложения
+             */
+
+            // Создаем массив идентификаторов упаковки
+            $package = null;
+
+            foreach($newSize as $barcode => $size)
+            {
+                /** Идентификаторы параметров упаковки по умолчанию */
+                $package[$barcode]['offer'] = null;
+                $package[$barcode]['variation'] = null;
+                $package[$barcode]['modification'] = null;
+
+
+                if(false === $SettingsByCategory['offer_id'])
+                {
+                    continue;
+                }
+
+
+                // поиск цвета по идентификатору (временно для футболок)
+                $CharValue = $WildberriesCardDTO->getCharacteristic(ColorWildberriesProductParameters::ID);
+
+                /**
+                 * @note Если указана библиотека, и значение не найдено - будет присвоено значение, и записан лог с значением
+                 */
+                if($SettingsByCategory['offer_reference'])
+                {
+                    /** @var ReferenceChoiceColor $offerReference */
+                    $offerReference = array_find($reference, static function($item) use ($SettingsByCategory) {
+                        return $item->equals($SettingsByCategory['offer_reference']);
+                    });
+
+                    if(false === is_null($offerReference))
+                    {
+                        $CharValue = new ($offerReference->class())($CharValue);
+                    }
+                }
+
+
+                $ProductOffersCollectionDTO = $ProductDTO->getOffer();
+
+                // фильтруем имеющиеся торговые предложения
+                $filterOffer = $ProductOffersCollectionDTO->filter(function($element) use ($CharValue) {
+                    return $element->getValue() === (string) $CharValue;
+                });
+
+                $OffersDTO = $filterOffer->current();
+
+                if(false === $OffersDTO)
+                {
+                    $OffersDTO = new ProductOffersCollectionDTO();
+                    $ProductDTO->addOffer($OffersDTO);
+                    $OffersDTO->setCategoryOffer(new CategoryProductOffersUid($SettingsByCategory['offer_id']));
+                }
+
+                // Если торговое предложение является артикульным - присваиваем артикул и баркод
+                if($SettingsByCategory['offer_article'])
+                {
+                    $OffersDTO->setArticle($WildberriesCardDTO->getArticle().'-'.$size);
+                    $OffersDTO->setBarcode(new ProductBarcode((string) $barcode));
+                }
+
+                $OffersDTO->setValue((string) $CharValue);
+                $OffersDTO->getConst(); // генерируем константу
+
+                $package[$barcode]['offer'] = $OffersDTO->getConst();
+
+
+                /** Загрузка изображений */
+                if($SettingsByCategory['offer_image'])
+                {
+                    foreach($WildberriesCardDTO->getMedia() as $media)
+                    {
+                        $this->createMediaFile($OffersDTO, ProductOfferImage::class, $media);
+                    }
+                }
+
+                /**
+                 * Множественные варианты
+                 */
+
+
+                if(false === $SettingsByCategory['variation_id'])
+                {
+                    continue;
+                }
+
+
+                // поиск цвета по идентификатору (временно для футболок)
+                $CharValueVariation = $size;
+
+                // Присваиваем значение из SIZE (ВРЕМЕННО ДЛЯ ФУТБОЛОК - РАЗМЕР)
+                if($SettingsByCategory['variation_reference'])
+                {
+                    /** @var ReferenceChoiceColor $offerReference */
+                    $variationReference = array_find($reference, static function($item) use ($SettingsByCategory) {
+                        return $item->equals($SettingsByCategory['variation_reference']);
+                    });
+
+                    if(false === is_null($variationReference))
+                    {
+                        $CharValueVariation = new ($variationReference->class())($CharValueVariation);
+                    }
+                }
+
+
+                $ProductVariationCollectionDTO = $OffersDTO->getVariation();
+
+                $filterVariation = $ProductVariationCollectionDTO->filter(function($element) use ($CharValueVariation) {
+                    return $element->getValue() === (string) $CharValueVariation;
+                });
+
+                $VariationDTO = $filterVariation->current();
+
+                if(false === $VariationDTO)
+                {
+                    $VariationDTO = new ProductVariationCollectionDTO();
+                    $OffersDTO->addVariation($VariationDTO);
+                    $VariationDTO->setCategoryVariation(new CategoryProductVariationUid($SettingsByCategory['variation_id']));
+                }
+
+                // Если множественный вариант является артикульным - присваиваем артикул и баркод
+                if($SettingsByCategory['variation_article'])
+                {
+                    $VariationDTO->setArticle($WildberriesCardDTO->getArticle().'-'.$size);
+                    $VariationDTO->setBarcode(new ProductBarcode((string) $barcode));
+                }
+
+                $VariationDTO->setValue((string) $CharValueVariation);
+                $VariationDTO->getConst(); // генерируем константу
+
+                $package[$barcode]['variation'] = $VariationDTO->getConst();
+
+                /** Загрузка изображений */
+                if($SettingsByCategory['variation_image'])
+                {
+                    foreach($WildberriesCardDTO->getMedia() as $media)
+                    {
+                        $this->createMediaFile($VariationDTO, ProductVariationImage::class, $media);
+                    }
+                }
+            }
+
+
+            /**
+             * Характеристики карточки
+             */
+
+            foreach($WildberriesCardDTO->getCharacteristicsCollection() as $id => $value)
+            {
+
+                $CategoryProductSectionFieldUid = $this->ProductSettingsCategoryParameters
+                    ->category($WildberriesCardDTO->getCategory())
+                    ->find((int) $id);
+
+                if(false === $CategoryProductSectionFieldUid)
+                {
+                    $CategoryProductSectionFieldUid = $this->ProductSettingsCategoryProperty
+                        ->category($WildberriesCardDTO->getCategory())
+                        ->find((string) $id);
+                }
+
+                if($CategoryProductSectionFieldUid)
+                {
+                    /** Проверяем нет ли свойства */
+                    $ProductPropertyFilter = $ProductDTO->getPropertyCollection()
+                        ->filter(function(PropertyCollectionDTO $element) use ($CategoryProductSectionFieldUid) {
+                            return $element->getField()?->equals($CategoryProductSectionFieldUid);
+                        });
+
+                    $PropertyCollectionDTO = $ProductPropertyFilter->current();
+
+                    if(false === $PropertyCollectionDTO)
+                    {
+                        $PropertyCollectionDTO = new PropertyCollectionDTO();
+                        $ProductDTO->addProperty($PropertyCollectionDTO);
+                        $PropertyCollectionDTO->setField($CategoryProductSectionFieldUid);
+                    }
+
+                    $PropertyCollectionDTO->setValue((string) $value);
+
+                }
+            }
+
+            /** Загрузка изображений в галлерею */
+            if(isset($SettingsByCategory['offer_image'], $SettingsByCategory['variation_image'], $SettingsByCategory['modification_image']))
+            {
+                foreach($WildberriesCardDTO->getMedia() as $media)
+                {
+                    $this->createMediaFile($ProductDTO, ProductPhoto::class, $media);
+                }
+            }
+
+            $Product = $this->ProductHandler->handle($ProductDTO);
+
+            if(false === ($Product instanceof Product))
+            {
+                $this->logger->critical(
+                    sprintf('wildberries-products: Ошибка при сохранении карточки %s', $WildberriesCardDTO->getArticle()),
+                    [$Product, self::class.':'.__LINE__]
+                );
+
+                return;
+            }
+
+            /** Сохраняем параметры упаковки */
+
+            if(class_exists(BaksDevDeliveryTransportBundle::class))
+            {
+                foreach($package as $pack)
+                {
+                    $DeliveryPackageProductParameterDTO = new DeliveryPackageProductParameterDTO()
+                        ->setProduct($Product->getId())
+                        ->setOffer($pack['offer'] ? new ProductOfferConst($pack['offer']) : null)
+                        ->setVariation($pack['variation'] ? new ProductVariationConst($pack['variation']) : null)
+                        ->setModification($pack['modification'] ? new ProductOfferConst($pack['modification']) : null)
+                        ->setWidth($WildberriesCardDTO->getWidth())
+                        ->setHeight($WildberriesCardDTO->getHeight())
+                        ->setLength($WildberriesCardDTO->getLength())
+                        ->setPackage(1)
+                        ->setWeight(new Kilogram(0));
+
+                    $DeliveryPackageProductParameter = $this->DeliveryPackageProductParameterHandler->handle($DeliveryPackageProductParameterDTO);
+
+                    if(false === ($DeliveryPackageProductParameter instanceof DeliveryPackageProductParameter))
+                    {
+                        $this->logger->critical(
+                            sprintf('wildberries-products: Ошибка при сохранении параметров упаковки артикула %s', $WildberriesCardDTO->getArticle()),
+                            [$DeliveryPackageProductParameter, $pack, self::class.':'.__LINE__]
+
+                        );
+                    }
+                }
+            }
+        }
+
+
+        //dd($message->getArticle());
+
+    }
+
+
+    public function createMediaFile(
+        ProductOffersCollectionDTO|ProductVariationCollectionDTO|ProductModificationCollectionDTO|ProductDTO $parent,
+        string $entity,
+        string $mediaFile,
+    ): void
+    {
+
+        $ref = new ReflectionClass($entity);
+        /** @var ReflectionAttribute $table */
+        $table = current($ref->getAttributes(Table::class));
+        $table = $table->getArguments()['name'] ?: false;
+
+        if(false === $table)
+        {
+            return;
+        }
+
+
+        $arrImage = ['png', 'jpg', 'jpeg', 'webp', 'gif'];
+        $mediaFileInfo = pathinfo($mediaFile);
+
+        if(false === in_array($mediaFileInfo['extension'], $arrImage, true))
+        {
+            return;
+        }
+
+        $ImageCollectionDTO = match (true)
+        {
+            ($parent instanceof ProductDTO) => new PhotoCollectionDTO(),
+            ($parent instanceof ProductOffersCollectionDTO) => new ProductOfferImageCollectionDTO(),
+            ($parent instanceof ProductVariationCollectionDTO) => new ProductVariationImageCollectionDTO(),
+            ($parent instanceof ProductModificationCollectionDTO) => new ProductModificationImageCollectionDTO(),
+            default => false
+        };
+
+        if(false === $ImageCollectionDTO)
+        {
+            return;
+        }
+
+
+        /** Не загружаем, если в коллекции имеется такое изображение  */
+
+        $isExistFile = $parent->getImage()->filter(function($element) use ($mediaFile) {
+            return $element->getName() === md5($mediaFile);
+        });
+
+        if(false === $isExistFile->isEmpty())
+        {
+            return;
+        }
+
+
+        $this->WildberriesCardImage->get(
+            $mediaFile,
+            $ImageCollectionDTO,
+            $table
+        );
+
+        if($parent->getImage()->isEmpty() === true)
+        {
+            $ImageCollectionDTO->setRoot(true);
+        }
+
+        $parent->addImage($ImageCollectionDTO);
+    }
+}

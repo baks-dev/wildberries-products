@@ -23,9 +23,10 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Mapper\Property\Shirts;
+namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Shirts;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
 use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
 use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
@@ -37,6 +38,9 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
     /**
      * Наименование товара
      */
+
+    public const int CATEGORY = 192;
+
     public const string PARAM = 'title';
 
     public function getIndex(): string
@@ -64,7 +68,7 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
      */
     public static function priority(): int
     {
-        return 100;
+        return 999;
     }
 
     /**
@@ -75,10 +79,9 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         return self::PARAM === $param;
     }
 
-
     public function isSetting(): bool
     {
-        return true;
+        return false;
     }
 
     public function isCard(): bool
@@ -88,94 +91,52 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
     public function getData(array $data): mixed
     {
-        if(!isset($data['market_category']) || $data['market_category'] !== YaMarketProductProperty::CATEGORY_TIRE)
+
+
+        if(!isset($data['market_category']) || $data['market_category'] !== WildberriesProductProperty::CATEGORY_SHIRTS)
         {
             return null;
         }
 
-        $name = '';
-
-        if(isset($data['product_params']))
-        {
-            $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
-
-            /** Добавляем к названию сезонность */
-            $Season = new SeasonYaMarketProductParams();
-
-            foreach($product_params as $product_param)
-            {
-                if($Season->equals($product_param->name))
-                {
-                    $season_value = $Season->getData($data);
-
-                    if(!empty($season_value['value']))
-                    {
-                        $name .= $season_value['value'].' ';
-                    }
-                }
-            }
-        }
-
-        $name .= 'футболки ';
-
+        $name = 'Футболка';
 
         /** Приводим к нижнему регистру и первой заглавной букве */
         $name = mb_strtolower(trim($name));
         $firstChar = mb_substr($name, 0, 1, 'UTF-8');
         $then = mb_substr($name, 1, null, 'UTF-8');
-        $name = mb_strtoupper($firstChar, 'UTF-8').$then.' ';
+        $name = mb_strtoupper($firstChar, 'UTF-8').$then;
 
 
-        $name .= $data['product_name'].' ';
+        $name = trim($name).' '.$data['product_name'];
 
-        if($data['product_variation_value'])
+        if(!empty($data['product_variation_value']))
         {
-            $name .= $data['product_variation_value'];
+            $name = trim($name).' '.$data['product_variation_value'];
         }
 
-        if($data['product_modification_value'])
+        if(!empty($data['product_modification_value']))
         {
-            $name .= '/'.$data['product_modification_value'].' ';
+            $name = trim($name).' '.$data['product_modification_value'];
         }
 
-        if($data['product_offer_value'])
+        if(!empty($data['product_offer_value']))
         {
-            $name .= 'R'.$data['product_offer_value'].' ';
+            $name = trim($name).' '.$data['product_offer_value'];
         }
 
-        if($data['product_offer_postfix'])
+        if(!empty($data['product_offer_postfix']))
         {
-            $name .= $data['product_offer_postfix'].' ';
+            $name = trim($name).' '.$data['product_offer_postfix'];
         }
 
-        if($data['product_variation_postfix'])
+        if(!empty($data['product_variation_postfix']))
         {
-            $name .= $data['product_variation_postfix'].' ';
+            $name = trim($name).' '.$data['product_variation_postfix'];
         }
 
-        if($data['product_modification_postfix'])
+        if(!empty($data['product_modification_postfix']))
         {
-            $name .= $data['product_modification_postfix'].' ';
-        }
-
-
-        if(isset($data['product_params']))
-        {
-            /** Добавляем к названию назначение */
-            $Purpose = new PurposeYaMarketProductParams();
-
-            foreach($product_params as $product_param)
-            {
-                if($Purpose->equals($product_param->name))
-                {
-                    $purpose_value = $Purpose->getData($data);
-
-                    if(!empty($purpose_value['value']))
-                    {
-                        $name .= $purpose_value['value'].' ';
-                    }
-                }
-            }
+            $name = trim($name).' '.$data['product_modification_postfix'];
         }
 
 

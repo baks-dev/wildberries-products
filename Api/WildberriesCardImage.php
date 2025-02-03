@@ -28,26 +28,15 @@ namespace BaksDev\Wildberries\Products\Api;
 //use App\Module\Products\Product\Type\Offers\Id\ProductOfferUid;
 //use App\Module\Wildberries\Rest\OpenApi\Cards\WbImage\WbImageInterface;
 use RuntimeException;
-use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class WildberriesCardImage
+final readonly class WildberriesCardImage
 {
-
-    private HttpClientInterface $client;
-
-    private KernelInterface $kernel;
-
-
     public function __construct(
-        HttpClientInterface $client,
-        KernelInterface $kernel
-    )
-    {
-        $this->client = $client;
-        $this->kernel = $kernel;
-    }
-
+        #[Autowire('%kernel.project_dir%')] private string $project,
+        private HttpClientInterface $client,
+    ) {}
 
     /**
      * @param string $url - url фото загрузки
@@ -62,11 +51,17 @@ final class WildberriesCardImage
 
         $dir = md5($url);
 
+        $arrUpload = [
+            $this->project,
+            'public',
+            'upload',
+            $nameDir,
+            $dir
+        ];
 
         /** Полный путь к директории загрузки */
-        $uploadDir = $this->kernel->getProjectDir().'/public/upload/'.$nameDir.'/'.$dir;
-        $path = $uploadDir.'/'.$newFilename;
-
+        $uploadDir = implode(DIRECTORY_SEPARATOR, $arrUpload); // $this->project.'/public/upload/'.$nameDir.'/'.$dir;
+        $path = $uploadDir.DIRECTORY_SEPARATOR.$newFilename;
 
         /**
          * Если файла не существует - скачиваем
@@ -108,6 +103,7 @@ final class WildberriesCardImage
             {
                 // получить содержимое ответа и сохранить их в файл
                 $fileHandler = fopen($path, 'w');
+
                 foreach($this->client->stream($response) as $chunk)
                 {
                     fwrite($fileHandler, $chunk->getContent());
@@ -127,7 +123,7 @@ final class WildberriesCardImage
     }
 
 
-    static function removeDir($dir)
+    public static function removeDir($dir): bool
     {
         $files = array_diff(scandir($dir), ['.', '..']);
         foreach($files as $file)

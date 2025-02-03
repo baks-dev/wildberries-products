@@ -20,7 +20,7 @@
             <div class="pb-3">
                 <h5 class="pb-3">Системный раздел</h5>
 
-                {{ form_row(form.category, {
+                {{ form_row(form.id, {
                     label: 'Категория продукции',
                     placeholder: 'Выберите категорию продукции ...',
                     attr: { 'data-select' : 'select2' }
@@ -30,16 +30,16 @@
             <div>
                 <h5 class="pb-3">Wildberries</h5>
 
-                {{ form_row(form.name, {
-                    label: 'Раздел',
-                    placeholder: 'Выберите раздел Wildberries ...',
-                    attr: { 'data-select' : 'select2' } }) }}
-
                 {{ form_row(form.parent, {
                     label: 'Категория Wildberries',
 
                     attr: { 'data-select' : 'select2' }
                 }) }}
+
+                {{ form_row(form.category, {
+                    label: 'Раздел',
+                    placeholder: 'Выберите раздел Wildberries ...',
+                    attr: { 'data-select' : 'select2' } }) }}
             </div>
 
         </div>

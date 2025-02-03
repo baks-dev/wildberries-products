@@ -27,60 +27,30 @@ namespace BaksDev\Wildberries\Products\Mapper\Property;
 
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
-final class WildberriesProductPropertyCollection
+final readonly class WildberriesProductPropertyCollection
 {
-
     public function __construct(
-        #[AutowireIterator('baks.wb.product.property', defaultPriorityMethod: 'priority')]
-        private iterable $property,
+        #[AutowireIterator('baks.wb.product.property', defaultPriorityMethod: 'priority')] private iterable $property,
     ) {}
 
-    public function cases(): array
+    public function cases(?int $category = null): array
     {
         $case = null;
 
         foreach($this->property as $key => $property)
         {
+            if(
+                true === defined($property::class.'::CATEGORY') &&
+                false === is_null($category) &&
+                $property::CATEGORY !== $category
+            )
+            {
+                continue;
+            }
+
             $case[$key] = new $property();
         }
 
-        return $case;
-    }
-
-    public function casesSettings(): array
-    {
-        $case = null;
-
-        /** @var WildberriesProductPropertyInterface $instance */
-
-        foreach($this->property as $key => $property)
-        {
-            $instance = new $property();
-
-            if($instance->isSetting())
-            {
-                $case[$key] = $instance;
-            }
-        }
-
-        return $case;
-    }
-
-    public function casesCards(): array
-    {
-        $case = null;
-
-        /** @var WildberriesProductPropertyInterface $instance */
-
-        foreach($this->property as $key => $property)
-        {
-            $instance = new $property();
-
-            if($instance->isCard())
-            {
-                $case[$key] = $instance;
-            }
-        }
 
         return $case;
     }

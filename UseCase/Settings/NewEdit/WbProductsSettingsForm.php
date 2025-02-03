@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,12 @@ namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
 use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectName;
 use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectNameDTO;
+use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersCollection;
+use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
+use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
+use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Parameters\WbProductSettingsParametersDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
 use DomainException;
@@ -39,23 +45,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class WbProductsSettingsForm extends AbstractType
 {
-    private PropertyFieldsCategoryChoiceInterface $propertyFields;
-
-    private WbCharacteristicByObjectName $wbCharacteristic;
-
-    private WbTokenByProfileInterface $wbTokenByProfile;
-
-
     public function __construct(
-        PropertyFieldsCategoryChoiceInterface $propertyFields,
-        WbCharacteristicByObjectName $wbCharacteristic,
-        WbTokenByProfileInterface $wbTokenByProfile,
-    )
-    {
-        $this->propertyFields = $propertyFields;
-        $this->wbCharacteristic = $wbCharacteristic;
-        $this->wbTokenByProfile = $wbTokenByProfile;
-    }
+        private readonly PropertyFieldsCategoryChoiceInterface $propertyFields,
+        private readonly WbCharacteristicByObjectName $wbCharacteristic,
+        private readonly WbTokenByProfileInterface $wbTokenByProfile,
+
+        private readonly WildberriesProductPropertyCollection $wildberriesProductPropertyCollection,
+        private readonly WildberriesProductParametersCollection $wildberriesProductParamsCollection
+
+    ) {}
 
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -67,10 +65,105 @@ final class WbProductsSettingsForm extends AbstractType
 
             $form = $event->getForm();
 
+
             /** Коллекция свойств категории для выпадающего списка */
             $property_fields = $this->propertyFields
-                ->category($data->getSettings())
+                ->category($data->getMain())
                 ->getPropertyFieldsCollection();
+
+            /* Category Trans */
+            $form->add('property', CollectionType::class, [
+                'entry_type' => Property\WbProductSettingsPropertyForm::class,
+                'entry_options' => ['label' => false, 'property_fields' => $property_fields],
+                'label' => false,
+                'by_reference' => false,
+                'allow_delete' => true,
+                'allow_add' => true,
+            ]);
+
+
+            $property = $this->wildberriesProductPropertyCollection->cases($data->getCategory());
+
+            $property = array_filter($property, static function(WildberriesProductPropertyInterface $element) {
+                return $element->isSetting() === true;
+            });
+
+            /** @var WildberriesProductPropertyInterface $prop */
+            foreach($property as $prop)
+            {
+                $filter = $data->getProperty()->filter(function(WbProductSettingsPropertyDTO $element) use ($prop) {
+                    return $element->getType()->equals($prop->getIndex());
+                });
+
+                if($filter->isEmpty())
+                {
+                    $WbProductSettingsPropertyDTO = new WbProductSettingsPropertyDTO()
+                        ->setType(new WildberriesProductProperty($prop->getIndex()))
+                        //->setName($prop->getName())
+                        ->setRequired($prop->required());
+
+                    $data->addProperty($WbProductSettingsPropertyDTO);
+
+                    continue;
+                }
+
+                $WbProductSettingsPropertyDTO = $filter->current();
+                $WbProductSettingsPropertyDTO->setRequired($prop->required());
+            }
+
+
+            /** Характеристики товара */
+
+
+            $characteristics = $this->wildberriesProductParamsCollection->cases($data->getCategory());
+
+            $characteristics = array_filter($characteristics, static function(
+                WildberriesProductParametersInterface $element
+            ) {
+                return $element->isSetting() === true;
+            });
+
+            /** @var WildberriesProductParametersInterface $characteristic */
+            foreach($characteristics as $characteristic)
+            {
+                $filter = $data->getParameter()->filter(function(WbProductSettingsParametersDTO $element) use (
+                    $characteristic
+                ) {
+                    return $element->getType() === (string) $characteristic::ID;
+                });
+
+                if($filter->isEmpty())
+                {
+                    $WbProductSettingsParametersDTO = new WbProductSettingsParametersDTO()
+                        ->setType($characteristic::ID)
+                        ->setName($characteristic->getName())
+                        ->setRequired($characteristic->required());
+
+
+                    $data->addParameter($WbProductSettingsParametersDTO);
+
+                    continue;
+                }
+
+                $WbProductSettingsParametersDTO = $filter->current();
+                $WbProductSettingsParametersDTO->setRequired($characteristic->required());
+                //$WbProductSettingsParametersDTO->setName($characteristic->getName());
+            }
+
+
+            /* Category Trans */
+            $form->add('parameter', CollectionType::class, [
+                'entry_type' => Parameters\WbProductSettingsParametersForm::class,
+                'entry_options' => ['label' => false, 'property_fields' => $property_fields],
+                'label' => false,
+                'by_reference' => false,
+                'allow_delete' => true,
+                'allow_add' => true,
+            ]);
+
+
+            return;
+
 
             $profile = $this->wbTokenByProfile->getCurrentUserProfile();
 
@@ -145,15 +238,6 @@ final class WbProductsSettingsForm extends AbstractType
 
             }
 
-            /* Category Trans */
-            $form->add('property', CollectionType::class, [
-                'entry_type' => Property\WbProductSettingsPropertyForm::class,
-                'entry_options' => ['label' => false, 'property_fields' => $property_fields],
-                'label' => false,
-                'by_reference' => false,
-                'allow_delete' => true,
-                'allow_add' => true,
-            ]);
 
         });
 

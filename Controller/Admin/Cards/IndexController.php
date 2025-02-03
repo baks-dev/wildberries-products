@@ -49,13 +49,15 @@ final class IndexController extends AbstractController
     {
 
         /* Поиск */
-        $search = new SearchDTO($request);
-        $searchForm = $this->createForm(
-            SearchForm::class,
-            $search,
-            ['action' => $this->generateUrl('wildberries-products:admin.card.index')]
-        );
-        $searchForm->handleRequest($request);
+        $search = new SearchDTO();
+
+        $searchForm = $this
+            ->createForm(
+                type: SearchForm::class,
+                data: $search,
+                options: ['action' => $this->generateUrl('wildberries-products:admin.card.index')]
+            )
+            ->handleRequest($request);
 
         /**
          * Фильтр продукции по ТП

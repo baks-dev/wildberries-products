@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -45,78 +45,74 @@ final readonly class AllProductsSettingsRepository implements AllProductsSetting
 
 
     /** Метод возвращает пагинатор WbProductsSettings */
-    public function fetchAllProductsSettingsAssociative(SearchDTO $search): PaginatorInterface
+    public function findPaginator(SearchDTO $search): PaginatorInterface
     {
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        $dbal->select('settings.id');
-        $dbal->addSelect('settings.event');
-        $dbal->addSelect('event.name');
-
-        $dbal->from(WbProductSettings::class, 'settings');
+        $dbal
+            ->select('settings.id')
+            ->addSelect('settings.event')
+            ->from(WbProductSettings::class, 'settings');
 
         $dbal->join(
             'settings',
             WbProductSettingsEvent::class,
             'event',
-            'event.id = settings.event AND event.settings = settings.id',
+            'event.id = settings.event',
         );
 
         /** Категория */
-        $dbal->addSelect('category.id as category_id');
-        $dbal->addSelect('category.event as category_event'); /* ID события */
-        $dbal->join(
-            'settings',
-            CategoryProduct::class,
-            'category',
-            'category.id = settings.id'
-        );
+        $dbal
+            ->addSelect('category.id as category_id')
+            ->addSelect('category.event as category_event')
+            ->join(
+                'settings',
+                CategoryProduct::class,
+                'category',
+                'category.id = settings.id'
+            );
 
         /** События категории */
-        $dbal->addSelect('category_event.sort');
-
-        $dbal->join
-        (
-            'category',
-            CategoryProductEvent::class,
-            'category_event',
-            'category_event.id = category.event',
-        );
+        $dbal->addSelect('category_event.sort')
+            ->join
+            (
+                'category',
+                CategoryProductEvent::class,
+                'category_event',
+                'category_event.id = category.event',
+            );
 
         /** Обложка */
-        $dbal->addSelect('category_cover.ext');
-        $dbal->addSelect('category_cover.cdn');
-        $dbal->leftJoin(
-            'category_event',
-            CategoryProductCover::class,
-            'category_cover',
-            'category_cover.event = category_event.id',
-        );
-
-
-        $dbal->addSelect("
-			CASE
-			   WHEN category_cover.name IS NOT NULL THEN
-					CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
-			   ELSE NULL
-			END AS cover
-		"
-        );
+        $dbal
+            ->addSelect("
+                CASE
+                   WHEN category_cover.name IS NOT NULL AND category_cover.name <> ''  
+                   THEN CONCAT ( '/upload/".$dbal->table(CategoryProductCover::class)."' , '/', category_cover.name)
+                   ELSE NULL
+                END AS cover
+			")
+            ->addSelect('category_cover.ext')
+            ->addSelect('category_cover.cdn')
+            ->leftJoin(
+                'category_event',
+                CategoryProductCover::class,
+                'category_cover',
+                'category_cover.event = category_event.id',
+            );
 
 
         /** Перевод категории */
-        $dbal->addSelect('category_trans.name as category_name');
-        $dbal->addSelect('category_trans.description as category_description');
-
-        $dbal->leftJoin(
-            'category_event',
-            CategoryProductTrans::class,
-            'category_trans',
-            'category_trans.event = category_event.id AND category_trans.local = :local',
-        );
-
+        $dbal
+            ->addSelect('category_trans.name as category_name')
+            ->addSelect('category_trans.description as category_description')
+            ->leftJoin(
+                'category_event',
+                CategoryProductTrans::class,
+                'category_trans',
+                'category_trans.event = category_event.id AND category_trans.local = :local',
+            );
 
         return $this->paginator->fetchAllAssociative($dbal);
 

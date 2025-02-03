@@ -60,7 +60,7 @@ final class BarcodeWildberriesProductsProperty implements WildberriesProductProp
      */
     public function isSetting(): bool
     {
-        return true;
+        return false;
     }
 
 
@@ -97,21 +97,21 @@ final class BarcodeWildberriesProductsProperty implements WildberriesProductProp
      */
     public function getData(array $data): string|false
     {
-        $uuid = $data['id'];
+        $uuid = $data['product_uid'];
 
-        if(!empty($data['product_offer_const']))
+        if(!empty($data['offer_const']))
         {
-            $uuid = $data['product_offer_const'];
+            $uuid = $data['offer_const'];
         }
 
-        if(!empty($data['product_variation_const']))
+        if(!empty($data['variation_const']))
         {
-            $uuid = $data['product_variation_const'];
+            $uuid = $data['variation_const'];
         }
 
-        if(!empty($data['product_modification_const']))
+        if(!empty($data['modification_const']))
         {
-            $uuid = $data['product_modification_const'];
+            $uuid = $data['modification_const'];
         }
 
         return ProductBarcode::generate($uuid);

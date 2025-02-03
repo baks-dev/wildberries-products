@@ -39,7 +39,7 @@ final class DimensionsWildberriesProductProperty implements WildberriesProductPr
      * width* Ширина упаковки в см
      * height* Высота упаковки в см.
      */
-    public const PARAM = 'dimensions';
+    public const string PARAM = 'dimensions';
 
     public function getIndex(): string
     {
@@ -66,7 +66,7 @@ final class DimensionsWildberriesProductProperty implements WildberriesProductPr
      */
     public static function priority(): int
     {
-        return 600;
+        return 300;
     }
 
     /**
@@ -82,19 +82,15 @@ final class DimensionsWildberriesProductProperty implements WildberriesProductPr
         return false;
     }
 
-    public function isCard(): bool
-    {
-        return false;
-    }
 
     public function getData(array $data): mixed
     {
         if(isset($data['length'], $data['width'], $data['height'], $data['weight']))
         {
             return [
-                'length' => ($data['length'] / 10),
-                'width' => ($data['width'] / 10),
-                'height' => ($data['height'] / 10),
+                'length' => (int) ($data['length'] / 10),
+                'width' => (int) ($data['width'] / 10),
+                'height' => (int) ($data['height'] / 10),
             ];
         }
 

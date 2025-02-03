@@ -23,9 +23,10 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Mapper\Property\Tire;
+namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Tire;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
 use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
 use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
@@ -37,6 +38,9 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
     /**
      * Наименование товара
      */
+
+    public const int CATEGORY = 545465;
+
     public const string PARAM = 'title';
 
     public function getIndex(): string
@@ -64,7 +68,7 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
      */
     public static function priority(): int
     {
-        return 100;
+        return 999;
     }
 
     /**
@@ -88,7 +92,7 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
     public function getData(array $data): mixed
     {
-        if(!isset($data['market_category']) || $data['market_category'] !== YaMarketProductProperty::CATEGORY_TIRE)
+        if(!isset($data['market_category']) || $data['market_category'] !== WildberriesProductProperty::CATEGORY_TIRE)
         {
             return null;
         }

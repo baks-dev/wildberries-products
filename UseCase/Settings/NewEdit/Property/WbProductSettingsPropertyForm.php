@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -36,17 +37,20 @@ final class WbProductSettingsPropertyForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /* TextType */
-        $builder->add('type', HiddenType::class);
+        //$builder->add('type', HiddenType::class);
+
+
+
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($options) {
 
             /** @var WbProductSettingsPropertyDTO $data */
             $data = $event->getData();
-            $form = $event->getForm();
+            $builder = $event->getForm();
 
             if($data)
             {
-                $form
+                $builder
                     ->add('field', ChoiceType::class, [
                         'choices' => $options['property_fields'],  // array_flip(Main::LANG),
                         'choice_value' => function($type) {
@@ -55,8 +59,10 @@ final class WbProductSettingsPropertyForm extends AbstractType
                         'choice_label' => function($type) {
                             return $type->getAttr();
                         },
+                        'translation_domain' => 'wildberries-products.property',
+                        'label' => $data->getType(),
+                        'help' => $data->getType().'_desc',
 
-                        'label' => false,
                         'expanded' => false,
                         'multiple' => false,
                         'required' => $data->isRequired(),
@@ -65,8 +71,18 @@ final class WbProductSettingsPropertyForm extends AbstractType
 
                 if(!$data->getType())
                 {
-                    $form->remove('field');
+                    $builder->remove('field');
                 }
+
+
+                $builder->add(
+                    'def',
+                    TextType::class,
+                    [
+                        //                //'data' => $data->getDef() ?: $YaMarketProperty->default(),
+                        'required' => $data->isRequired()
+                    ]
+                );
 
             }
         });

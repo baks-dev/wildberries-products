@@ -23,6 +23,9 @@
 
 namespace BaksDev\Wildberries\Products\Mapper\Property;
 
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+
+#[AutoconfigureTag('baks.wb.product.property')]
 interface WildberriesProductPropertyInterface
 {
     /**
@@ -44,11 +47,6 @@ interface WildberriesProductPropertyInterface
      * Отобразить для заполнения в общих настройках
      */
     public function isSetting(): bool;
-
-    /**
-     * Отобразить для заполнения в настройках категории
-     */
-    public function isCard(): bool;
 
     /**
      * Обязательный для заполнения

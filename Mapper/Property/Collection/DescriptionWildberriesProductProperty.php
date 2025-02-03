@@ -26,18 +26,17 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
+use BaksDev\Yandex\Market\Products\Mapper\Properties\Collection\YaMarketProductPropertyInterface;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('baks.wb.product.property')]
+#[AutoconfigureTag('baks.ya.product.property')]
 final class DescriptionWildberriesProductProperty implements WildberriesProductPropertyInterface
 {
     /**
-     * Наименование товара
+     * Подробное описание товара: например, его преимущества и особенности.
      */
     public const string PARAM = 'description';
+
 
     public function getIndex(): string
     {
@@ -64,7 +63,7 @@ final class DescriptionWildberriesProductProperty implements WildberriesProductP
      */
     public static function priority(): int
     {
-        return 100;
+        return 503;
     }
 
     /**
@@ -78,12 +77,7 @@ final class DescriptionWildberriesProductProperty implements WildberriesProductP
 
     public function isSetting(): bool
     {
-        return true;
-    }
-
-    public function isCard(): bool
-    {
-        return true;
+        return false;
     }
 
     public function getData(array $data): mixed

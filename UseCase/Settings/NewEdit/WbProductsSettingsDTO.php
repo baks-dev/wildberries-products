@@ -1,28 +1,33 @@
 <?php
 /*
- *  Copyright 2022.  Baks.dev <admin@baks.dev>
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *   limitations under the License.
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
  */
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
 
 
-use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEventInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
+use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Invariable\WbProductsSettingsInvariableDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,11 +45,7 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
-    private readonly CategoryProductUid $settings;
-
-    /** Категория Wildberries */
-    #[Assert\NotBlank]
-    private string $name;
+    private readonly CategoryProductUid $main;
 
 
     /**
@@ -52,6 +53,15 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
      */
     #[Assert\Valid]
     private ArrayCollection $property;
+
+
+    /**
+     * Характеристики
+     */
+    #[Assert\Valid]
+    private ArrayCollection $parameter;
+
+    private WbProductsSettingsInvariableDTO $invariable;
 
     //    /** Коллекция торговых предложений */
     //    private ArrayCollection $offer;
@@ -67,6 +77,10 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
     public function __construct()
     {
         $this->property = new ArrayCollection();
+        $this->parameter = new ArrayCollection();
+
+        $this->invariable = new WbProductsSettingsInvariableDTO();
+
         //        $this->offer = new ArrayCollection();
         //        $this->variation = new ArrayCollection();
     }
@@ -89,84 +103,31 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
     /**
      * ID настройки
      */
-    public function getSettings(): ?CategoryProductUid
+    public function getMain(): ?CategoryProductUid
     {
-        return $this->settings;
+        return $this->main;
     }
 
 
-    public function setSettings(CategoryProductUid|CategoryProduct $settings): void
+    public function setMain(CategoryProductUid $main): void
     {
-        $this->settings = $settings instanceof CategoryProduct ? $settings->getId() : $settings;
+        $this->main = $main;
     }
 
 
     /**
      * Категория Wildberries
      */
-    public function getName(): string
+    public function setCategory(int $category): self
     {
-        return $this->name;
+        $this->invariable->setCategory($category);
+        return $this;
     }
 
-
-    public function setName(string $name): void
+    public function getCategory(): int
     {
-        $this->name = $name;
+        return $this->invariable->getCategory();
     }
-
-
-
-
-
-
-
-    //    public function updConfigCard(array $configCard) : void
-    //    {
-    //
-    //        /** @var CharacteristicCardDTO $current */
-    //        $current = current($configCard);
-    //
-    //
-    //        $this->name = current($configCard)-> // $configCard->getName();
-    //        $this->config = $configCard;
-    //        //$this->parent = $configCard->getParent();
-    //
-    //        /* PROPERTY */
-    //
-    //        $properties = $configCard->getProperty()->getIterator();
-    //
-    //        /* Сортируем коллекцию по обязательному заполнению */
-    //        $properties->uasort(function ($first, $second) {
-    //            return (int) $first->isRequired() > (int) $second->isRequired() ? -1 : 1;
-    //        });
-    //
-    //        /** @var PropertyDTO $property */
-    //        foreach($properties as $property)
-    //        {
-    //            if($property->getType() === 'Наименование') { continue; }
-    //            if($property->getType() === 'Описание') { continue; }
-    //
-    //            /* Получаем элемент из коллекции по типу */
-    //            $issetProperty = $this->property->filter(function( $v ) use ($property) {
-    //                return $v->getType() === $property->getType();
-    //            });
-    //
-    //            if($issetProperty->isEmpty())
-    //            {
-    //                $newProperty = new Property\WbProductSettingsDTO();
-    //                $this->addProperty($newProperty);
-    //            }
-    //            else
-    //            {
-    //                $newProperty = $issetProperty->current();
-    //            }
-    //
-    //            /* Обновляем вспомогательные свойства */
-    //            $newProperty->updConfigCardProperty($property);
-    //
-    //        }
-    //   }
 
 
     /* PROPERTY */
@@ -177,15 +138,61 @@ final class WbProductsSettingsDTO implements WbProductSettingsEventInterface
     }
 
 
-    public function addProperty(Property\WbProductSettingsPropertyDTO $property): void
+    public function addProperty(Property\WbProductSettingsPropertyDTO $property): self
     {
-        $this->property->add($property);
+
+        $filter = $this->property->filter(function(Property\WbProductSettingsPropertyDTO $element) use ($property) {
+            return $element->getType() === $property->getType();
+        });
+
+        if($filter->isEmpty())
+        {
+            $this->property->add($property);
+        }
+
+        return $this;
     }
 
 
     public function removeProperty(Property\WbProductSettingsPropertyDTO $property): void
     {
         $this->property->removeElement($property);
+    }
+
+
+    /* PARAMETERS */
+
+    public function getParameter(): ArrayCollection
+    {
+        return $this->parameter;
+    }
+
+    public function addParameter(Parameters\WbProductSettingsParametersDTO $parameter): self
+    {
+        $filter = $this->parameter->filter(function(Parameters\WbProductSettingsParametersDTO $element) use ($parameter
+        ) {
+            return $element->getType() === $parameter->getType();
+        });
+
+        if($filter->isEmpty())
+        {
+            $this->parameter->add($parameter);
+        }
+
+        return $this;
+    }
+
+    public function removeParameter(Parameters\WbProductSettingsParametersDTO $parameter): void
+    {
+        $this->parameter->removeElement($parameter);
+    }
+
+    /**
+     * Invariable
+     */
+    public function getInvariable(): WbProductsSettingsInvariableDTO
+    {
+        return $this->invariable;
     }
 
 
