@@ -486,7 +486,7 @@ final readonly class WildberriesCardNewHandler
                     [$Product, self::class.':'.__LINE__]
                 );
 
-                return;
+                continue;
             }
 
             /** Сохраняем параметры упаковки */
