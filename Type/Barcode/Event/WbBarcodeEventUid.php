@@ -21,41 +21,61 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Wildberries\Products\Type\Barcode\Event;
 
-namespace BaksDev\Wildberries\Products\Listeners\Event;
+use BaksDev\Core\Type\UidType\Uid;
 
-
-use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-
-
-#[AsEventListener(event: ControllerEvent::class)]
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-final class WildberriesProductPropertyListeners
+final class WbBarcodeEventUid extends Uid
 {
-    private WildberriesProductPropertyCollection $collection;
+    public const string TYPE = 'wb_barcode_event';
 
-    public function __construct(WildberriesProductPropertyCollection $collection)
+    public const string TEST = '6dbca238-40da-72ea-9d99-d5e6e9c6e240';
+
+    /*private mixed $attr;
+
+    private mixed $option;
+
+    private mixed $property;
+
+    private mixed $characteristic;
+
+
+    public function __construct(
+        AbstractUid|string|null $value = null,
+        mixed $attr = null,
+        mixed $option = null,
+        mixed $property = null,
+        mixed $characteristic = null,
+    )
     {
-        $this->collection = $collection;
+        parent::__construct($value);
+        $this->attr = $attr;
+        $this->option = $option;
+        $this->property = $property;
+        $this->characteristic = $characteristic;
     }
 
-    public function onKernelController(ControllerEvent $event): void
+
+    public function getAttr(): mixed
     {
-        if(in_array(WildberriesProductPropertyType::class, get_declared_classes(), true))
-        {
-            $this->collection->cases();
-        }
+        return $this->attr;
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event): void
+
+    public function getOption(): mixed
     {
-        $this->collection->cases();
+        return $this->option;
     }
+
+
+    public function getProperty(): mixed
+    {
+        return $this->property;
+    }
+
+    public function getCharacteristic(): mixed
+    {
+        return $this->characteristic;
+    }*/
 
 }

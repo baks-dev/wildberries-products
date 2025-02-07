@@ -23,39 +23,28 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Listeners\Event;
+namespace BaksDev\Wildberries\Products\Security\Barcode;
 
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-
-
-#[AsEventListener(event: ControllerEvent::class)]
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-final class WildberriesProductPropertyListeners
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterIndex implements VoterInterface
 {
-    private WildberriesProductPropertyCollection $collection;
 
-    public function __construct(WildberriesProductPropertyCollection $collection)
+    public const string VOTER = 'INDEX';
+
+    public static function getVoter(): string
     {
-        $this->collection = $collection;
+        return Role::ROLE.'_'.self::VOTER;
     }
 
-    public function onKernelController(ControllerEvent $event): void
+    public function equals(RoleInterface $role): bool
     {
-        if(in_array(WildberriesProductPropertyType::class, get_declared_classes(), true))
-        {
-            $this->collection->cases();
-        }
+        return $role->getRole() === Role::ROLE;
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event): void
-    {
-        $this->collection->cases();
-    }
 
 }
+

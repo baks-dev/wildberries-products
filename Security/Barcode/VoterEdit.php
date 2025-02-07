@@ -23,37 +23,27 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
+namespace BaksDev\Wildberries\Products\Security\Barcode;
 
-use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
-use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Messenger\Settings\WbProductSettingsMessage;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-final class WbProductsSettingsHandler extends AbstractHandler
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterEdit implements VoterInterface
 {
-    /** @see ProductsSettings */
-    public function handle(WbProductsSettingsDTO $command): string|WbProductSettings
+    /**
+     * Редактировать
+     */
+    public const string VOTER = 'EDIT';
+
+    public static function getVoter(): string
     {
-        $this
-            ->setCommand($command)
-            ->preEventPersistOrUpdate(WbProductSettings::class, WbProductSettingsEvent::class);
+        return Role::ROLE.'_'.self::VOTER;
+    }
 
-        /** Валидация всех объектов */
-        if($this->validatorCollection->isInvalid())
-        {
-            return $this->validatorCollection->getErrorUniqid();
-        }
-
-        $this->flush();
-
-        /* Отправляем сообщение в шину */
-        $this->messageDispatch->dispatch(
-            message: new WbProductSettingsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'wildberries-products'
-        );
-
-        return $this->main;
-
+    public function equals(RoleInterface $role): bool
+    {
+        return $role->getRole() === Role::ROLE;
     }
 }

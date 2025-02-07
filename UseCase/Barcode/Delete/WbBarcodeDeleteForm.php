@@ -23,37 +23,33 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\Delete;
 
-use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
-use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Messenger\Settings\WbProductSettingsMessage;
 
-final class WbProductsSettingsHandler extends AbstractHandler
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class WbBarcodeDeleteForm extends AbstractType
 {
-    /** @see ProductsSettings */
-    public function handle(WbProductsSettingsDTO $command): string|WbProductSettings
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this
-            ->setCommand($command)
-            ->preEventPersistOrUpdate(WbProductSettings::class, WbProductSettingsEvent::class);
-
-        /** Валидация всех объектов */
-        if($this->validatorCollection->isInvalid())
-        {
-            return $this->validatorCollection->getErrorUniqid();
-        }
-
-        $this->flush();
-
-        /* Отправляем сообщение в шину */
-        $this->messageDispatch->dispatch(
-            message: new WbProductSettingsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'wildberries-products'
+        /* Сохранить ******************************************************/
+        $builder->add(
+            'wb_barcode_delete',
+            SubmitType::class,
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
         );
+    }
 
-        return $this->main;
-
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => WbBarcodeDeleteDTO::class,
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
+        ]);
     }
 }

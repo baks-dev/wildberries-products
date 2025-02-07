@@ -23,21 +23,25 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit;
 
 use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
-use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Messenger\Settings\WbProductSettingsMessage;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
+use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
+use BaksDev\Wildberries\Products\Messenger\Barcode\WbBarcodeMessage;
 
-final class WbProductsSettingsHandler extends AbstractHandler
+final class WbBarcodeHandler extends AbstractHandler
 {
-    /** @see ProductsSettings */
-    public function handle(WbProductsSettingsDTO $command): string|WbProductSettings
+
+    public function handle(
+        WbBarcodeDTO $command,
+        UserProfileUid $profile
+    ): string|WbBarcode
     {
         $this
             ->setCommand($command)
-            ->preEventPersistOrUpdate(WbProductSettings::class, WbProductSettingsEvent::class);
+            ->preEventPersistOrUpdate(new WbBarcode($profile), WbBarcodeEvent::class);
 
         /** Валидация всех объектов */
         if($this->validatorCollection->isInvalid())
@@ -49,11 +53,11 @@ final class WbProductsSettingsHandler extends AbstractHandler
 
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
-            message: new WbProductSettingsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
+            message: new WbBarcodeMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
             transport: 'wildberries-products'
         );
 
         return $this->main;
-
     }
+
 }

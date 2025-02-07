@@ -23,37 +23,33 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
+namespace BaksDev\Wildberries\Products\Messenger\Barcode;
 
-use BaksDev\Core\Entity\AbstractHandler;
-use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
-use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Messenger\Settings\WbProductSettingsMessage;
+use BaksDev\Core\Cache\AppCacheInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class WbProductsSettingsHandler extends AbstractHandler
+#[AsMessageHandler(fromTransport: 'sync')]
+final class WbBarcodeCacheClear
 {
-    /** @see ProductsSettings */
-    public function handle(WbProductsSettingsDTO $command): string|WbProductSettings
+    private AppCacheInterface $cache;
+    private LoggerInterface $messageDispatchLogger;
+
+    public function __construct(
+        AppCacheInterface $cache,
+        LoggerInterface $messageDispatchLogger,
+    )
     {
-        $this
-            ->setCommand($command)
-            ->preEventPersistOrUpdate(WbProductSettings::class, WbProductSettingsEvent::class);
+        $this->cache = $cache;
+        $this->messageDispatchLogger = $messageDispatchLogger;
+    }
 
-        /** Валидация всех объектов */
-        if($this->validatorCollection->isInvalid())
-        {
-            return $this->validatorCollection->getErrorUniqid();
-        }
+    public function __invoke(WbBarcodeMessage $message)
+    {
+        /* Чистим кеш модуля */
+        $cache = $this->cache->init('WildberriesProducts');
+        $cache->clear();
 
-        $this->flush();
-
-        /* Отправляем сообщение в шину */
-        $this->messageDispatch->dispatch(
-            message: new WbProductSettingsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'wildberries-products'
-        );
-
-        return $this->main;
-
+        $this->messageDispatchLogger->info('Очистили кеш WildberriesProducts', [__FILE__.':'.__LINE__]);
     }
 }

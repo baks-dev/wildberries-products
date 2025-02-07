@@ -21,79 +21,83 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Wildberries\Products\Entity\Settings\Event;
-
+namespace BaksDev\Wildberries\Products\Entity\Barcode\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
-use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
-use BaksDev\Wildberries\Products\Entity\Settings\Modify\WbProductSettingsModify;
-use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
-use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
-use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
+use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustom;
+use BaksDev\Wildberries\Products\Entity\Barcode\Modify\WbBarcodeModify;
+use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
+use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
+use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/* Event */
-
 #[ORM\Entity]
-#[ORM\Table(name: 'wb_card_settings_event')]
-class WbProductSettingsEvent extends EntityEvent
+#[ORM\Table(name: 'wb_barcode_event')]
+class WbBarcodeEvent extends EntityEvent
 {
-    /**
-     * Идентификатор события
-     */
+    /** ID События */
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\Column(type: WbProductSettingsEventUid::TYPE)]
-    private WbProductSettingsEventUid $id;
+    #[ORM\Column(type: WbBarcodeEventUid::TYPE)]
+    private WbBarcodeEventUid $id;
 
     /**
-     * Идентификатор настройки
+     * ID категории
      */
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Column(type: CategoryProductUid::TYPE)]
     private CategoryProductUid $main;
 
-    /** One To One */
-    #[ORM\OneToOne(targetEntity: WbProductSettingsInvariable::class, mappedBy: 'event', cascade: ['all'])]
-    private ?WbProductSettingsInvariable $invariable = null;
+    /**
+     * Добавить Торговое предложение в стикер
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $offer = false;
 
     /**
-     * Модификатор
+     * Добавить Множественный вариант в стикер
      */
-    #[Assert\Valid]
-    #[ORM\OneToOne(targetEntity: WbProductSettingsModify::class, mappedBy: 'event', cascade: ['all'])]
-    private WbProductSettingsModify $modify;
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $variation = false;
 
     /**
-     * Свойства карточки
+     * Количество стикеров
      */
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 1, max: 5)]
+    #[ORM\Column(type: Types::SMALLINT)]
+    private int $counter = 1;
+
+    /** Коллекция свойств продукта */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: WbProductSettingsProperty::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OrderBy(['sort' => 'ASC'])]
+    #[ORM\OneToMany(targetEntity: WbBarcodeProperty::class, mappedBy: 'event', cascade: ['all'])]
     private Collection $property;
 
-
-    /**
-     * Характеристики карточки
-     */
+    /** Коллекция пользовательских свойств */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: WbProductSettingsParameters::class, mappedBy: 'event', cascade: ['all'])]
-    private Collection $parameter;
+    #[ORM\OneToMany(targetEntity: WbBarcodeCustom::class, mappedBy: 'event', cascade: ['all'])]
+    private Collection $custom;
 
+    /** Модификатор */
+    #[Assert\Valid]
+    #[ORM\OneToOne(targetEntity: WbBarcodeModify::class, mappedBy: 'event', cascade: ['all'])]
+    private WbBarcodeModify $modify;
 
     public function __construct()
     {
-        $this->id = new WbProductSettingsEventUid();
-        $this->modify = new WbProductSettingsModify($this);
+        $this->id = new WbBarcodeEventUid();
+        $this->modify = new WbBarcodeModify($this);
     }
 
-    public function __clone(): void
+    public function __clone()
     {
         $this->id = clone $this->id;
     }
@@ -103,14 +107,9 @@ class WbProductSettingsEvent extends EntityEvent
         return (string) $this->id;
     }
 
-    public function getId(): WbProductSettingsEventUid
+    public function getId(): WbBarcodeEventUid
     {
         return $this->id;
-    }
-
-    public function setMain(WbProductSettings $settings): self
-    {
-        return $this;
     }
 
     public function getMain(): CategoryProductUid
@@ -118,12 +117,24 @@ class WbProductSettingsEvent extends EntityEvent
         return $this->main;
     }
 
+    public function setMain(WbBarcode|CategoryProductUid $main): self
+    {
+        if($main instanceof WbBarcode)
+        {
+            return $this;
+        }
+
+        $this->main = $main;
+
+        return $this;
+    }
+
 
     public function getDto($dto): mixed
     {
         $dto = is_string($dto) && class_exists($dto) ? new $dto() : $dto;
 
-        if($dto instanceof WbProductSettingsEventInterface)
+        if($dto instanceof WbBarcodeEventInterface)
         {
             return parent::getDto($dto);
         }
@@ -134,15 +145,13 @@ class WbProductSettingsEvent extends EntityEvent
 
     public function setEntity($dto): mixed
     {
-        if($dto instanceof WbProductSettingsEventInterface || $dto instanceof self)
+        if($dto instanceof WbBarcodeEventInterface || $dto instanceof self)
         {
             return parent::setEntity($dto);
         }
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
-
-
 
 
 }

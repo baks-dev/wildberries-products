@@ -23,39 +23,61 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Listeners\Event;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\Delete;
 
+use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEventInterface;
+use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
+use Symfony\Component\Validator\Constraints as Assert;
 
-use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-
-
-#[AsEventListener(event: ControllerEvent::class)]
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-final class WildberriesProductPropertyListeners
+/** @see WbBarcodeDeleteEvent */
+final class WbBarcodeDeleteDTO implements WbBarcodeEventInterface
 {
-    private WildberriesProductPropertyCollection $collection;
 
-    public function __construct(WildberriesProductPropertyCollection $collection)
+    /**
+     * Идентификатор события
+     */
+    #[Assert\Uuid]
+    #[Assert\NotBlank]
+    private readonly WbBarcodeEventUid $id;
+
+    /**
+     * Модификатор
+     */
+    #[Assert\Valid]
+    private Modify\ModifyDTO $modify;
+
+    public function __construct()
     {
-        $this->collection = $collection;
+        $this->modify = new Modify\ModifyDTO();
     }
 
-    public function onKernelController(ControllerEvent $event): void
+    /**
+     * Идентификатор события
+     */
+
+    public function getEvent(): WbBarcodeEventUid
     {
-        if(in_array(WildberriesProductPropertyType::class, get_declared_classes(), true))
-        {
-            $this->collection->cases();
-        }
+        return $this->id;
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event): void
+    public function setId(WbBarcodeEventUid $id): void
     {
-        $this->collection->cases();
+        $this->id = $id;
     }
+
+    /**
+     * Modify
+     */
+    public function getModify(): Modify\ModifyDTO
+    {
+        return $this->modify;
+    }
+
+    public function setModify(Modify\ModifyDTO $modify): self
+    {
+        $this->modify = $modify;
+        return $this;
+    }
+
 
 }

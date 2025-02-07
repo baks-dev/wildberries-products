@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
- *  
+ *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *  
+ *
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *  
+ *
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,41 +21,68 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Custom;
 
-namespace BaksDev\Wildberries\Products\Listeners\Event;
+use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustomInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
-
-use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-
-
-#[AsEventListener(event: ControllerEvent::class)]
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-final class WildberriesProductPropertyListeners
+/** @see WbBarcodeCustom */
+final class WbBarcodeCustomDTO implements WbBarcodeCustomInterface
 {
-    private WildberriesProductPropertyCollection $collection;
 
-    public function __construct(WildberriesProductPropertyCollection $collection)
+    /**
+     * Сортировка
+     */
+    #[Assert\NotBlank]
+    #[Assert\Range(min: 1, max: 999)]
+    private int $sort = 100;
+
+    /**
+     * Название поля
+     */
+    #[Assert\NotBlank]
+    private string $name;
+
+    /**
+     * Значение
+     */
+    #[Assert\NotBlank]
+    private string $value;
+
+
+    public function getSort(): int
     {
-        $this->collection = $collection;
+        return $this->sort;
     }
 
-    public function onKernelController(ControllerEvent $event): void
+
+    public function setSort(int $sort): void
     {
-        if(in_array(WildberriesProductPropertyType::class, get_declared_classes(), true))
-        {
-            $this->collection->cases();
-        }
+        $this->sort = $sort;
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event): void
+
+    public function getName(): string
     {
-        $this->collection->cases();
+        return $this->name;
     }
 
+
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
+
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+
+    public function setValue(string $value): void
+    {
+        $this->value = $value;
+    }
 }
+

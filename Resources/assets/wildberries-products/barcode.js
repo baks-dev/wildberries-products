@@ -1,5 +1,5 @@
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -20,15 +20,15 @@
  *  THE SOFTWARE.
  */
 
-// initOfferCategory();
+// initOffermain();
 //
 //
-// function initOfferCategory() {
+// function initOffermain() {
 
-category = document.getElementById('wb_barcode_form_category');
+main = document.getElementById('wb_barcode_form_main');
 
 
-changeObjectOffers(category);
+changeObjectOffers(main);
 
 addProperty = document.getElementById('wb_barcode_form_addProperty');
 if(addProperty)
@@ -64,7 +64,7 @@ if(addCustom)
 $blockCollection = document.getElementById('collectionProperty');
 
 /* Удаляем при клике колекцию СЕКЦИЙ */
-$blockCollection.querySelector('.del-item-custom').addEventListener('click', function()
+$blockCollection?.querySelector('.del-item-custom')?.addEventListener('click', function()
 {
 
     this.closest('.item-collection-custom').remove();
@@ -74,7 +74,7 @@ $blockCollection.querySelector('.del-item-custom').addEventListener('click', fun
 
 
 /* Удаляем при клике колекцию */
-$blockCollection.querySelector('.del-item-property').addEventListener('click', function()
+$blockCollection?.querySelector('.del-item-property')?.addEventListener('click', function()
 {
 
     this.closest('.item-collection-property').remove();
@@ -211,10 +211,10 @@ function addPropertyPrototype()
 
 
 /** Обновляем список торговых предложений в SELECT */
-function changeObjectOffers(category, index = 0)
+function changeObjectOffers(main, index = 0)
 {
 
-    category.addEventListener('change', function()
+    main.addEventListener('change', function()
     {
 
 
@@ -234,8 +234,8 @@ function changeObjectOffers(category, index = 0)
         let incomingForm = document.forms.wb_barcode_form;
         let formData = new FormData();
 
-        let categoryName = document.getElementById('wb_barcode_form_category');
-        formData.append(categoryName.getAttribute('name'), this.value);
+        let mainName = document.getElementById('wb_barcode_form_main');
+        formData.append(mainName.getAttribute('name'), this.value);
 
         requestModalName.open(incomingForm.getAttribute('method'), incomingForm.getAttribute('action'), true);
 

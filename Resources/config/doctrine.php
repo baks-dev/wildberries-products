@@ -26,8 +26,6 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use BaksDev\Wildberries\Products\BaksDevWildberriesProductsBundle;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUidType;
-use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUid;
-use BaksDev\Wildberries\Products\Type\Cards\Id\WbCardUidType;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventType;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
@@ -38,7 +36,7 @@ return static function(DoctrineConfig $doctrine): void {
 
     $doctrine->dbal()->type(WbProductSettingsEventUid::TYPE)->class(WbProductSettingsEventType::class);
     $doctrine->dbal()->type(WildberriesProductProperty::TYPE)->class(WildberriesProductPropertyType::class);
-
+    $doctrine->dbal()->type(WbBarcodeEventUid::TYPE)->class(WbBarcodeEventUidType::class);
 
     $emDefault = $doctrine->orm()->entityManager('default')->autoMapping(true);
 

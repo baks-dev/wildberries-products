@@ -23,39 +23,66 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Listeners\Event;
+namespace BaksDev\Wildberries\Products\Messenger\Barcode;
 
+use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 
-use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductPropertyType;
-use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpKernel\Event\ControllerEvent;
-
-
-#[AsEventListener(event: ControllerEvent::class)]
-#[AsEventListener(event: ConsoleEvents::COMMAND)]
-final class WildberriesProductPropertyListeners
+final class WbBarcodeMessage
 {
-    private WildberriesProductPropertyCollection $collection;
 
-    public function __construct(WildberriesProductPropertyCollection $collection)
+    /**
+     * Идентификатор
+     */
+    private CategoryProductUid $id;
+
+    /**
+     * Идентификатор события
+     */
+    private WbBarcodeEventUid $event;
+
+    /**
+     * Идентификатор предыдущего события
+     */
+    private ?WbBarcodeEventUid $last;
+
+
+    public function __construct(
+        CategoryProductUid $id,
+        WbBarcodeEventUid $event,
+        ?WbBarcodeEventUid $last = null,
+    )
     {
-        $this->collection = $collection;
+        $this->id = $id;
+        $this->event = $event;
+        $this->last = $last;
     }
 
-    public function onKernelController(ControllerEvent $event): void
+
+    /**
+     * Идентификатор
+     */
+    public function getId(): CategoryProductUid
     {
-        if(in_array(WildberriesProductPropertyType::class, get_declared_classes(), true))
-        {
-            $this->collection->cases();
-        }
+        return $this->id;
     }
 
-    public function onConsoleCommand(ConsoleCommandEvent $event): void
+
+    /**
+     * Идентификатор события
+     */
+    public function getEvent(): WbBarcodeEventUid
     {
-        $this->collection->cases();
+        return $this->event;
+    }
+
+
+    /**
+     * Идентификатор предыдущего события
+     */
+    public function getLast(): ?WbBarcodeEventUid
+    {
+        return $this->last;
     }
 
 }

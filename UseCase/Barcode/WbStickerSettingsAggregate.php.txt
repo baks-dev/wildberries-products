@@ -1,0 +1,127 @@
+<?php
+/*
+ *  Copyright 2022.  Baks.dev <admin@baks.dev>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ */
+
+namespace BaksDev\Wildberries\Products\UseCase\Barcode;
+
+use App\Module\Products\Category\Type\Id\CategoryUid;
+use App\Module\User\Profile\UserProfile\Type\Id\UserProfileUid;
+use App\Module\Wildberries\Products\Sticker\Entity as EntityWbStickerSettings;
+use App\System\Type\Modify\ModifyActionEnum;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
+final class WbStickerSettingsAggregate
+{
+    private EntityManagerInterface $entityManager;
+    private ValidatorInterface $validator;
+    private LoggerInterface $logger;
+    
+    public function __construct(
+      EntityManagerInterface $entityManager,
+      ValidatorInterface $validator,
+      LoggerInterface $logger
+    )
+    {
+        $this->entityManager = $entityManager;
+        $this->validator = $validator;
+        $this->logger = $logger;
+    }
+    
+    public function handle(
+      EntityWbStickerSettings\Event\WbBarcodeEventInterface $command
+    ) : string|EntityWbStickerSettings\WbBarcode
+    {
+        /* Валидация */
+        $errors = $this->validator->validate($command);
+        
+        if(count($errors) > 0)
+        {
+            $uniqid = uniqid('', false);
+            $errorsString = (string) $errors;
+            $this->logger->error($uniqid.': '.$errorsString);
+            return $uniqid;
+        }
+        
+        //dd('WbStickerSettingsAggregate');
+        
+        /* Событие */
+        if($command->getEvent())
+        {
+            $EventRepo = $this->entityManager->getRepository(
+              EntityWbStickerSettings\Event\WbBarcodeEvent::class)
+              ->find($command->getEvent());
+            
+            $Event = $EventRepo->cloneEntity();
+        }
+        else
+        {
+            $Event = new EntityWbStickerSettings\Event\WbBarcodeEvent();
+        }
+        
+        /* Маппинг */
+        $Event->setEntity($command);
+        
+        $this->entityManager->clear();
+        $this->entityManager->persist($Event);
+        
+        /** @var CategoryUid $Category */
+        if($Event->getCategory())
+        {
+            /* Восстанавливаем из корзины */
+            if($Event->isModifyActionEquals(ModifyActionEnum::RESTORE))
+            {
+                $Category = new EntityWbStickerSettings\WbBarcode($Event->getCategory());
+                $this->entityManager->persist($Category);
+                
+                $remove = $this->entityManager->getRepository(
+                  EntityWbStickerSettings\Event\WbBarcodeEvent::class)
+                  ->find($command->getEvent());
+                $this->entityManager->remove($remove);
+                
+            }
+            else
+            {
+                $Category = $this->entityManager->getRepository(EntityWbStickerSettings\WbBarcode::class)
+                  ->find($Event->getCategory());
+            }
+            
+            if(empty($Category))
+            {
+                $Category = new EntityWbStickerSettings\WbBarcode($Event->getCategory());
+                $this->entityManager->persist($Category);
+            }
+            
+            /* Обновляем событие */
+            $Category->setEvent($Event);
+            
+            /* Удаляем приход */
+            if($Event->isModifyActionEquals(ModifyActionEnum::DELETE))
+            {
+                $this->entityManager->remove($Category);
+            }
+            
+            $this->entityManager->flush();
+            
+            return $Category;
+        }
+        
+        return sprintf('Error aggregate entity %s', EntityWbStickerSettings\WbBarcode::class);
+    }
+    
+}
