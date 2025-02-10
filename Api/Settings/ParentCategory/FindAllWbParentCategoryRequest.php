@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Api\Settings\Category;
+namespace BaksDev\Wildberries\Products\Api\Settings\ParentCategory;
 
 use BaksDev\Wildberries\Api\Wildberries;
 use Generator;
@@ -32,42 +32,29 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
 
-final class WbCategoryRequest extends Wildberries
+final class FindAllWbParentCategoryRequest extends Wildberries
 {
-
-    private int|false $parent = false;
-
-    public function parent(int|string $parent): self
-    {
-        $this->parent = (int) $parent;
-
-        return $this;
-    }
 
     public function findAll(): Generator|false
     {
 
+        /** Кешируем результат запроса */
+
+        $key = md5(self::class);
         $cache = new FilesystemAdapter('wildberries');
-        $key = md5(self::class.$this->parent);
-        // $cache->deleteItem($key);
 
         $content = $cache->get($key, function(ItemInterface $item): array|false {
 
             $item->expiresAfter(1);
 
             $response = $this->content()->TokenHttpClient()
-                ->request('GET', '/content/v2/object/all',
-                    $this->parent ? ['query' => [
-                        'limit' => 1000,
-                        'parentID' => $this->parent,
-                    ]] : []);
+                ->request('GET', '/content/v2/object/parent/all');
 
             $content = $response->toArray(false);
 
             if($response->getStatusCode() !== 200)
             {
-                $this->logger->critical('wildberries: Ошибка категории ', [$content, self::class.''.__LINE__]);
-
+                $this->logger->critical('wildberries: ', $content);
                 return false;
             }
 
@@ -89,7 +76,7 @@ final class WbCategoryRequest extends Wildberries
 
         foreach($content as $data)
         {
-            yield new WbCategoryDTO($data);
+            yield new WbParentCategoryDTO($data);
         }
 
     }

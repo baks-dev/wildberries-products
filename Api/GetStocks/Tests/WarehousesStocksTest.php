@@ -28,7 +28,7 @@ namespace BaksDev\Wildberries\Products\Api\GetStocks\Tests;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouse;
 use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouses;
-use BaksDev\Wildberries\Products\Api\GetStocks\WildberriesStocks;
+use BaksDev\Wildberries\Products\Api\GetStocks\FindWildberriesStocksRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -53,8 +53,8 @@ final class WarehousesStocksTest extends KernelTestCase
 
     public function testUseCase(): void
     {
-        /** @var WildberriesStocks $WildberriesStocks */
-        $WildberriesStocks = self::getContainer()->get(WildberriesStocks::class);
+        /** @var FindWildberriesStocksRequest $WildberriesStocks */
+        $WildberriesStocks = self::getContainer()->get(FindWildberriesStocksRequest::class);
 
         $WildberriesStocks->TokenHttpClient(new WbAuthorizationToken(new UserProfileUid(), self::$tocken));
 

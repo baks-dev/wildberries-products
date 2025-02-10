@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Api\Cards\Tests;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -49,8 +49,8 @@ class WildberriesCardRequestTest extends KernelTestCase
 
     public function testUseCase(): void
     {
-        /** @var WildberriesCardsRequest $WildberriesGetCardsRequest */
-        $WildberriesGetCardsRequest = self::getContainer()->get(WildberriesCardsRequest::class);
+        /** @var FindAllWildberriesCardsRequest $WildberriesGetCardsRequest */
+        $WildberriesGetCardsRequest = self::getContainer()->get(FindAllWildberriesCardsRequest::class);
         $WildberriesGetCardsRequest->TokenHttpClient(self::$Authorization);
 
         $data = $WildberriesGetCardsRequest->findAll();

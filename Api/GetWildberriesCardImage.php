@@ -31,7 +31,7 @@ use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final readonly class WildberriesCardImage
+final readonly class GetWildberriesCardImage
 {
     public function __construct(
         #[Autowire('%kernel.project_dir%')] private string $project,

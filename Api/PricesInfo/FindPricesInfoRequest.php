@@ -32,7 +32,7 @@ use InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
-final class PricesInfo extends Wildberries
+final class FindPricesInfoRequest extends Wildberries
 {
     private ArrayObject $prices;
 
@@ -128,12 +128,12 @@ final class PricesInfo extends Wildberries
         }
 
 
-        $this->prices->offsetSet($nomenclature, new Price($data));
+        $this->prices->offsetSet($nomenclature, new PricesInfoDTO($data));
 
         return $this;
     }
 
-    public function getPriceByNomenclature(int $nomenclature): ?Price
+    public function getPriceByNomenclature(int $nomenclature): ?PricesInfoDTO
     {
         if($this->prices->offsetExists($nomenclature))
         {

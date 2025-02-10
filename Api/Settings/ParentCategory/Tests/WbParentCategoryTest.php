@@ -31,7 +31,7 @@ use BaksDev\Orders\Order\UseCase\Admin\Edit\Tests\OrderNewTest;
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\Profile\UserProfile\UseCase\User\NewEdit\Tests\UserNewUserProfileHandleTest;
-use BaksDev\Wildberries\Orders\Api\WildberriesOrdersNewRequest;
+use BaksDev\Wildberries\Orders\Api\FindAllWildberriesOrdersNewRequest;
 use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderDTO;
 use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderHandler;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
@@ -58,8 +58,8 @@ class WbParentCategoryTest extends KernelTestCase
     public function testUseCase(): void
     {
 
-        /** @var WbParentCategoryRequest $WbParentCategoryRequest */
-        $WbParentCategoryRequest = self::getContainer()->get(WbParentCategoryRequest::class);
+        /** @var FindAllWbParentCategoryRequest $WbParentCategoryRequest */
+        $WbParentCategoryRequest = self::getContainer()->get(FindAllWbParentCategoryRequest::class);
         $WbParentCategoryRequest->TokenHttpClient(self::$Authorization);
 
         $data = $WbParentCategoryRequest

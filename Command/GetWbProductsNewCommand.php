@@ -26,8 +26,8 @@ namespace BaksDev\Wildberries\Products\Command;
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardNew\WildberriesCardNewMassage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -53,7 +53,7 @@ class GetWbProductsNewCommand extends Command
     public function __construct(
         private readonly MessageDispatchInterface $messageDispatch,
         private readonly AllProfileTokenInterface $allProfileToken,
-        private readonly WildberriesCardsRequest $WildberriesCardsRequest
+        private readonly FindAllWildberriesCardsRequest $WildberriesCardsRequest
     )
     {
         parent::__construct();

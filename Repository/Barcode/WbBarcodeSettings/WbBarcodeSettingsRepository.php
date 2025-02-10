@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2024.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
     public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
 
-    public function findWbBarcodeSettings(Product|ProductUid|string $product): ?array
+    public function findWbBarcodeSettings(Product|ProductUid|string $product): array|false
     {
         if($product instanceof Product)
         {

@@ -29,10 +29,10 @@ use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserPro
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObject;
 use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
+use BaksDev\Wildberries\Products\Api\Settings\Category\FindAllWbCategoryRequest;
 use BaksDev\Wildberries\Products\Api\Settings\Category\WbCategoryDTO;
-use BaksDev\Wildberries\Products\Api\Settings\Category\WbCategoryRequest;
+use BaksDev\Wildberries\Products\Api\Settings\ParentCategory\FindAllWbParentCategoryRequest;
 use BaksDev\Wildberries\Products\Api\Settings\ParentCategory\WbParentCategoryDTO;
-use BaksDev\Wildberries\Products\Api\Settings\ParentCategory\WbParentCategoryRequest;
 use BaksDev\Wildberries\Repository\AnyWbTokenActive\AnyWbTokenActiveInterface;
 use DomainException;
 use Symfony\Component\Form\AbstractType;
@@ -59,8 +59,8 @@ final class PreformForm extends AbstractType
         WbObject $objectReference,
         AnyWbTokenActiveInterface $anyWbTokenActive,
 
-        private readonly WbParentCategoryRequest $wbParentCategory,
-        private readonly WbCategoryRequest $wbCategoryRequest,
+        private readonly FindAllWbParentCategoryRequest $wbParentCategory,
+        private readonly FindAllWbCategoryRequest $wbCategoryRequest,
         private readonly UserProfileTokenStorageInterface $userProfileTokenStorage,
     )
     {

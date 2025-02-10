@@ -34,7 +34,7 @@ use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
-final class WildberriesCardsRequest extends Wildberries
+final class FindAllWildberriesCardsRequest extends Wildberries
 {
     private const int LIMIT = 100;
 

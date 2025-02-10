@@ -28,7 +28,7 @@ namespace BaksDev\Wildberries\Products\Api\PricesInfo\Tests;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Api\PricesInfo\PricesInfo;
+use BaksDev\Wildberries\Products\Api\PricesInfo\FindPricesInfoRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -53,8 +53,8 @@ class WbPricesInfoTest extends KernelTestCase
 
     public function testUseCase(): void
     {
-        /** @var PricesInfo $PricesInfo */
-        $PricesInfo = self::getContainer()->get(PricesInfo::class);
+        /** @var FindPricesInfoRequest $PricesInfo */
+        $PricesInfo = self::getContainer()->get(FindPricesInfoRequest::class);
 
         $PricesInfo->TokenHttpClient(new WbAuthorizationToken(new UserProfileUid(), self::$tocken));
 

@@ -68,6 +68,12 @@ class WbBarcodeEvent extends EntityEvent
     private bool $variation = false;
 
     /**
+     * Добавить модификацию множественного варианта в стикер
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $modification = false;
+
+    /**
      * Количество стикеров
      */
     #[Assert\NotBlank]

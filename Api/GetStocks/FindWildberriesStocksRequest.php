@@ -31,7 +31,7 @@ use InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
-final class WildberriesStocks extends Wildberries
+final class FindWildberriesStocksRequest extends Wildberries
 {
     /**
      * Идентификатор склада продавца
@@ -79,7 +79,7 @@ final class WildberriesStocks extends Wildberries
      * @see https://openapi.wildberries.ru/marketplace/api/ru/#tag/Ostatki/paths/~1api~1v3~1stocks~1{warehouseId}/post
      *
      */
-    public function stocks(): Stocks
+    public function stocks(): WildberriesStocksDTO
     {
         if($this->warehouse === null)
         {
@@ -126,7 +126,7 @@ final class WildberriesStocks extends Wildberries
 
         $content = $response->toArray(false);
 
-        return new Stocks($content);
+        return new WildberriesStocksDTO($content);
     }
 
 

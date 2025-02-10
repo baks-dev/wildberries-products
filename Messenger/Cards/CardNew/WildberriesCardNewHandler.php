@@ -57,9 +57,9 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductHandler;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Property\PropertyCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
 use BaksDev\Reference\Color\Choice\ReferenceChoiceColor;
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardsRequest;
-use BaksDev\Wildberries\Products\Api\WildberriesCardImage;
+use BaksDev\Wildberries\Products\Api\GetWildberriesCardImage;
 use BaksDev\Wildberries\Products\Mapper\Params\Collection\Shirts\ColorWildberriesProductParameters;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategory\ProductSettingsCategoryInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryParameters\ProductSettingsCategoryParametersInterface;
@@ -78,10 +78,10 @@ final readonly class WildberriesCardNewHandler
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         #[TaggedIterator('baks.reference.choice')] private iterable $reference,
-        private WildberriesCardsRequest $WildberriesCardsRequest,
+        private FindAllWildberriesCardsRequest $WildberriesCardsRequest,
         private SettingsByCategoryInterface $SettingsByCategory,
         private ExistProductArticleInterface $ExistProductArticle,
-        private WildberriesCardImage $WildberriesCardImage,
+        private GetWildberriesCardImage $WildberriesCardImage,
         private ProductHandler $ProductHandler,
         private DeliveryPackageProductParameterHandler $DeliveryPackageProductParameterHandler,
         private ProductSettingsCategoryInterface $ProductSettingsCategory,

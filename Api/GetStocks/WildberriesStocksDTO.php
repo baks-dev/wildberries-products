@@ -23,45 +23,43 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Api\PricesInfo;
+namespace BaksDev\Wildberries\Products\Api\GetStocks;
 
+use ArrayObject;
 
-use BaksDev\Reference\Money\Type\Money;
-
-final class Price
+final class WildberriesStocksDTO
 {
-
-    /**
-     * Цена
-     */
-    private int $price;
-
-    /**
-     * Скидка
-     */
-    private int $discount;
-
+    private ArrayObject $collection;
 
     public function __construct(array $content)
     {
-        $this->price = $content['price'];
-        $this->discount = $content['discountedPrice'];
+        $this->collection = new ArrayObject();
+
+        foreach($content['stocks'] as $data)
+        {
+            /** Если имеется остаток штрихкода, и он больше - не присваиваем*/
+            if($this->collection->offsetExists($data['sku']))
+            {
+                $amount = $this->getAmount($data['sku']);
+
+                if($amount > $data['amount'])
+                {
+                    return;
+                }
+            }
+
+            $this->collection->offsetSet($data['sku'], $data['amount']);
+        }
     }
 
-    /**
-     * Price
-     */
-    public function getPrice(): Money
+    public function getAmount(int|string $barcode): int
     {
-        return new Money($this->price);
-    }
+        if($this->collection->offsetExists($barcode))
+        {
+            return $this->collection->offsetGet($barcode);
+        }
 
-    /**
-     * Discount
-     */
-    public function getDiscount(): int
-    {
-        return $this->discount;
+        return 0;
     }
 
 }

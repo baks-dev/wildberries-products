@@ -23,68 +23,50 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Api\Settings\Characteristic;
+namespace BaksDev\Wildberries\Products\Api\Settings\Category;
 
-use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectNameDTO;
 use BaksDev\Wildberries\Api\Wildberries;
 use Generator;
-use InvalidArgumentException;
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
-final class WbCharacteristicRequest extends Wildberries
+
+final class FindAllWbCategoryRequest extends Wildberries
 {
-    private int|false $category = false;
 
-    public function category(int|string $category): self
+    private int|false $parent = false;
+
+    public function parent(int|string $parent): self
     {
-        $this->category = (int) $category;
+        $this->parent = (int) $parent;
+
         return $this;
     }
 
-    /**
-     * Характеристики для создания КТ по всем подкатегориям
-     *
-     * @see https://dev.wildberries.ru/openapi/work-with-products/#tag/Kategorii-predmety-i-harakteristiki/paths/~1content~1v2~1object~1charcs~1{subjectId}/get
-     *
-     * С помощью данного метода можно получить список характеристик, которые можно или нужно заполнить при создании КТ
-     *     в подкатегории определенной родительской категории.
-     */
     public function findAll(): Generator|false
     {
 
-        if(false === $this->category)
-        {
-            throw new InvalidArgumentException('Invalid Argument category');
-        }
-
-
-        $key = md5(self::class.$this->category);
         $cache = new FilesystemAdapter('wildberries');
+        $key = md5(self::class.$this->parent);
+        // $cache->deleteItem($key);
 
-        /**
-         * Кешируем результат запроса
-         *
-         * @var  ResponseInterface $response
-         */
         $content = $cache->get($key, function(ItemInterface $item): array|false {
+
             $item->expiresAfter(1);
 
             $response = $this->content()->TokenHttpClient()
-                ->request(
-                    'GET',
-                    sprintf('/content/v2/object/charcs/%s', $this->category),
-                );
+                ->request('GET', '/content/v2/object/all',
+                    $this->parent ? ['query' => [
+                        'limit' => 1000,
+                        'parentID' => $this->parent,
+                    ]] : []);
 
             $content = $response->toArray(false);
 
             if($response->getStatusCode() !== 200)
             {
-                $this->logger->critical('wildberries-products: Ошибка характеристик', [
-                    $content, self::class.':'.__LINE__
-                ]);
+                $this->logger->critical('wildberries: Ошибка категории ', [$content, self::class.''.__LINE__]);
 
                 return false;
             }
@@ -97,6 +79,7 @@ final class WbCharacteristicRequest extends Wildberries
             $item->expiresAfter(86400);
 
             return $content['data'];
+
         });
 
         if(false === $content)
@@ -106,8 +89,10 @@ final class WbCharacteristicRequest extends Wildberries
 
         foreach($content as $data)
         {
-            yield new WbCharacteristicDTO($data);
+            yield new WbCategoryDTO($data);
         }
+
     }
+
 
 }
