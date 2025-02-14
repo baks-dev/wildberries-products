@@ -30,6 +30,7 @@ use BaksDev\Wildberries\Products\Api\Settings\Characteristic\FindAllWbCharacteri
 use BaksDev\Wildberries\Products\Api\Settings\Characteristic\WbCharacteristicDTO;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersCollection;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -58,42 +59,59 @@ class WbCharacteristicRequestTest extends KernelTestCase
         $WbCharacteristicRequest->TokenHttpClient(self::$Authorization);
 
 
-        $category = 192; // Футболки
+        $cats = [
+            WildberriesProductProperty::CATEGORY_TIRE, // Шины автомобильные
+            WildberriesProductProperty::CATEGORY_SHIRTS, // Футболки
+            WildberriesProductProperty::CATEGORY_HOODIE, // Худи
+            WildberriesProductProperty::CATEGORY_JEANS, // Джинсы
+        ];
 
-        /** @var WildberriesProductParametersCollection $WildberriesProductParamsCollection */
-        $WildberriesProductParamsCollection = self::getContainer()->get(WildberriesProductParametersCollection::class);
+        /** @see WildberriesProductProperty */
+        //$category = 1724; // Футболки
 
-        $params = $WildberriesProductParamsCollection->cases($category);
+        $cats = [WildberriesProductProperty::CATEGORY_TIRE];
 
-
-        $data = $WbCharacteristicRequest
-            ->category(192)
-            ->findAll();
-
-
-        //dd(iterator_to_array($data));
-
-
-        /** @var WbCharacteristicDTO $item */
-
-        foreach($data as $item)
+        foreach($cats as $category)
         {
-            //            if($item->getId() === 192)
-            //            {
-            //                dd($item);
-            //            }
-
-            self::assertNotEmpty(array_filter($params, function(WildberriesProductParametersInterface $param) use ($item
-            ) {
-                return $param->equals($item->getId());
-            }), sprintf('Отсутствует элемент %s: %s', $item->getId(), $item->getName()));
+            $data = $WbCharacteristicRequest
+                ->category($category)
+                ->findAll();
 
 
+            //dd(iterator_to_array($data) );
+
+            /** @var WildberriesProductParametersCollection $WildberriesProductParamsCollection */
+            $WildberriesProductParamsCollection = self::getContainer()->get(WildberriesProductParametersCollection::class);
+            $params = $WildberriesProductParamsCollection->cases($category);
+
+            //dd($params);
+
+
+            /** @var WbCharacteristicDTO $item */
+
+            $count = 0;
+            foreach($data as $item)
+            {
+
+                self::assertNotFalse($params,
+                    sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category)
+                );
+
+                self::assertNotEmpty(array_filter($params, function(WildberriesProductParametersInterface $param) use (
+                    $item
+                ) {
+                    return $param->equals($item->getId());
+                }), sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category));
+
+                ++$count;
+            }
+
+            self::assertCount($count, $params);
         }
+
 
         self::assertTrue(true);
 
     }
-
 
 }

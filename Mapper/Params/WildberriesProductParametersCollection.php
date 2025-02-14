@@ -35,13 +35,14 @@ final readonly class WildberriesProductParametersCollection
         #[AutowireIterator('baks.wb.product.params', defaultPriorityMethod: 'priority')] private iterable $params,
     ) {}
 
-    public function cases(int $category): array
+    // clothes
+    public function cases(int $category): array|false
     {
         $case = null;
 
         foreach($this->params as $key => $params)
         {
-            if(true === defined($params::class.'::CATEGORY') && $params::CATEGORY !== $category)
+            if(true === defined($params::class.'::CATEGORY') && false === in_array($category, $params::CATEGORY, true))
             {
                 continue;
             }
@@ -49,6 +50,6 @@ final readonly class WildberriesProductParametersCollection
             $case[$key] = new $params();
         }
 
-        return $case;
+        return $case ?: false;
     }
 }

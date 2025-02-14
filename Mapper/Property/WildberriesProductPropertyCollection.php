@@ -39,11 +39,7 @@ final readonly class WildberriesProductPropertyCollection
 
         foreach($this->property as $key => $property)
         {
-            if(
-                true === defined($property::class.'::CATEGORY') &&
-                false === is_null($category) &&
-                $property::CATEGORY !== $category
-            )
+            if(true === defined($property::class.'::CATEGORY') && false === in_array($category, $property::CATEGORY, true))
             {
                 continue;
             }

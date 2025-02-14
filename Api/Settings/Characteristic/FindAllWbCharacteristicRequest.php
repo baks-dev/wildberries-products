@@ -34,6 +34,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+#[Autoconfigure(public: true)]
 final class FindAllWbCharacteristicRequest extends Wildberries
 {
     private int|false $category = false;

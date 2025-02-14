@@ -27,9 +27,6 @@ namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Shirts;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -39,7 +36,8 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
      * Наименование товара
      */
 
-    public const int CATEGORY = 192;
+    /** @see WildberriesProductProperty */
+    public const array CATEGORY = [192];
 
     public const string PARAM = 'title';
 
@@ -91,14 +89,12 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
     public function getData(array $data): mixed
     {
-
-
         if(!isset($data['market_category']) || $data['market_category'] !== WildberriesProductProperty::CATEGORY_SHIRTS)
         {
             return null;
         }
 
-        $name = 'Футболка';
+        $name = 'Футболки';
 
         /** Приводим к нижнему регистру и первой заглавной букве */
         $name = mb_strtolower(trim($name));

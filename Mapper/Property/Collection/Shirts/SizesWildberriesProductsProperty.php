@@ -37,7 +37,8 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
      * Артикул продавца
      */
 
-    public const int CATEGORY = 192;
+    /** @see WildberriesProductProperty */
+    public const array CATEGORY = [192];
 
     public const string PARAM = 'sizes';
 

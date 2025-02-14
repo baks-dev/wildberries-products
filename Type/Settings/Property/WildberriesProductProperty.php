@@ -34,11 +34,21 @@ final class WildberriesProductProperty
 
     public const int CATEGORY_TIRE = 5283; // Шины автомобильные
     public const int CATEGORY_SHIRTS = 192; // Футболки
+    public const int CATEGORY_HOODIE = 1724; // Худи
+    public const int CATEGORY_JEANS = 180; // Джинсы
 
+    public static function caseCategory(): array
+    {
+        return [
+            self::CATEGORY_TIRE => ['Шины', 'Шина', 'Шины автомобильные'],
+            self::CATEGORY_SHIRTS => ['Футболки', 'Футболка'],
+            self::CATEGORY_HOODIE => ['Худи'],
+            self::CATEGORY_JEANS => ['Джинсы', 'Джинс'],
+        ];
+    }
 
     public function __construct(WildberriesProductPropertyInterface|self|string $property)
     {
-
         if(is_string($property) && class_exists($property))
         {
             $instance = new $property();
@@ -71,7 +81,6 @@ final class WildberriesProductProperty
                 return;
             }
         }
-
     }
 
 

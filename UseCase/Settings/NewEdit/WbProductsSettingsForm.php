@@ -34,7 +34,6 @@ use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProper
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Parameters\WbProductSettingsParametersDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
-use DomainException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -117,6 +116,11 @@ final class WbProductsSettingsForm extends AbstractType
 
             $characteristics = $this->wildberriesProductParamsCollection->cases($data->getCategory());
 
+            if(false === $characteristics)
+            {
+                return;
+            }
+
             $characteristics = array_filter($characteristics, static function(
                 WildberriesProductParametersInterface $element
             ) {
@@ -160,84 +164,6 @@ final class WbProductsSettingsForm extends AbstractType
                 'allow_delete' => true,
                 'allow_add' => true,
             ]);
-
-
-            return;
-
-
-            $profile = $this->wbTokenByProfile->getCurrentUserProfile();
-
-            $characteristics = [];
-
-
-            if($profile)
-            {
-                try
-                {
-                    $characteristics = $this->wbCharacteristic
-                        ->profile($profile)
-                        ->name($data->getName())
-                        ->findCharacteristics();
-
-
-                }
-                catch(DomainException $e)
-                {
-                    /** Если токен авторизации не найден */
-                    $characteristics = [];
-                }
-            }
-
-            /** @var WbCharacteristicByObjectNameDTO $characteristic */
-            foreach($characteristics as $characteristic)
-            {
-
-                if($characteristic->getName() === 'Наименование' || $characteristic->getName() === 'Описание')
-                {
-                    continue;
-                }
-
-                $new = true;
-
-
-                /** @var WbProductSettingsPropertyDTO $property */
-                foreach($data->getProperty() as $property)
-                {
-                    if($property->getType() === $characteristic->getName())
-                    {
-                        $property->setRequired($characteristic->isRequired());
-                        $property->setUnit($characteristic->getUnit());
-                        $property->setPopular($characteristic->isPopular());
-
-                        $new = false;
-                        break;
-                    }
-                }
-
-                if($new)
-                {
-                    /**
-                     * "objectName": "Косухи", - Наименование подкатегории
-                     * "name": "Особенности модели", - Наименование характеристики
-                     * "required": false, - Характеристика обязательна к заполнению
-                     * "unitName": "", - Единица измерения (см, гр и т.д.)
-                     * "maxCount": 1, - Максимальное кол-во значений которое можно присвоить данной характеристике
-                     * "popular": false, - Характеристика популярна у пользователей
-                     * "charcType": 1 - Тип характеристики (1 и 0 - строка или массив строк; 4 - число или массив чисел)
-                     */
-
-                    $WbProductSettingsPropertyDTO = new WbProductSettingsPropertyDTO();
-                    $WbProductSettingsPropertyDTO->setType($characteristic->getName());
-
-                    $WbProductSettingsPropertyDTO->setRequired($characteristic->isRequired());
-                    $WbProductSettingsPropertyDTO->setUnit($characteristic->getUnit());
-                    $WbProductSettingsPropertyDTO->setPopular($characteristic->isPopular());
-
-                    $data->addProperty($WbProductSettingsPropertyDTO);
-                }
-
-            }
-
 
         });
 

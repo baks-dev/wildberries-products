@@ -39,7 +39,8 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
      * Наименование товара
      */
 
-    public const int CATEGORY = 545465;
+    /** @see WildberriesProductProperty */
+    public const array CATEGORY = [545465];
 
     public const string PARAM = 'title';
 
