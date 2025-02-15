@@ -65,6 +65,13 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     private bool $variation = false;
 
     /**
+     * Добавить Модификатор множественного варианта
+     */
+    private bool $modification = false;
+
+
+
+    /**
      * Количество стикеров
      */
     #[Assert\NotBlank]
@@ -144,16 +151,18 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
         return new Property\WbBarcodePropertyDTO();
     }
 
-    /** OFFER */
-
+    /**
+     * Offer
+     */
     public function getOffer(): bool
     {
         return $this->offer;
     }
 
-    public function setOffer(bool $offer): void
+    public function setOffer(bool $offer): self
     {
         $this->offer = $offer;
+        return $this;
     }
 
     /**
@@ -169,6 +178,22 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
         $this->variation = $variation;
         return $this;
     }
+
+
+    /**
+     * Modification
+     */
+    public function getModification(): bool
+    {
+        return $this->modification;
+    }
+
+    public function setModification(bool $modification): self
+    {
+        $this->modification = $modification;
+        return $this;
+    }
+
 
 
     /** COUNTER */

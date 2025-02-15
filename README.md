@@ -1,6 +1,6 @@
 # BaksDev Products Wildberries
 
-[![Version](https://img.shields.io/badge/version-7.2.8-blue)](https://github.com/baks-dev/wildberries-products/releases)
+[![Version](https://img.shields.io/badge/version-7.2.9-blue)](https://github.com/baks-dev/wildberries-products/releases)
 ![php 8.4+](https://img.shields.io/badge/php-min%208.4-red.svg)
 
 Модуль продукции Wildberries

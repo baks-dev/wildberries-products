@@ -59,7 +59,9 @@ final class PrintController extends AbstractController
         /** Получаем настройки стикера */
 
         $WbProductCard = $WbProductCardVariation->getCard();
-        $BarcodeSettings = $barcodeSettings->findWbBarcodeSettings($WbProductCard->getProduct());
+        $BarcodeSettings = $barcodeSettings
+            ->forProduct($WbProductCard->getProduct())
+            ->findWbBarcodeSettings($WbProductCard->getProduct());
 
 
         //dd($BarcodeSettings);

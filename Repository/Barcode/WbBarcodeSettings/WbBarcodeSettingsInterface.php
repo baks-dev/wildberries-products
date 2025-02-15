@@ -28,5 +28,15 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 
 interface WbBarcodeSettingsInterface
 {
-    public function findWbBarcodeSettings(Product|ProductUid|string $product): array|false;
+    public function forProduct(Product|ProductUid|string $product): self;
+
+    /**
+     * Метод получает настройку бокового печати стикеров для указанного продукта
+     */
+    public function find(): WbBarcodeSettingsResult|false;
+
+    /**
+     * @deprecated  ->forProduct()->find()
+     */
+    public function findWbBarcodeSettings(): array|false;
 }

@@ -66,6 +66,7 @@ final class WbBarcodeForm extends AbstractType
 
         $builder->add('offer', CheckboxType::class, ['required' => false]);
         $builder->add('variation', CheckboxType::class, ['required' => false]);
+        $builder->add('modification', CheckboxType::class, ['required' => false]);
         $builder->add('counter', IntegerType::class);
 
         $builder->add('property', CollectionType::class, [
@@ -169,13 +170,27 @@ final class WbBarcodeForm extends AbstractType
 
                 if($data->getMain() && $data->isHiddenCategory())
                 {
+
                     $category = $this->categoryChoice
                         ->category($data->getMain())
                         ->find();
 
-                    $builder->add('main', HiddenType::class, [
+
+                    $builder->add('main', ChoiceType::class, [
+                        'choices' => $this->categoryChoice->findAll(),
+                        'choice_value' => function(?CategoryProductUid $category) {
+                            return $category?->getValue();
+                        },
+                        'choice_label' => function(CategoryProductUid $category) {
+                            return (is_int($category->getAttr()) ? str_repeat(' - ', $category->getAttr() - 1) : '').$category->getOptions();
+                        },
+                        'disabled' => true,
                         'label' => $category?->getOptions()
                     ]);
+
+                    /*$builder->add('main', HiddenType::class, [
+                        'label' => $category?->getOptions()
+                    ]);*/
                 }
 
                 $formModifier($builder, $data->getMain());
