@@ -26,6 +26,9 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryParameters;
 
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Products\Category\Entity\CategoryProduct;
+use BaksDev\Products\Category\Entity\Section\CategoryProductSection;
+use BaksDev\Products\Category\Entity\Section\Field\CategoryProductSectionField;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
@@ -79,11 +82,40 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
             ->setParameter('type', $type, Types::INTEGER);
 
 
+        /** Определяем тип свойства, не является ли оно справочником */
+
+        $dbal
+            ->leftJoin(
+                'invariable',
+                CategoryProduct::class,
+                'category',
+                'category.id = invariable.main'
+            );
+
+        $dbal
+            ->leftJoin(
+                'category',
+                CategoryProductSection::class,
+                'section',
+                'section.event = category.event'
+            );
+
+
+        $dbal
+            ->leftJoin(
+                'section',
+                CategoryProductSectionField::class,
+                'field',
+                'field.section = section.id AND field.const = parameters.field'
+            );
+
+
         $dbal->select('parameters.field AS value');
         $dbal->addSelect('parameters.type AS const');
+        $dbal->addSelect('field.type AS attr');
 
         return $dbal
-            // ->enableCache('Namespace', 3600)
+            ->enableCache('wildberries-products', 60)
             ->fetchHydrate(CategoryProductSectionFieldUid::class);
     }
 }

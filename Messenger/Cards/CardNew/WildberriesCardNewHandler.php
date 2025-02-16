@@ -34,6 +34,7 @@ use BaksDev\DeliveryTransport\UseCase\Admin\ProductParameter\DeliveryPackageProd
 use BaksDev\Products\Category\Repository\SettingsByCategory\SettingsByCategoryInterface;
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
+use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\Variation\Image\ProductVariationImage;
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
@@ -60,10 +61,11 @@ use BaksDev\Reference\Color\Choice\ReferenceChoiceColor;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\GetWildberriesCardImage;
-use BaksDev\Wildberries\Products\Mapper\Params\Collection\Shirts\ColorWildberriesProductParameters;
+use BaksDev\Wildberries\Products\Mapper\Params\Collection\ColorWildberriesProductParameters;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategory\ProductSettingsCategoryInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryParameters\ProductSettingsCategoryParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Settings\ProductSettingsCategoryProperty\ProductSettingsCategoryPropertyInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Doctrine\ORM\Mapping\Table;
 use Psr\Log\LoggerInterface;
 use ReflectionAttribute;
@@ -78,6 +80,7 @@ final readonly class WildberriesCardNewHandler
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         #[TaggedIterator('baks.reference.choice')] private iterable $reference,
+        #[TaggedIterator('baks.fields.choice')] private iterable $fields,
         private FindAllWildberriesCardsRequest $WildberriesCardsRequest,
         private SettingsByCategoryInterface $SettingsByCategory,
         private ExistProductArticleInterface $ExistProductArticle,
@@ -100,6 +103,15 @@ final readonly class WildberriesCardNewHandler
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         foreach($WildberriesCards as $WildberriesCardDTO)
         {
+
+
+            /** DEBUG фильтр категории  */
+            //            if($WildberriesCardDTO->getCategory() !== 1724)
+            //            {
+            //                continue;
+            //            }
+
+
             /**
              * Если передан артикул - применяем фильтр по вхождению
              */
@@ -154,13 +166,6 @@ final readonly class WildberriesCardNewHandler
             /**
              * Проверка имеющейся карточки
              */
-
-            //            while(true)
-            //            {
-            //                $posting = explode('-', $order->getNumber());
-            //                array_pop($posting);
-            //                $number = implode("-", $posting);
-            //            }
 
 
             $article = $WildberriesCardDTO->getArticle();
@@ -261,25 +266,16 @@ final readonly class WildberriesCardNewHandler
             $ProductInfo->setArticle($article);
 
 
-            /**
-             * Название файла
-             * @var ProductTransDTO $ProductTransDTO
-             */
-            foreach($ProductDTO->getTranslate() as $ProductTransDTO)
-            {
-                $ProductTransDTO->getName() ?: $ProductTransDTO->setName($WildberriesCardDTO->getName());
-            }
+            /** Создаем первоначально название */
+            $title = $WildberriesCardDTO->getName();
 
-            /**
-             * Описание файла
-             * @var ProductDescriptionDTO $ProductDescriptionDTO
-             */
-            foreach($ProductDTO->getDescription() as $ProductDescriptionDTO)
-            {
-                $ProductDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
-            }
+            // Фильтруем название категории
+            $cats = WildberriesProductProperty::caseCategory()[$WildberriesCardDTO->getCategory()];
+            $title = $this->filterTitle($cats, $title);
+
 
             $reference = iterator_to_array($this->reference);
+            $fields = iterator_to_array($this->fields);
 
 
             /**
@@ -319,6 +315,11 @@ final readonly class WildberriesCardNewHandler
                     if(false === is_null($offerReference))
                     {
                         $CharValue = new ($offerReference->class())($CharValue);
+
+                        // Фильтруем торговое предложение в названии
+                        $title = $CharValue->filter($title);
+
+
                     }
                 }
 
@@ -375,6 +376,7 @@ final readonly class WildberriesCardNewHandler
                 // поиск цвета по идентификатору (временно для футболок)
                 $CharValueVariation = $size;
 
+
                 // Присваиваем значение из SIZE (ВРЕМЕННО ДЛЯ ФУТБОЛОК - РАЗМЕР)
                 if($SettingsByCategory['variation_reference'])
                 {
@@ -386,6 +388,9 @@ final readonly class WildberriesCardNewHandler
                     if(false === is_null($variationReference))
                     {
                         $CharValueVariation = new ($variationReference->class())($CharValueVariation);
+
+                        // Фильтруем множественный вариант в названии
+                        $title = $CharValue->filter($title);
                     }
                 }
 
@@ -432,7 +437,7 @@ final readonly class WildberriesCardNewHandler
              * Характеристики карточки
              */
 
-            foreach($WildberriesCardDTO->getCharacteristicsCollection() as $id => $value)
+            foreach($WildberriesCardDTO->getCharacteristicsCollection() as $id => $CharValueProperty)
             {
 
                 $CategoryProductSectionFieldUid = $this->ProductSettingsCategoryParameters
@@ -446,7 +451,8 @@ final readonly class WildberriesCardNewHandler
                         ->find((string) $id);
                 }
 
-                if($CategoryProductSectionFieldUid)
+
+                if($CategoryProductSectionFieldUid instanceof CategoryProductSectionFieldUid)
                 {
                     /** Проверяем нет ли свойства */
                     $ProductPropertyFilter = $ProductDTO->getPropertyCollection()
@@ -463,7 +469,23 @@ final readonly class WildberriesCardNewHandler
                         $PropertyCollectionDTO->setField($CategoryProductSectionFieldUid);
                     }
 
-                    $PropertyCollectionDTO->setValue((string) $value);
+
+                    /** Пробуем найти соответствующее свойство  */
+                    $propertyFields = array_find($fields, static function($item) use ($CategoryProductSectionFieldUid) {
+                        return $item->equals($CategoryProductSectionFieldUid->getAttr());
+                    });
+
+                    if($propertyFields)
+                    {
+                        $CharValueProperty = new ($propertyFields->class())((string) $CharValueProperty);
+
+                        if(method_exists($CharValueProperty, 'filter'))
+                        {
+                            $title = $CharValueProperty->filter($title);
+                        }
+                    }
+
+                    $PropertyCollectionDTO->setValue((string) $CharValueProperty);
 
                 }
             }
@@ -476,6 +498,28 @@ final readonly class WildberriesCardNewHandler
                     $this->createMediaFile($ProductDTO, ProductPhoto::class, $media);
                 }
             }
+
+
+            /**
+             * Название продукта
+             * @var ProductTransDTO $ProductTransDTO
+             */
+            foreach($ProductDTO->getTranslate() as $ProductTransDTO)
+            {
+                $ProductTransDTO->getName() ?: $ProductTransDTO->setName($title);
+            }
+
+            /**
+             * Описание файла
+             * @var ProductDescriptionDTO $ProductDescriptionDTO
+             */
+            foreach($ProductDTO->getDescription() as $ProductDescriptionDTO)
+            {
+                $ProductDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
+            }
+
+
+
 
             $Product = $this->ProductHandler->handle($ProductDTO);
 
@@ -518,11 +562,9 @@ final readonly class WildberriesCardNewHandler
                     }
                 }
             }
+
+            //dd($ProductDTO);
         }
-
-
-        //dd($message->getArticle());
-
     }
 
 
@@ -591,5 +633,18 @@ final readonly class WildberriesCardNewHandler
         }
 
         $parent->addImage($ImageCollectionDTO);
+    }
+
+
+    public function filterTitle(array $haystack, string $title): string
+    {
+        $haystack = array_map("mb_strtolower", $haystack);
+
+        $title = mb_strtolower($title);
+        $title = (string) str_ireplace($haystack, '', $title);
+        $title = preg_replace('/\s/', ' ', $title);
+        $title = trim($title);
+
+        return mb_ucfirst($title);
     }
 }
