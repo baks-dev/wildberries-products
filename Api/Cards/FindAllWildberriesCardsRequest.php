@@ -44,15 +44,18 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
     /**
      * @return array{WildberriesCardDTO}
+     *
+     * https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1get~1cards~1list/post
      */
-    public function findAll(): Generator|false
+    public function findAll(?string $search = null): Generator|false
     {
         while(true)
         {
             $cache = new FilesystemAdapter('wildberries');
-            $key = md5(self::class.$this->getProfile().$this->nomenclature);
+            $key = md5(self::class.$this->getProfile().$this->nomenclature.$search);
+            $cache->deleteItem($key);
 
-            $content = $cache->get($key, function(ItemInterface $item) {
+            $content = $cache->get($key, function(ItemInterface $item) use ($search) {
 
                 $item->expiresAfter(DateInterval::createFromDateString('1 seconds'));
 
@@ -65,7 +68,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
                         ],
                         "filter" => [
-                            //"textSearch" => $search,
+                            "textSearch" => $search ?: '',
                             "withPhoto" => 1,
                         ],
                     ]

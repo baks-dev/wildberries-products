@@ -166,7 +166,7 @@ class GetWbProductsNewCommand extends Command
 
         $WildberriesCards = $this->WildberriesCardsRequest
             ->profile($profile)
-            ->findAll();
+            ->findAll($article);
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         foreach($WildberriesCards as $WildberriesCardDTO)

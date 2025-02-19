@@ -106,16 +106,11 @@ final readonly class WildberriesCardNewHandler
 
 
             /** DEBUG фильтр категории  */
-            //                        if($WildberriesCardDTO->getCategory() !== 159)
-            //                        {
-            //                            continue;
-            //                        }
 
-
-            if(false === stripos($WildberriesCardDTO->getArticle(), 'FSWOMEN-0203'))
-            {
-                continue;
-            }
+            //            if(false === stripos($WildberriesCardDTO->getArticle(), 'FSWOMEN-0203'))
+            //            {
+            //                continue;
+            //            }
 
             /**
              * Если передан артикул - применяем фильтр по вхождению
