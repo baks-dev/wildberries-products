@@ -74,8 +74,9 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(priority: 999)]
-final readonly class WildberriesCardNewHandler
+/** Создает новые карточки товаров */
+#[AsMessageHandler(priority: 0)]
+final readonly class WildberriesCardNewDispatcher
 {
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
@@ -95,7 +96,6 @@ final readonly class WildberriesCardNewHandler
 
     public function __invoke(WildberriesCardNewMassage $message): void
     {
-
         $WildberriesCards = $this->WildberriesCardsRequest
             ->profile($message->getProfile())
             ->findAll();
@@ -487,8 +487,6 @@ final readonly class WildberriesCardNewHandler
             {
                 $ProductDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
             }
-
-
 
 
             $Product = $this->ProductHandler->handle($ProductDTO);

@@ -23,12 +23,36 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Settings;
+namespace BaksDev\Wildberries\Products\Messenger\Barcode;
 
+use BaksDev\Core\Cache\AppCacheInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler]
-final class WbProductSettingsNullHandler
+/**
+ * Сбрасывает кеш модуля wildberries-products
+ */
+#[AsMessageHandler(fromTransport: 'sync')]
+final class WbBarcodeCacheClearDispatcher
 {
-    public function __invoke(WbProductSettingsMessage $message): void {}
+    private AppCacheInterface $cache;
+    private LoggerInterface $messageDispatchLogger;
+
+    public function __construct(
+        AppCacheInterface $cache,
+        LoggerInterface $messageDispatchLogger,
+    )
+    {
+        $this->cache = $cache;
+        $this->messageDispatchLogger = $messageDispatchLogger;
+    }
+
+    public function __invoke(WbBarcodeMessage $message): void
+    {
+        /* Чистим кеш модуля */
+        $cache = $this->cache->init('wildberries-products');
+        $cache->clear();
+
+        $this->messageDispatchLogger->info('Очистили кеш wildberries-products', [self::class.':'.__LINE__]);
+    }
 }

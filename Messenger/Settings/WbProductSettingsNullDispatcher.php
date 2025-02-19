@@ -23,12 +23,12 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Barcode;
+namespace BaksDev\Wildberries\Products\Messenger\Settings;
 
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class WbBarcodeDispatch
+final class WbProductSettingsNullDispatcher
 {
-    public function __invoke(WbBarcodeMessage $message): void {}
+    public function __invoke(WbProductSettingsMessage $message): void {}
 }
