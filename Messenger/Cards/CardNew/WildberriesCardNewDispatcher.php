@@ -98,7 +98,7 @@ final readonly class WildberriesCardNewDispatcher
     {
         $WildberriesCards = $this->WildberriesCardsRequest
             ->profile($message->getProfile())
-            ->findAll();
+            ->findAll($message->getArticle());
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         foreach($WildberriesCards as $WildberriesCardDTO)
