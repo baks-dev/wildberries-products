@@ -26,9 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Api\GetStocks;
 
 use BaksDev\Wildberries\Api\Wildberries;
-use DomainException;
+use DateInterval;
 use InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
 final class FindWildberriesStocksRequest extends Wildberries
@@ -79,7 +78,7 @@ final class FindWildberriesStocksRequest extends Wildberries
      * @see https://openapi.wildberries.ru/marketplace/api/ru/#tag/Ostatki/paths/~1api~1v3~1stocks~1{warehouseId}/post
      *
      */
-    public function stocks(): WildberriesStocksDTO
+    public function stocks(): WildberriesStocksDTO|false
     {
         if($this->warehouse === null)
         {
@@ -95,13 +94,12 @@ final class FindWildberriesStocksRequest extends Wildberries
             );
         }
 
-        $cache = new FilesystemAdapter('wildberries');
+        $cache = $this->getCacheInit('wildberries');
+        $key = md5($this->profile->getValue().implode('.', $this->barcode).self::class);
 
-        $response = $cache->get('stocks-'.$this->profile->getValue().'-'.implode('.', $this->barcode), function(
-            ItemInterface $item
-        ) {
+        $content = $cache->get($key, function(ItemInterface $item): array|false {
 
-            $item->expiresAfter(60 * 5);
+            $item->expiresAfter(1);
 
             $data = ["skus" => $this->barcode];
 
@@ -111,22 +109,21 @@ final class FindWildberriesStocksRequest extends Wildberries
                 ['json' => $data],
             );
 
+            $content = $response->toArray(false);
+
             if($response->getStatusCode() !== 200)
             {
-                $content = $response->toArray(false);
-
-                throw new DomainException(
-                    message: $content['message'] ?? self::class, code: $response->getStatusCode()
-                );
+                $this->logger->critical('', [$content, self::class.':'.__LINE__]);
+                return false;
             }
 
-            return $response;
+            $item->expiresAfter(DateInterval::createFromDateString('1 minute'));
+
+            return $content;
 
         });
 
-        $content = $response->toArray(false);
-
-        return new WildberriesStocksDTO($content);
+        return $content ? new WildberriesStocksDTO($content) : false;
     }
 
 

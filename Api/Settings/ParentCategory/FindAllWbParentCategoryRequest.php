@@ -26,9 +26,8 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Api\Settings\ParentCategory;
 
 use BaksDev\Wildberries\Api\Wildberries;
+use DateInterval;
 use Generator;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
 
@@ -38,10 +37,9 @@ final class FindAllWbParentCategoryRequest extends Wildberries
     public function findAll(): Generator|false
     {
 
-        /** Кешируем результат запроса */
-
+        $cache = $this->getCacheInit('wildberries-products');
         $key = md5(self::class);
-        $cache = new FilesystemAdapter('wildberries');
+        // $cache->deleteItem($key);
 
         $content = $cache->get($key, function(ItemInterface $item): array|false {
 
@@ -63,7 +61,7 @@ final class FindAllWbParentCategoryRequest extends Wildberries
                 return false;
             }
 
-            $item->expiresAfter(86400);
+            $item->expiresAfter(DateInterval::createFromDateString('1 day'));
 
             return $content['data'];
 

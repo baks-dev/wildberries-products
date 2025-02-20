@@ -27,9 +27,9 @@ namespace BaksDev\Wildberries\Products\Api\PricesInfo;
 
 use ArrayObject;
 use BaksDev\Wildberries\Api\Wildberries;
+use DateInterval;
 use DomainException;
 use InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Contracts\Cache\ItemInterface;
 
 final class FindPricesInfoRequest extends Wildberries
@@ -70,12 +70,13 @@ final class FindPricesInfoRequest extends Wildberries
 
         /** Кешируем результат запроса */
 
-        $cache = new FilesystemAdapter('wildberries');
-        //$cache->delete('prices-'.$nomenclature);
+        $cache = $this->getCacheInit('wildberries-products');
+        $key = md5($nomenclature.self::class);
+        //$cache->delete($key);
 
-        $content = $cache->get('prices-'.$nomenclature, function(ItemInterface $item) use ($nomenclature) {
+        $content = $cache->get($key, function(ItemInterface $item) use ($nomenclature) {
 
-            $item->expiresAfter(60 * 60 * 24);
+            $item->expiresAfter(1);
 
             $response = $this->TokenHttpClient()->request(
                 'GET',
@@ -113,6 +114,8 @@ final class FindPricesInfoRequest extends Wildberries
                     message: 'Найденная номенклатура не совпадает с искомой: '.$list['nmID'].' != '.$nomenclature, code: 404
                 );
             }
+
+            $item->expiresAfter(DateInterval::createFromDateString('1 hours'));
 
             return current($content['data']['listGoods'])['sizes']; //$response->toArray(false);
 

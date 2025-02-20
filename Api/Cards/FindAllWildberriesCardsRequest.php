@@ -30,8 +30,6 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
 final class FindAllWildberriesCardsRequest extends Wildberries
@@ -51,9 +49,9 @@ final class FindAllWildberriesCardsRequest extends Wildberries
     {
         while(true)
         {
-            $cache = new FilesystemAdapter('wildberries');
+            $cache = $this->getCacheInit('wildberries-products');
             $key = md5(self::class.$this->getProfile().$this->nomenclature.$search);
-            $cache->deleteItem($key);
+            // $cache->deleteItem($key);
 
             $content = $cache->get($key, function(ItemInterface $item) use ($search) {
 

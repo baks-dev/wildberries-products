@@ -25,14 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Api\Settings\Characteristic;
 
-use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectNameDTO;
 use BaksDev\Wildberries\Api\Wildberries;
+use DateInterval;
 use Generator;
 use InvalidArgumentException;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[Autoconfigure(public: true)]
 final class FindAllWbCharacteristicRequest extends Wildberries
@@ -61,16 +59,12 @@ final class FindAllWbCharacteristicRequest extends Wildberries
             throw new InvalidArgumentException('Invalid Argument category');
         }
 
-
+        $cache = $this->getCacheInit('wildberries-products');
         $key = md5(self::class.$this->category);
-        $cache = new FilesystemAdapter('wildberries');
+        // $cache->deleteItem($key);
 
-        /**
-         * Кешируем результат запроса
-         *
-         * @var  ResponseInterface $response
-         */
         $content = $cache->get($key, function(ItemInterface $item): array|false {
+
             $item->expiresAfter(1);
 
             $response = $this->content()->TokenHttpClient()
@@ -95,7 +89,7 @@ final class FindAllWbCharacteristicRequest extends Wildberries
                 return false;
             }
 
-            $item->expiresAfter(86400);
+            $item->expiresAfter(DateInterval::createFromDateString('1 day'));
 
             return $content['data'];
         });
