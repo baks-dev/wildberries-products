@@ -45,7 +45,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
      *
      * https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1get~1cards~1list/post
      */
-    public function findAll(?string $search = null): Generator|false
+    public function findAll(string|null|false $search = null): Generator|false
     {
         while(true)
         {
