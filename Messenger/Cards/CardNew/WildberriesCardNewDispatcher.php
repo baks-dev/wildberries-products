@@ -158,6 +158,21 @@ final readonly class WildberriesCardNewDispatcher
             /** Формируем артикул карточки товара  */
 
             $cardArticle = $WildberriesCardDTO->getArticle();
+
+            // фильтруем артикул по пробелам
+            $cardArticleSpace = explode(' ', $cardArticle);
+            $cardArticle = current($cardArticleSpace);
+
+            $cardArticlePostfix = null;
+
+            if(count($cardArticleSpace) > 1)
+            {
+                array_shift($cardArticleSpace);
+
+                $cardArticlePostfix = implode(' ', $cardArticleSpace);
+            }
+
+
             $cardArticle = explode('-', $cardArticle);
 
             if($SettingsByCategory['variation_article'])
@@ -172,6 +187,7 @@ final readonly class WildberriesCardNewDispatcher
             }
 
             $cardArticle = implode('-', $cardArticle);
+
 
 
             /** Проверяем карточку с соответствующим корневым артикулом */
@@ -306,7 +322,8 @@ final readonly class WildberriesCardNewDispatcher
                     }
 
 
-                    $OffersDTO->setName($title);
+                    $OffersDTO->setName($title.($cardArticlePostfix ? ' '.$cardArticlePostfix : ''));
+
 
                     // Если торговое предложение является артикульным - присваиваем артикул и баркод
                     if($SettingsByCategory['offer_article'])
@@ -477,6 +494,12 @@ final readonly class WildberriesCardNewDispatcher
             foreach($ProductDTO->getTranslate() as $ProductTransDTO)
             {
                 $ProductTransDTO->getName() ?: $ProductTransDTO->setName($title);
+
+                if(empty($ProductTransDTO->getName()))
+                {
+                    $ProductTransDTO->setName($WildberriesCardDTO->getName());
+                }
+
             }
 
             /**

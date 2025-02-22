@@ -37,6 +37,7 @@ final class WildberriesProductProperty
     public const int CATEGORY_HOODIE = 1724; // Худи
     public const int CATEGORY_JEANS = 180; // Джинсы
     public const int CATEGORY_SVITSHOT = 159; // Свитшоты
+    public const int CATEGORY_TOP = 185; // Топы
 
     /** @see WbCharacteristicRequestTest */
     public static function caseCategory(): array
@@ -47,6 +48,7 @@ final class WildberriesProductProperty
             self::CATEGORY_HOODIE => ['Худи'],
             self::CATEGORY_JEANS => ['Джинсы', 'Джинс'],
             self::CATEGORY_SVITSHOT => ['Свитшот', 'Свитшоты'],
+            self::CATEGORY_TOP => ['Топ', 'Топы'],
         ];
     }
 

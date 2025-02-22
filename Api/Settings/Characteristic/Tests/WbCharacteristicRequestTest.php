@@ -58,6 +58,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
         $WbCharacteristicRequest = self::getContainer()->get(FindAllWbCharacteristicRequest::class);
         $WbCharacteristicRequest->TokenHttpClient(self::$Authorization);
 
+        //
 
         $cats = [
             WildberriesProductProperty::CATEGORY_TIRE, // Шины автомобильные
@@ -65,12 +66,13 @@ class WbCharacteristicRequestTest extends KernelTestCase
             WildberriesProductProperty::CATEGORY_HOODIE, // Худи
             WildberriesProductProperty::CATEGORY_JEANS, // Джинсы
             WildberriesProductProperty::CATEGORY_SVITSHOT, // Свитшоты
+            WildberriesProductProperty::CATEGORY_TOP, // Свитшоты
         ];
 
         /** @see WildberriesProductProperty */
-        //$category = 1724; // Футболки
+        //$category = 1724; // Футболки  Тип рукава
 
-        $cats = [WildberriesProductProperty::CATEGORY_SVITSHOT];
+        $cats = [WildberriesProductProperty::CATEGORY_TOP];
 
         foreach($cats as $category)
         {
