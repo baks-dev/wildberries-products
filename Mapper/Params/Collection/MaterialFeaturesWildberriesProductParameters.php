@@ -30,15 +30,15 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class DecorativeElementsWildberriesProductParameters implements WildberriesProductParametersInterface
+final class MaterialFeaturesWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [1724, 192, 180, 159, 185, 402];
+    public const array CATEGORY = [402];
 
-    public const int ID = 50;
+    public const int ID = 385397;
 
     public function getName(): string
     {
-        return 'Декоративные элементы';
+        return 'Особенности материала';
     }
 
     public function required(): bool
@@ -86,9 +86,12 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
 
     public function getData(array $data, ?TranslatorInterface $translator = null): mixed
     {
+
+
         if(isset($data['product_params']))
         {
             $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
+
 
             foreach($product_params as $product_param)
             {

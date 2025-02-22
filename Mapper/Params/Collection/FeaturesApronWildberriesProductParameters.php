@@ -30,15 +30,15 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class WidthWildberriesProductParameters implements WildberriesProductParametersInterface
+final class FeaturesApronWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [5283];
+    public const array CATEGORY = [402];
 
-    public const int ID = 244928;
+    public const int ID = 18332;
 
     public function getName(): string
     {
-        return 'Ширина, мм';
+        return 'Особенности фартука';
     }
 
     public function required(): bool
@@ -86,12 +86,9 @@ final class WidthWildberriesProductParameters implements WildberriesProductParam
 
     public function getData(array $data, ?TranslatorInterface $translator = null): mixed
     {
-
-
         if(isset($data['product_params']))
         {
             $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
-
 
             foreach($product_params as $product_param)
             {

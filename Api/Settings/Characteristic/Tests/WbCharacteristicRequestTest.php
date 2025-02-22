@@ -67,21 +67,18 @@ class WbCharacteristicRequestTest extends KernelTestCase
             WildberriesProductProperty::CATEGORY_JEANS, // Джинсы
             WildberriesProductProperty::CATEGORY_SVITSHOT, // Свитшоты
             WildberriesProductProperty::CATEGORY_TOP, // Свитшоты
+            WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // Фартуки кухонные
         ];
 
         /** @see WildberriesProductProperty */
-        //$category = 1724; // Футболки  Тип рукава
 
-        $cats = [WildberriesProductProperty::CATEGORY_TOP];
+        $cats = [WildberriesProductProperty::CATEGORY_KITCHEN_APRONS];
 
         foreach($cats as $category)
         {
             $data = $WbCharacteristicRequest
                 ->category($category)
                 ->findAll();
-
-
-            //dd(iterator_to_array($data) );
 
             /** @var WildberriesProductParametersCollection $WildberriesProductParamsCollection */
             $WildberriesProductParamsCollection = self::getContainer()->get(WildberriesProductParametersCollection::class);
@@ -95,7 +92,6 @@ class WbCharacteristicRequestTest extends KernelTestCase
             $count = 0;
             foreach($data as $item)
             {
-
                 self::assertNotFalse($params,
                     sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category)
                 );

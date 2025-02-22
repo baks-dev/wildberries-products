@@ -30,15 +30,15 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class DecorativeElementsWildberriesProductParameters implements WildberriesProductParametersInterface
+final class OccasionWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [1724, 192, 180, 159, 185, 402];
+    public const array CATEGORY = [402];
 
-    public const int ID = 50;
+    public const int ID = 59615;
 
     public function getName(): string
     {
-        return 'Декоративные элементы';
+        return 'Повод';
     }
 
     public function required(): bool
