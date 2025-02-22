@@ -32,7 +32,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AutoconfigureTag('baks.wb.product.params')]
 final class WidthCmWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [402];
+    public const array CATEGORY = [402, 3188];
 
     public const int ID = 90673;
 

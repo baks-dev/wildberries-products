@@ -72,7 +72,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
         /** @see WildberriesProductProperty */
 
-        $cats = [WildberriesProductProperty::CATEGORY_KITCHEN_APRONS];
+        $cats = [WildberriesProductProperty::CATEGORY_WORKERS_APRONS];
 
         foreach($cats as $category)
         {

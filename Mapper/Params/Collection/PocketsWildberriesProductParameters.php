@@ -32,7 +32,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AutoconfigureTag('baks.wb.product.params')]
 final class PocketsWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [192, 180];
+    public const array CATEGORY = [192, 180, 3188];
 
     public const int ID = 48;
 
