@@ -27,27 +27,29 @@ namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
 
 final class WbBarcodeSettingsResult
 {
-    private $offer = false;
+    private bool $offer;
 
-    private $variation = false;
+    private bool $variation;
 
-    private $modification = false;
+    private bool $modification;
 
-    private $counter = 1;
+    private int $counter;
 
-    private array $property = [];
+    private array $property;
 
-    private array $custom = [];
+    private array $custom;
 
     public function __construct(...$data)
     {
-        $this->offer = $data['offer'];
-        $this->variation = $data['variation'];
-        $this->modification = $data['modification'];
-        $this->counter = $data['counter'];
 
-        $this->property = $data['property'] ? json_decode($data['property'], false) : [];
-        $this->custom = $data['custom'] ? json_decode($data['custom'], false) : [];
+        $this->offer = (bool) $data['offer'];
+        $this->variation = (bool) $data['variation'];
+        $this->modification = (bool) $data['modification'];
+
+        $this->counter = $data['counter'] ?: 1;
+
+        $this->property = $data['property'] ? json_decode($data['property'], false, 512, JSON_THROW_ON_ERROR) : [];
+        $this->custom = $data['custom'] ? json_decode($data['custom'], false, 512, JSON_THROW_ON_ERROR) : [];
     }
 
     /**
@@ -69,7 +71,7 @@ final class WbBarcodeSettingsResult
     /**
      * Modification
      */
-    public function getModification(): mixed
+    public function isModification(): bool
     {
         return $this->modification;
     }
@@ -79,7 +81,7 @@ final class WbBarcodeSettingsResult
      */
     public function getCounter(): int
     {
-        return $this->counter;
+        return empty($this->counter) ? 1 : $this->counter;
     }
 
     /**
@@ -87,7 +89,7 @@ final class WbBarcodeSettingsResult
      */
     public function getProperty(): array
     {
-        return $this->property;
+        return $this->property ?: [];
     }
 
     /**
@@ -95,7 +97,7 @@ final class WbBarcodeSettingsResult
      */
     public function getCustom(): array
     {
-        return $this->custom;
+        return $this->custom ?: [];
     }
 
 }
