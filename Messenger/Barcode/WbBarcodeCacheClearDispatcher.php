@@ -32,7 +32,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 /**
  * Сбрасывает кеш модуля wildberries-products
  */
-#[AsMessageHandler(fromTransport: 'sync')]
+#[AsMessageHandler]
 final class WbBarcodeCacheClearDispatcher
 {
     private AppCacheInterface $cache;
