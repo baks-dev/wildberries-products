@@ -49,11 +49,10 @@ final class WildberriesProductProperty
             self::CATEGORY_SHIRTS => ['Футболки', 'Футболка'],
             self::CATEGORY_HOODIE => ['Худи'],
             self::CATEGORY_JEANS => ['Джинсы', 'Джинс'],
-            self::CATEGORY_SVITSHOT => ['Свитшот', 'Свитшоты'],
-            self::CATEGORY_TOP => ['Топ', 'Топы'],
-            self::CATEGORY_KITCHEN_APRONS => ['Фартуки', 'Кухонные'],
-            self::CATEGORY_WORKERS_APRONS => ['Фартуки', 'Рабочие'],
-
+            self::CATEGORY_SVITSHOT => ['Свитшоты', 'Свитшот'],
+            self::CATEGORY_TOP => ['Топы', 'Топ'],
+            self::CATEGORY_KITCHEN_APRONS => ['Фартуки', 'Кухонные', 'Фартук'],
+            self::CATEGORY_WORKERS_APRONS => ['Фартуки', 'Рабочие', 'Фартук'],
         ];
     }
 
