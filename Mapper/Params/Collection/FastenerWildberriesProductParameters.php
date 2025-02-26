@@ -26,13 +26,19 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class FastenerWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [180, 402, 3188];
+    public const array CATEGORY = [402,
+        WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
+        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_SABO
+    ];
 
     public const int ID = 4;
 

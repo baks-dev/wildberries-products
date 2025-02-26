@@ -189,7 +189,6 @@ final readonly class WildberriesCardNewDispatcher
             $cardArticle = implode('-', $cardArticle);
 
 
-
             /** Проверяем карточку с соответствующим корневым артикулом */
             $ProductEvent = $this->ProductEventByArticle
                 ->onlyCard() // проверяем только артикул карточки
@@ -253,7 +252,8 @@ final readonly class WildberriesCardNewDispatcher
 
             // Фильтруем название категории
             $cats = WildberriesProductProperty::caseCategory()[$WildberriesCardDTO->getCategory()];
-            $title = $this->filterTitle($cats, $title);
+
+            !$cats ?: $title = $this->filterTitle($cats, $title);
 
 
             $reference = iterator_to_array($this->reference);
@@ -539,7 +539,7 @@ final readonly class WildberriesCardNewDispatcher
                         ->setHeight($WildberriesCardDTO->getHeight())
                         ->setLength($WildberriesCardDTO->getLength())
                         ->setPackage(1)
-                        ->setWeight(new Kilogram(0));
+                        ->setWeight(new Kilogram(0.1));
 
                     $DeliveryPackageProductParameter = $this->DeliveryPackageProductParameterHandler->handle($DeliveryPackageProductParameterDTO);
 

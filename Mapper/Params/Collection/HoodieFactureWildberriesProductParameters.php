@@ -26,13 +26,19 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class HoodieFactureWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [1724, 159, 185, 3188];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_SVITSHOT,
+        WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+    ];
 
     public const int ID = 13;
 

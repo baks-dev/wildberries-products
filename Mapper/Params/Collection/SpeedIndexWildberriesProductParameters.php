@@ -26,13 +26,16 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class SpeedIndexWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [5283];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_TIRE,
+    ];
 
     public const int ID = 15001207;
 

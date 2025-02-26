@@ -40,6 +40,9 @@ final class WildberriesProductProperty
     public const int CATEGORY_TOP = 185; // Топы
     public const int CATEGORY_KITCHEN_APRONS = 402; // Фартуки кухонные
     public const int CATEGORY_WORKERS_APRONS = 3188; // Фартуки рабочие;
+    public const int CATEGORY_SLIPPERS = 106; // Тапки;
+    public const int CATEGORY_STRAPS = 107; // Шлепанцы;
+    public const int CATEGORY_SABO = 98; // Cабо;
 
     /** @see WbCharacteristicRequestTest */
     public static function caseCategory(): array
@@ -53,6 +56,9 @@ final class WildberriesProductProperty
             self::CATEGORY_TOP => ['Топы', 'Топ'],
             self::CATEGORY_KITCHEN_APRONS => ['Фартуки', 'Кухонные', 'Фартук', 'Кухонный'],
             self::CATEGORY_WORKERS_APRONS => ['Фартуки', 'Рабочие', 'Фартук', 'Рабочий'],
+            self::CATEGORY_SLIPPERS => ['Тапки', 'Тапочки', 'Домашние'],
+            self::CATEGORY_STRAPS => ['Шлепанцы'],
+            self::CATEGORY_SABO => ['Cабо'],
         ];
     }
 

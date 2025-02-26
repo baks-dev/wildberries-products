@@ -32,8 +32,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AutoconfigureTag('baks.wb.product.params')]
 final class CountryWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    //public const array CATEGORY = [1724, 192, 180, 5283];
-
     public const int ID = 14177451;
 
     public function getName(): string

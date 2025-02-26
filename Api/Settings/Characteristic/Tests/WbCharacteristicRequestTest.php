@@ -68,11 +68,14 @@ class WbCharacteristicRequestTest extends KernelTestCase
             WildberriesProductProperty::CATEGORY_SVITSHOT, // Свитшоты
             WildberriesProductProperty::CATEGORY_TOP, // Свитшоты
             WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // Фартуки кухонные
+            WildberriesProductProperty::CATEGORY_SLIPPERS, // Тапки
+            WildberriesProductProperty::CATEGORY_STRAPS,// Шлепанцы;
+            WildberriesProductProperty::CATEGORY_SABO, // Cабо;
         ];
 
         /** @see WildberriesProductProperty */
 
-        $cats = [WildberriesProductProperty::CATEGORY_WORKERS_APRONS];
+        $cats = [WildberriesProductProperty::CATEGORY_SABO];
 
         foreach($cats as $category)
         {
@@ -85,7 +88,6 @@ class WbCharacteristicRequestTest extends KernelTestCase
             $params = $WildberriesProductParamsCollection->cases($category);
 
             //dd($params);
-
 
             /** @var WbCharacteristicDTO $item */
 
