@@ -25,10 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Api;
 
-//use App\Module\Products\Product\Type\Offers\Id\ProductOfferUid;
-//use App\Module\Wildberries\Rest\OpenApi\Cards\WbImage\WbImageInterface;
-use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final readonly class GetWildberriesCardImage
@@ -36,6 +34,7 @@ final readonly class GetWildberriesCardImage
     public function __construct(
         #[Autowire('%kernel.project_dir%')] private string $project,
         private HttpClientInterface $client,
+        private Filesystem $filesystem,
     ) {}
 
     /**
@@ -66,16 +65,10 @@ final readonly class GetWildberriesCardImage
         /**
          * Если файла не существует - скачиваем
          */
-        if($reload || !file_exists($path))
+        if($reload || false === $this->filesystem->exists($path))
         {
             /* Создаем директорию для загрузки */
-            if(!file_exists($uploadDir))
-            {
-                if(!mkdir($uploadDir) && !is_dir($uploadDir))
-                {
-                    throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadDir));
-                }
-            }
+            $this->filesystem->exists($uploadDir) ?: $this->filesystem->mkdir($uploadDir);
 
             $response = $this->client->request('GET', $url);
 
@@ -90,13 +83,10 @@ final readonly class GetWildberriesCardImage
              */
             if($reload && filemtime($path) < (time() - 86400))
             {
-                self::removeDir($uploadDir);
+                $this->filesystem->remove($uploadDir);
 
                 /* Создаем директорию для новой загрузки */
-                if(!mkdir($uploadDir) && !is_dir($uploadDir))
-                {
-                    throw new RuntimeException(sprintf('Directory "%s" was not created', $uploadDir));
-                }
+                $this->filesystem->mkdir($uploadDir);
             }
 
             if(!file_exists($path))
