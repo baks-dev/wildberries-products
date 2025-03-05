@@ -140,10 +140,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
         if($this->search->getQuery())
         {
             $this->DBALQueryBuilder
-                //  ->createSearchQueryBuilder($search)
-                //
-                //  ->addSearchEqualUid('product.id')
-                //
+                ->createSearchQueryBuilder($this->search)
                 ->addSearchLike('category_trans.name');
 
         }
