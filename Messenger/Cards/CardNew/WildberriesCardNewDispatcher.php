@@ -35,6 +35,7 @@ use BaksDev\Products\Category\Repository\SettingsByCategory\SettingsByCategoryIn
 use BaksDev\Products\Category\Type\Offers\Id\CategoryProductOffersUid;
 use BaksDev\Products\Category\Type\Offers\Variation\CategoryProductVariationUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use BaksDev\Products\Product\Entity\Event\ProductEvent;
 use BaksDev\Products\Product\Entity\Offers\Image\ProductOfferImage;
 use BaksDev\Products\Product\Entity\Offers\Variation\Image\ProductVariationImage;
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
@@ -172,7 +173,6 @@ final readonly class WildberriesCardNewDispatcher
                 $cardArticlePostfix = implode(' ', $cardArticleSpace);
             }
 
-
             $cardArticle = explode('-', $cardArticle);
 
             if($SettingsByCategory['variation_article'])
@@ -188,12 +188,20 @@ final readonly class WildberriesCardNewDispatcher
 
             $cardArticle = implode('-', $cardArticle);
 
-
             /** Проверяем карточку с соответствующим корневым артикулом */
             $ProductEvent = $this->ProductEventByArticle
                 ->onlyCard() // проверяем только артикул карточки
+                ->forProfile($message->getProfile())
                 ->findProductEventByArticle($cardArticle);
 
+            /** Если карточка не найдена - пробуем найти общую */
+            if(false === ($ProductEvent instanceof ProductEvent))
+            {
+                $ProductEvent = $this->ProductEventByArticle
+                    ->onlyCard() // проверяем только артикул карточки
+                    ->forProfile(false)
+                    ->findProductEventByArticle($cardArticle);
+            }
 
             /**
              * Проверяем что в ней отсутствует артикул торговых предложения с размерами
@@ -224,7 +232,7 @@ final readonly class WildberriesCardNewDispatcher
 
 
             $ProductDTO = new ProductDTO();
-            false === $ProductEvent ?: $ProductEvent->getDto($ProductDTO);
+            false === ($ProductEvent instanceof ProductEvent) ?: $ProductEvent->getDto($ProductDTO);
 
             /** Всегда переопределяем категорию */
 
@@ -285,11 +293,9 @@ final readonly class WildberriesCardNewDispatcher
 
             if(false !== $SettingsByCategory['offer_id'])
             {
-
                 $OffersDTO = new ProductOffersCollectionDTO();
                 $ProductDTO->addOffer($OffersDTO);
                 $OffersDTO->setCategoryOffer(new CategoryProductOffersUid($SettingsByCategory['offer_id']));
-
 
                 foreach($WildberriesCardDTO->getOffersCollection() as $barcode => $size)
                 {
