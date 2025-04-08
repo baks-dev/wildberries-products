@@ -194,15 +194,6 @@ final readonly class WildberriesCardNewDispatcher
                 ->forProfile($message->getProfile())
                 ->findProductEventByArticle($cardArticle);
 
-            /** Если карточка не найдена - пробуем найти общую */
-            if(false === ($ProductEvent instanceof ProductEvent))
-            {
-                $ProductEvent = $this->ProductEventByArticle
-                    ->onlyCard() // проверяем только артикул карточки
-                    ->forProfile(false)
-                    ->findProductEventByArticle($cardArticle);
-            }
-
             /**
              * Проверяем что в ней отсутствует артикул торговых предложения с размерами
              */
