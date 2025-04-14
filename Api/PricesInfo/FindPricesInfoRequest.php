@@ -30,8 +30,10 @@ use BaksDev\Wildberries\Api\Wildberries;
 use DateInterval;
 use DomainException;
 use InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
+#[Autoconfigure(public: true)] /* TODO: удалить !!! */
 final class FindPricesInfoRequest extends Wildberries
 {
     private ArrayObject $prices;

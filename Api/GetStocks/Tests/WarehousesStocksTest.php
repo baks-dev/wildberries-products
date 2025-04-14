@@ -29,6 +29,7 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouse;
 use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouses;
 use BaksDev\Wildberries\Products\Api\GetStocks\FindWildberriesStocksRequest;
+use BaksDev\Wildberries\Products\Api\GetStocks\WildberriesStocksDTO;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -58,13 +59,20 @@ final class WarehousesStocksTest extends KernelTestCase
 
         $WildberriesStocks->TokenHttpClient(new WbAuthorizationToken(new UserProfileUid(), self::$tocken));
 
-        $Warehouses = $WildberriesStocks
+        /** @var WildberriesStocksDTO $WildberriesStocksDTO */
+        $WildberriesStocksDTO = $WildberriesStocks
             ->warehouse(self::$warehouse)
             ->addBarcode(self::$barcode)
             ->stocks();
 
-        self::assertNotNull($Warehouses->getAmount(self::$barcode));
-        self::assertIsInt($Warehouses->getAmount(self::$barcode));
+        if(false === $WildberriesStocksDTO)
+        {
+            self::assertFalse(false);
+            return;
+        }
+
+        self::assertNotNull($WildberriesStocksDTO->getAmount(self::$barcode));
+        self::assertIsInt($WildberriesStocksDTO->getAmount(self::$barcode));
 
     }
 }

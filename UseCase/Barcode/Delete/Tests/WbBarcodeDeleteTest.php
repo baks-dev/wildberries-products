@@ -148,7 +148,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         /* WbBarcodeEvent */
 
         $WbBarcodeEventCollection = $em->getRepository(WbBarcodeEvent::class)
-            ->findBy(['category' => CategoryProductUid::TEST]);
+            ->findBy(['main' => CategoryProductUid::TEST]);
 
         foreach($WbBarcodeEventCollection as $remove)
         {

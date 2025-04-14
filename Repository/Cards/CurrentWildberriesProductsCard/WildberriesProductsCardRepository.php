@@ -53,7 +53,6 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
-use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
@@ -62,7 +61,15 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 final class WildberriesProductsCardRepository implements WildberriesProductsCardInterface
 {
+    private int $limit = 100000;
+
     public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
+
+    public function setLimit(int $limit): self
+    {
+        $this->limit = $limit;
+        return $this;
+    }
 
     /**
      * ID продукта
@@ -258,7 +265,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     ProductOffer::class,
                     'product_offer',
                     'product_offer.event = product.event AND 
-                    product_offer.const = IS NULL'
+                    product_offer.const IS NULL'
                 );
         }
 
@@ -480,14 +487,14 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
          * Категория, согласно настройкам соотношений
          */
 
-        $dbal
-            ->addSelect('settings_event.category AS market_category')
-            ->leftJoin(
-                'settings',
-                WbProductSettingsEvent::class,
-                'settings_event',
-                'settings_event.id = settings.event'
-            );
+        //        $dbal
+        //            ->addSelect('settings_event.category AS market_category')
+        //            ->leftJoin(
+        //                'settings',
+        //                WbProductSettingsEvent::class,
+        //                'settings_event',
+        //                'settings_event.id = settings.event'
+        //            );
 
 
         /**
@@ -839,6 +846,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 
         $dbal->allGroupByExclude();
 
+        $dbal->setMaxResults($this->limit);
 
         return $dbal
             ->enableCache('products-product', 5)

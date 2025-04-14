@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Api\Settings\Category\Tests;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Api\Settings\Category\FindAllWbCategoryRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -48,11 +49,11 @@ class WbCategoryTest extends KernelTestCase
 
     public function testUseCase(): void
     {
-        /** @var WbCategoryRequest $WbCategoryRequest */
-        $WbCategoryRequest = self::getContainer()->get(WbCategoryRequest::class);
-        $WbCategoryRequest->TokenHttpClient(self::$Authorization);
+        /** @var FindAllWbCategoryRequest $FindAllWbCategoryRequest */
+        $FindAllWbCategoryRequest = self::getContainer()->get(FindAllWbCategoryRequest::class);
+        $FindAllWbCategoryRequest->TokenHttpClient(self::$Authorization);
 
-        $data = $WbCategoryRequest
+        $data = $FindAllWbCategoryRequest
             ->parent(1)
             ->findAll();
 

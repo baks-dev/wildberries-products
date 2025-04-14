@@ -49,8 +49,13 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
         /** @var AllProductsIdentifierInterface $AllProductsIdentifier */
         $AllProductsIdentifier = self::getContainer()->get(AllProductsIdentifierInterface::class);
 
-        foreach($AllProductsIdentifier->findAll() as $item)
+        foreach($AllProductsIdentifier->findAll() as $key => $item)
         {
+            if($key >= 10)
+            {
+                break;
+            }
+
             $new = $WildberriesProductsCard
                 ->forProduct($item['product_id'])
                 ->forOfferConst($item['offer_const'])

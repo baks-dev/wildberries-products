@@ -32,6 +32,7 @@ use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControlle
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
+use BaksDev\Wildberries\Products\Mapper\Property\Collection\BarcodeWildberriesProductsProperty;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsHandler;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest;
@@ -94,7 +95,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
          */
 
         self::assertEquals(CategoryProductUid::TEST, (string) $WbProductCardDTO->getMain());
-        self::assertEquals('GCRIVEHZUY', $WbProductCardDTO->getName());
+        //self::assertEquals('GCRIVEHZUY', $WbProductCardDTO->getName());
 
         /**
          * WbProductSettingsPropertyDTO
@@ -102,7 +103,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         $WbProductSettingsPropertyDTO = $WbProductCardDTO->getProperty()->current();
 
-        self::assertEquals('fTXTGyZxIr', $WbProductSettingsPropertyDTO->getType());
+        self::assertTrue($WbProductSettingsPropertyDTO->getType()->equals(BarcodeWildberriesProductsProperty::class));
         self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
 
 

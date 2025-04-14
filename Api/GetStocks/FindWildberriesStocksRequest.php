@@ -28,8 +28,10 @@ namespace BaksDev\Wildberries\Products\Api\GetStocks;
 use BaksDev\Wildberries\Api\Wildberries;
 use DateInterval;
 use InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
+#[Autoconfigure(public: true)] /* TODO: удалить !!! */
 final class FindWildberriesStocksRequest extends Wildberries
 {
     /**

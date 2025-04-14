@@ -27,6 +27,7 @@ namespace BaksDev\Wildberries\Products\Api\Cards\Tests;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
@@ -55,13 +56,16 @@ class WildberriesCardRequestTest extends KernelTestCase
 
         $data = $WildberriesGetCardsRequest->findAll();
 
+        /** @var WildberriesCardDTO $Card */
         foreach($data as $Card)
         {
+            self::assertInstanceOf(WildberriesCardDTO::class, $Card);
+
             self::assertIsInt($Card->getId());
             self::assertIsInt($Card->getNomenclature());
 
             self::assertNotEmpty($Card->getCategory());
-            self::assertIsString($Card->getCategory());
+            self::assertIsInt($Card->getCategory());
 
             self::assertNotEmpty($Card->getName());
             self::assertIsString($Card->getName());

@@ -33,6 +33,8 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /**
  * @group wildberries-products
  * @group wildberries-products-barcode
+ *
+ * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::class
  */
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
@@ -41,11 +43,6 @@ final class EditControllerTest extends WebTestCase
 
     private const ROLE = 'ROLE_WB_BARCODE_EDIT';
 
-
-    /**
-     * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::testComplete
-     * @see     NewHandleTest
-     */
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();

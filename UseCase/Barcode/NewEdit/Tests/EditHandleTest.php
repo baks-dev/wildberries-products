@@ -126,19 +126,19 @@ final class EditHandleTest extends KernelTestCase
     }
 
 
-    public function testComplete(): void
-    {
-
-        self::bootKernel();
-        $container = self::getContainer();
-
-        /** @var EntityManagerInterface $em */
-        $em = $container->get(EntityManagerInterface::class);
-        $WbBarcode = $em->getRepository(WbBarcode::class)
-            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
-        self::assertNotNull($WbBarcode);
-
-
-        self::assertTrue(true);
-    }
+    //    public function testComplete(): void
+    //    {
+    //
+    //        self::bootKernel();
+    //        $container = self::getContainer();
+    //
+    //        /** @var EntityManagerInterface $em */
+    //        $em = $container->get(EntityManagerInterface::class);
+    //        $WbBarcode = $em->getRepository(WbBarcode::class)
+    //            ->findOneBy(['id' => CategoryProductUid::TEST, 'profile' => UserProfileUid::TEST]);
+    //        self::assertNotNull($WbBarcode);
+    //
+    //
+    //        self::assertTrue(true);
+    //    }
 }

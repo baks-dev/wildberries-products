@@ -29,6 +29,7 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Yandex\Market\Products\Type\Card\Id\YaMarketProductsCardUid;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 interface WildberriesProductsCardInterface
 {

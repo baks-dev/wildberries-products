@@ -59,19 +59,20 @@ final class NewHandleTest extends KernelTestCase
         if($WbBarcode)
         {
             $em->remove($WbBarcode);
-
-            /* WbBarcodeEvent */
-
-            $WbBarcodeEventCollection = $em->getRepository(WbBarcodeEvent::class)
-                ->findBy(['category' => CategoryProductUid::TEST]);
-
-            foreach($WbBarcodeEventCollection as $remove)
-            {
-                $em->remove($remove);
-            }
-
-            $em->flush();
         }
+
+        /* WbBarcodeEvent */
+
+        $WbBarcodeEventCollection = $em->getRepository(WbBarcodeEvent::class)
+            ->findBy(['main' => CategoryProductUid::TEST]);
+
+        foreach($WbBarcodeEventCollection as $remove)
+        {
+            $em->remove($remove);
+        }
+
+        $em->flush();
+
     }
 
 
@@ -81,8 +82,8 @@ final class NewHandleTest extends KernelTestCase
 
         // setCategory
         $CategoryProductUid = new CategoryProductUid();
-        $WbBarcodeDTO->setCategory($CategoryProductUid);
-        self::assertSame($CategoryProductUid, $WbBarcodeDTO->getCategory());
+        $WbBarcodeDTO->setMain($CategoryProductUid);
+        self::assertSame($CategoryProductUid, $WbBarcodeDTO->getMain());
 
         // setOffer
         $WbBarcodeDTO->setOffer(true);

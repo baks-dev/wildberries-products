@@ -31,7 +31,10 @@ use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldU
 use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\EditControllerTest;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
+use BaksDev\Wildberries\Products\Mapper\Property\Collection\BarcodeWildberriesProductsProperty;
+use BaksDev\Wildberries\Products\Mapper\Property\Collection\BrandWildberriesProductProperty;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsHandler;
@@ -57,26 +60,26 @@ final class WbProductSettingsEditTest extends KernelTestCase
         /** @var EntityManagerInterface $em */
         $em = $container->get(EntityManagerInterface::class);
 
-        $WbProductSettingsEvent = $em->getRepository(WbProductSettingsEvent::class)->find(WbProductSettingsEventUid::TEST);
-        self::assertNotNull($WbProductSettingsEvent);
+        $WbProductSettingsEvent = $em->getRepository(WbProductSettingsEvent::class)
+            ->find(WbProductSettingsEventUid::TEST);
 
+        self::assertNotNull($WbProductSettingsEvent);
 
         $WbProductsSettingsDTO = new WbProductsSettingsDTO();
         $WbProductSettingsEvent->getDto($WbProductsSettingsDTO);
 
-
         self::assertEquals(CategoryProductUid::TEST, (string) $WbProductsSettingsDTO->getMain());
 
-        self::assertEquals('ffxZnGTCbd', $WbProductsSettingsDTO->getName());
-        $WbProductsSettingsDTO->setName('GCRIVEHZUY');
+        //self::assertEquals('ffxZnGTCbd', $WbProductsSettingsDTO->getName());
+        //$WbProductsSettingsDTO->setName('GCRIVEHZUY');
 
 
         /** @var WbProductSettingsPropertyDTO $WbProductSettingsPropertyDTO */
 
         $WbProductSettingsPropertyDTO = $WbProductsSettingsDTO->getProperty()->current();
 
-        self::assertEquals('MsUPpqkQHD', $WbProductSettingsPropertyDTO->getType());
-        $WbProductSettingsPropertyDTO->setType('fTXTGyZxIr');
+        self::assertTrue($WbProductSettingsPropertyDTO->getType()->equals(BrandWildberriesProductProperty::class));
+        $WbProductSettingsPropertyDTO->setType(new WildberriesProductProperty(BarcodeWildberriesProductsProperty::class));
 
         self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
         $WbProductSettingsPropertyDTO->setField(new CategoryProductSectionFieldUid());

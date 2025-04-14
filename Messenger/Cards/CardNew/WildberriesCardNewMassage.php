@@ -27,7 +27,9 @@ namespace BaksDev\Wildberries\Products\Messenger\Cards\CardNew;
 
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Symfony\Component\DependencyInjection\Attribute\Exclude;
 
+#[Exclude]
 final class WildberriesCardNewMassage
 {
     private string $profile;

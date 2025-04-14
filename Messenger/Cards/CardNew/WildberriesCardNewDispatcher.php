@@ -75,7 +75,9 @@ use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-/** Создает новые карточки товаров */
+/**
+ * Создает новые карточки товаров в системе
+ */
 #[AsMessageHandler(priority: 0)]
 final readonly class WildberriesCardNewDispatcher
 {

@@ -33,6 +33,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 /**
  * @group wildberries-products
  * @group wildberries-products-barcode
+ * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::class
  */
 #[When(env: 'test')]
 final class DeleteControllerTest extends WebTestCase
@@ -43,8 +44,7 @@ final class DeleteControllerTest extends WebTestCase
 
 
     /**
-     * @see     NewHandleTest;
-     * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::testComplete
+
      */
     public function testRoleSuccessful(): void
     {
