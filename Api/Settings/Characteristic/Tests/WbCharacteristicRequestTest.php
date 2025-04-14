@@ -37,7 +37,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 
 
 /**
- * @group wb-characteristic-request-test
+ * @group wildberries-products
  */
 #[When(env: 'test')]
 class WbCharacteristicRequestTest extends KernelTestCase
@@ -75,7 +75,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
         /** @see WildberriesProductProperty */
 
-        $cats = [WildberriesProductProperty::CATEGORY_SABO];
+        $cats = [WildberriesProductProperty::CATEGORY_KITCHEN_APRONS];
 
         foreach($cats as $category)
         {
@@ -87,12 +87,10 @@ class WbCharacteristicRequestTest extends KernelTestCase
             $WildberriesProductParamsCollection = self::getContainer()->get(WildberriesProductParametersCollection::class);
             $params = $WildberriesProductParamsCollection->cases($category);
 
-            //dd($params);
-
             /** @var WbCharacteristicDTO $item */
 
-            $count = 0;
-            foreach($data as $item)
+            $count = 1;
+            foreach($data as $i => $item)
             {
                 self::assertNotFalse($params,
                     sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category)
@@ -107,9 +105,9 @@ class WbCharacteristicRequestTest extends KernelTestCase
                 ++$count;
             }
 
-            self::assertCount($count, $params);
-        }
 
+            self::assertCount($count, $params, message: sprintf('Количество элементов %s при %s параметрах', $count, count($params)));
+        }
 
         self::assertTrue(true);
 

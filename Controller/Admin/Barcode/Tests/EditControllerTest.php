@@ -39,9 +39,9 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 final class EditControllerTest extends WebTestCase
 {
-    private const URL = '/admin/wb/barcode/edit/%s';
+    private const string URL = '/admin/wb/barcode/edit/%s';
 
-    private const ROLE = 'ROLE_WB_BARCODE_EDIT';
+    private const string ROLE = 'ROLE_WB_BARCODE_EDIT';
 
     public function testRoleSuccessful(): void
     {

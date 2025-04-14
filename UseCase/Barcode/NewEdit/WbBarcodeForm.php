@@ -185,7 +185,7 @@ final class WbBarcodeForm extends AbstractType
                             return (is_int($category->getAttr()) ? str_repeat(' - ', $category->getAttr() - 1) : '').$category->getOptions();
                         },
                         'disabled' => true,
-                        'label' => $category?->getOptions()
+                        'label' => $category ? $category->getOptions() : false
                     ]);
 
                     /*$builder->add('main', HiddenType::class, [
