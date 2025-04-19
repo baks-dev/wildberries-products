@@ -21,21 +21,29 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
+declare(strict_types=1);
 
-use BaksDev\Products\Product\Entity\Product;
-use BaksDev\Products\Product\Type\Id\ProductUid;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Name;
 
-interface WbBarcodeSettingsInterface
+use BaksDev\Wildberries\Products\Entity\Barcode\Name\WbBarcodeNameInterface;
+
+/** @see WbProductsSettingsName */
+final class WbBarcodeNameDTO implements WbBarcodeNameInterface
 {
-    public function forProduct(Product|ProductUid|string $product): self;
-
-    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
-
     /**
-     * Метод получает настройку бокового печати стикеров для указанного продукта
+     * Значение свойства
+     * @see WbProductSettingsName
      */
-    public function find(): WbBarcodeSettingsResult|false;
+    private bool $value = false;
+
+    public function getValue(): bool
+    {
+        return $this->value === true;
+    }
+
+    public function setValue(?bool $value): self
+    {
+        $this->value = ($value === true);
+        return $this;
+    }
 }

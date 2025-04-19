@@ -21,21 +21,41 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
+declare(strict_types=1);
 
-use BaksDev\Products\Product\Entity\Product;
-use BaksDev\Products\Product\Type\Id\ProductUid;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Name;
 
-interface WbBarcodeSettingsInterface
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+
+final class WbBarcodeNameForm extends AbstractType
 {
-    public function forProduct(Product|ProductUid|string $product): self;
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder->add('value', CheckboxType::class, ['required' => false]);
 
-    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
+        $builder->get('value')->addModelTransformer(
+            new CallbackTransformer(
+                function($value) {
+                    return $value === true;
+                },
+                function($value) {
+                    return $value === true;
+                }
+            )
+        );
+    }
 
-    /**
-     * Метод получает настройку бокового печати стикеров для указанного продукта
-     */
-    public function find(): WbBarcodeSettingsResult|false;
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => WbBarcodeNameDTO::class,
+            'method' => 'POST',
+            'attr' => ['class' => 'w-100'],
+        ]);
+    }
 }

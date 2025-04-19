@@ -31,9 +31,15 @@ use BaksDev\Products\Product\Entity\Info\ProductInfo;
 use BaksDev\Products\Product\Entity\Product;
 use BaksDev\Products\Product\Entity\Property\ProductProperty;
 use BaksDev\Products\Product\Type\Id\ProductUid;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Entity\Barcode\Counter\WbBarcodeCounter;
 use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustom;
-use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
+use BaksDev\Wildberries\Products\Entity\Barcode\Name\WbBarcodeName;
+use BaksDev\Wildberries\Products\Entity\Barcode\Offer\WbBarcodeOffer;
 use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
+use BaksDev\Wildberries\Products\Entity\Barcode\Variation\WbBarcodeVariation;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use InvalidArgumentException;
 
@@ -41,10 +47,20 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 {
     private ProductUid|false $product = false;
 
-    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
+    private UserProfileUid|false $profile = false;
+
+    public function __construct(
+        private readonly DBALQueryBuilder $DBALQueryBuilder,
+        private readonly UserProfileTokenStorageInterface $UserProfileTokenStorage
+    ) {}
 
     public function forProduct(Product|ProductUid|string $product): self
     {
+        if(empty($product))
+        {
+            $this->product = false;
+            return $this;
+        }
 
         if(is_string($product))
         {
@@ -61,8 +77,31 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
         return $this;
     }
 
+    public function forProfile(UserProfile|UserProfileUid|string $profile): self
+    {
+        if(empty($profile))
+        {
+            $this->profile = false;
+            return $this;
+        }
 
-    private function builder(): DBALQueryBuilder
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+
+    public function find(): WbBarcodeSettingsResult|false
     {
         if(false === ($this->product instanceof ProductUid))
         {
@@ -71,9 +110,9 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 
         $dbal = $this->DBALQueryBuilder->createQueryBuilder(self::class);
 
-        $dbal->from(Product::class, 'product');
-
-        $dbal->where('product.id = :product')
+        $dbal
+            ->from(Product::class, 'product')
+            ->where('product.id = :product')
             ->setParameter(
                 key: 'product',
                 value: $this->product,
@@ -94,25 +133,66 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             'product_info.product = product.id'
         );
 
-        //$dbal->addSelect('barcode.event');
-        $dbal->join(
-            'product_category',
-            WbBarcode::class,
-            'barcode',
-            'barcode.id = product_category.category AND barcode.profile = product_info.profile'
-        );
+        $dbal
+            ->join(
+                'product_category',
+                WbBarcode::class,
+                'barcode',
+                '
+                barcode.id = product_category.category AND 
+                barcode.profile = :profile
+            ')
+            ->setParameter(
+                key: 'profile',
+                value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
+                type: UserProfileUid::TYPE
+            );
 
-        $dbal->addSelect('barcode_event.offer');
-        $dbal->addSelect('barcode_event.variation');
-        $dbal->addSelect('barcode_event.modification');
-        $dbal->addSelect('barcode_event.counter');
+        $dbal
+            ->addSelect('barcode_counter.value AS counter')
+            ->leftJoin(
+                'barcode',
+                WbBarcodeCounter::class,
+                'barcode_counter',
+                'barcode_counter.event = barcode.event'
+            );
 
-        $dbal->join(
-            'barcode',
-            WbBarcodeEvent::class,
-            'barcode_event',
-            'barcode_event.id = barcode.event'
-        );
+        $dbal
+            ->addSelect('barcode_name.value AS name')
+            ->leftJoin(
+                'barcode',
+                WbBarcodeName::class,
+                'barcode_name',
+                'barcode_name.event = barcode.event'
+            );
+
+        $dbal
+            ->addSelect('barcode_offer.value AS offer')
+            ->leftJoin(
+                'barcode',
+                WbBarcodeOffer::class,
+                'barcode_offer',
+                'barcode_offer.event = barcode.event'
+            );
+
+        $dbal
+            ->addSelect('barcode_variation.value AS variation')
+            ->leftJoin(
+                'barcode',
+                WbBarcodeVariation::class,
+                'barcode_variation',
+                'barcode_variation.event = barcode.event'
+            );
+
+        $dbal
+            ->addSelect('barcode_modification.value AS modification')
+            ->leftJoin(
+                'barcode',
+                WbBarcodeVariation::class,
+                'barcode_modification',
+                'barcode_modification.event = barcode.event'
+            );
+
 
         /** Получаем настройки свойств */
 
@@ -171,26 +251,6 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
 
 
         $dbal->allGroupByExclude();
-
-        return $dbal;
-    }
-
-    /**
-     * @deprecated  ->forProduct()->find()
-     */
-    public function findWbBarcodeSettings(): array|false
-    {
-        $dbal = $this->builder();
-
-        return $dbal
-            ->enableCache('wildberries-products')
-            ->fetchAssociative();
-    }
-
-    public function find(): WbBarcodeSettingsResult|false
-    {
-        $dbal = $this->builder();
-
 
         return $dbal
             ->enableCache('wildberries-products')

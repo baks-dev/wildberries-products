@@ -21,21 +21,33 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
+declare(strict_types=1);
 
-use BaksDev\Products\Product\Entity\Product;
-use BaksDev\Products\Product\Type\Id\ProductUid;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+namespace BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Counter;
 
-interface WbBarcodeSettingsInterface
+use BaksDev\Wildberries\Products\Entity\Barcode\Counter\WbBarcodeCounterInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/** @see WbBarcodeCounter */
+final class WbBarcodeCounterDTO implements WbBarcodeCounterInterface
 {
-    public function forProduct(Product|ProductUid|string $product): self;
-
-    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
+    /** Значение свойства */
+    #[Assert\NotBlank]
+    private ?int $value = 1;
 
     /**
-     * Метод получает настройку бокового печати стикеров для указанного продукта
+     * Значение свойства
+     * @see WbBarcodeCounter
      */
-    public function find(): WbBarcodeSettingsResult|false;
+    public function getValue(): int
+    {
+        return $this->value ?? 1;
+    }
+
+    public function setValue(?int $value): self
+    {
+        $this->value = $value ?? 1;
+        return $this;
+    }
+
 }

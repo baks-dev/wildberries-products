@@ -28,6 +28,11 @@ use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEventInterface;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Counter\WbBarcodeCounterDTO;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Modification\WbBarcodeModificationDTO;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Name\WbBarcodeNameDTO;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Offer\WbBarcodeOfferDTO;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Variation\WbBarcodeVariationDTO;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -55,28 +60,10 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
 
 
     /**
-     * Добавить Торговое предложение в стикер
-     */
-    private bool $offer = false;
-
-    /**
-     * Добавить Множественный вариант в стикер
-     */
-    private bool $variation = false;
-
-    /**
-     * Добавить Модификатор множественного варианта
-     */
-    private bool $modification = false;
-
-
-
-    /**
      * Количество стикеров
      */
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 1, max: 5)]
-    private ?int $counter = 1;
+    #[Assert\Valid]
+    private WbBarcodeCounterDTO $counter;
 
     /**
      * Свойства товара
@@ -90,11 +77,41 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     #[Assert\Valid]
     private ArrayCollection $custom;
 
+    /**
+     * Флаг отображения звания в стикере
+     */
+    private WbBarcodeNameDTO $name;
+
+
+    /**
+     * Добавить Торговое предложение в стикер
+     */
+    #[Assert\Valid]
+    private WbBarcodeOfferDTO $offer;
+
+    /**
+     * Добавить Множественный вариант в стикер
+     */
+    #[Assert\Valid]
+    private WbBarcodeVariationDTO $variation;
+
+    /**
+     * Добавить Модификатор множественного варианта
+     */
+    #[Assert\Valid]
+    private WbBarcodeModificationDTO $modification;
+
 
     public function __construct()
     {
         $this->property = new ArrayCollection();
         $this->custom = new ArrayCollection();
+
+        $this->counter = new WbBarcodeCounterDTO();
+        $this->name = new WbBarcodeNameDTO();
+        $this->offer = new WbBarcodeOfferDTO();
+        $this->variation = new WbBarcodeVariationDTO();
+        $this->modification = new WbBarcodeModificationDTO();
     }
 
     public function getEvent(): ?WbBarcodeEventUid
@@ -151,63 +168,10 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
         return new Property\WbBarcodePropertyDTO();
     }
 
-    /**
-     * Offer
-     */
-    public function getOffer(): bool
-    {
-        return $this->offer;
-    }
-
-    public function setOffer(bool $offer): self
-    {
-        $this->offer = $offer;
-        return $this;
-    }
-
-    /**
-     * Variation
-     */
-    public function getVariation(): bool
-    {
-        return $this->variation;
-    }
-
-    public function setVariation(bool $variation): self
-    {
-        $this->variation = $variation;
-        return $this;
-    }
-
-
-    /**
-     * Modification
-     */
-    public function getModification(): bool
-    {
-        return $this->modification;
-    }
-
-    public function setModification(bool $modification): self
-    {
-        $this->modification = $modification;
-        return $this;
-    }
-
-
-
-    /** COUNTER */
-
-    public function getCounter(): ?int
+    public function getCounter(): WbBarcodeCounterDTO
     {
         return $this->counter;
     }
-
-    public function setCounter(?int $counter = 1): void
-    {
-        $this->counter = $counter;
-    }
-
 
     /** CUSTOM */
 
@@ -224,6 +188,26 @@ final class WbBarcodeDTO implements WbBarcodeEventInterface
     public function removeCustom(Custom\WbBarcodeCustomDTO $custom): void
     {
         $this->custom->removeElement($custom);
+    }
+
+    public function getName(): WbBarcodeNameDTO
+    {
+        return $this->name;
+    }
+
+    public function getOffer(): WbBarcodeOfferDTO
+    {
+        return $this->offer;
+    }
+
+    public function getVariation(): WbBarcodeVariationDTO
+    {
+        return $this->variation;
+    }
+
+    public function getModification(): WbBarcodeModificationDTO
+    {
+        return $this->modification;
     }
 
 }

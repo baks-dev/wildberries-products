@@ -28,6 +28,7 @@ use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
 use BaksDev\Wildberries\Products\Entity\Settings\Modify\WbProductSettingsModify;
+use BaksDev\Wildberries\Products\Entity\Settings\Name\WbProductSettingsName;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;

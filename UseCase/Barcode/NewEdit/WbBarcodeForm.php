@@ -28,6 +28,11 @@ use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Counter\WbBarcodeCounterForm;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Modification\WbBarcodeModificationForm;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Name\WbBarcodeNameForm;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Offer\WbBarcodeOfferForm;
+use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Variation\WbBarcodeVariationForm;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -64,10 +69,16 @@ final class WbBarcodeForm extends AbstractType
             },
         ]);
 
-        $builder->add('offer', CheckboxType::class, ['required' => false]);
-        $builder->add('variation', CheckboxType::class, ['required' => false]);
-        $builder->add('modification', CheckboxType::class, ['required' => false]);
-        $builder->add('counter', IntegerType::class);
+        $builder->add('counter', WbBarcodeCounterForm::class);
+
+        $builder->add('name', WbBarcodeNameForm::class, ['label' => false]);
+
+        $builder->add('offer', WbBarcodeOfferForm::class, ['required' => false]);
+
+        $builder->add('variation', WbBarcodeVariationForm::class, ['required' => false]);
+
+        $builder->add('modification', WbBarcodeModificationForm::class, ['required' => false]);
+
 
         $builder->add('property', CollectionType::class, [
             'entry_type' => Property\WbBarcodePropertyForm::class,

@@ -25,9 +25,14 @@ namespace BaksDev\Wildberries\Products\Entity\Barcode\Event;
 
 use BaksDev\Core\Entity\EntityEvent;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
+use BaksDev\Wildberries\Products\Entity\Barcode\Counter\WbBarcodeCounter;
 use BaksDev\Wildberries\Products\Entity\Barcode\Custom\WbBarcodeCustom;
+use BaksDev\Wildberries\Products\Entity\Barcode\Modification\WbBarcodeModification;
 use BaksDev\Wildberries\Products\Entity\Barcode\Modify\WbBarcodeModify;
+use BaksDev\Wildberries\Products\Entity\Barcode\Name\WbBarcodeName;
+use BaksDev\Wildberries\Products\Entity\Barcode\Offer\WbBarcodeOffer;
 use BaksDev\Wildberries\Products\Entity\Barcode\Property\WbBarcodeProperty;
+use BaksDev\Wildberries\Products\Entity\Barcode\Variation\WbBarcodeVariation;
 use BaksDev\Wildberries\Products\Entity\Barcode\WbBarcode;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 use Doctrine\Common\Collections\Collection;
@@ -55,31 +60,26 @@ class WbBarcodeEvent extends EntityEvent
     #[ORM\Column(type: CategoryProductUid::TYPE)]
     private CategoryProductUid $main;
 
-    /**
-     * Добавить Торговое предложение в стикер
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $offer = false;
+    /** Количество стикеров */
+    #[ORM\OneToOne(targetEntity: WbBarcodeCounter::class, mappedBy: 'event', cascade: ['all'])]
+    private ?WbBarcodeCounter $counter = null;
 
-    /**
-     * Добавить Множественный вариант в стикер
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $variation = false;
+    /** Флаг отображения звания в стикере */
+    #[ORM\OneToOne(targetEntity: WbBarcodeName::class, mappedBy: 'event', cascade: ['all'])]
+    private ?WbBarcodeName $name = null;
 
-    /**
-     * Добавить модификацию множественного варианта в стикер
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private bool $modification = false;
+    /** Добавить Торговое предложение в стикер */
+    #[ORM\OneToOne(targetEntity: WbBarcodeOffer::class, mappedBy: 'event', cascade: ['all'])]
+    private ?WbBarcodeOffer $offer = null;
 
-    /**
-     * Количество стикеров
-     */
-    #[Assert\NotBlank]
-    #[Assert\Range(min: 1, max: 5)]
-    #[ORM\Column(type: Types::SMALLINT)]
-    private int $counter = 1;
+    /** Добавить Множественный вариант в стикер */
+    #[ORM\OneToOne(targetEntity: WbBarcodeVariation::class, mappedBy: 'event', cascade: ['all'])]
+    private ?WbBarcodeVariation $variation = null;
+
+    /** Добавить модификацию множественного варианта в стикер */
+    #[ORM\OneToOne(targetEntity: WbBarcodeModification::class, mappedBy: 'event', cascade: ['all'])]
+    private ?WbBarcodeModification $modification = null;
+
 
     /** Коллекция свойств продукта */
     #[Assert\Valid]

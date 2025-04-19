@@ -21,21 +21,13 @@
  *  THE SOFTWARE.
  */
 
-namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
+namespace BaksDev\Wildberries\Products\Entity\Barcode\Modification;
 
-use BaksDev\Products\Product\Entity\Product;
-use BaksDev\Products\Product\Type\Id\ProductUid;
-use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-
-interface WbBarcodeSettingsInterface
+interface WbBarcodeModificationInterface
 {
-    public function forProduct(Product|ProductUid|string $product): self;
-
-    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
-
     /**
-     * Метод получает настройку бокового печати стикеров для указанного продукта
+     * Значение свойства
+     * @see WbBarcodeModification
      */
-    public function find(): WbBarcodeSettingsResult|false;
+    public function getValue(): bool;
 }

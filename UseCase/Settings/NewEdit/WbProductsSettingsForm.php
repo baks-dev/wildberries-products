@@ -31,6 +31,7 @@ use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInter
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
+use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Name\WbProductsSettingsNameForm;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Parameters\WbProductSettingsParametersDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
@@ -57,6 +58,8 @@ final class WbProductsSettingsForm extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+
+
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) {
 
             /** @var WbProductsSettingsDTO $data */

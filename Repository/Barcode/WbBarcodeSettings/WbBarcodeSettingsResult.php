@@ -25,56 +25,17 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Repository\Barcode\WbBarcodeSettings;
 
-final class WbBarcodeSettingsResult
+final readonly class WbBarcodeSettingsResult
 {
-    private bool $offer;
-
-    private bool $variation;
-
-    private bool $modification;
-
-    private int $counter;
-
-    private array $property;
-
-    private array $custom;
-
-    public function __construct(...$data)
-    {
-
-        $this->offer = (bool) $data['offer'];
-        $this->variation = (bool) $data['variation'];
-        $this->modification = (bool) $data['modification'];
-
-        $this->counter = $data['counter'] ?: 1;
-
-        $this->property = $data['property'] ? json_decode($data['property'], false, 512, JSON_THROW_ON_ERROR) : [];
-        $this->custom = $data['custom'] ? json_decode($data['custom'], false, 512, JSON_THROW_ON_ERROR) : [];
-    }
-
-    /**
-     * Offer
-     */
-    public function isOffer(): bool
-    {
-        return $this->offer;
-    }
-
-    /**
-     * Variation
-     */
-    public function isVariation(): bool
-    {
-        return $this->variation;
-    }
-
-    /**
-     * Modification
-     */
-    public function isModification(): bool
-    {
-        return $this->modification;
-    }
+    public function __construct(
+        private ?int $counter,
+        private ?bool $name,
+        private ?bool $offer,
+        private ?bool $variation,
+        private ?bool $modification,
+        private ?string $property,
+        private ?string $custom
+    ) {}
 
     /**
      * Counter
@@ -85,11 +46,43 @@ final class WbBarcodeSettingsResult
     }
 
     /**
+     * Name
+     */
+    public function isName(): bool
+    {
+        return $this->name === true;
+    }
+
+    /**
+     * Offer
+     */
+    public function isOffer(): bool
+    {
+        return $this->offer === true;
+    }
+
+    /**
+     * Variation
+     */
+    public function isVariation(): bool
+    {
+        return $this->variation === true;
+    }
+
+    /**
+     * Modification
+     */
+    public function isModification(): bool
+    {
+        return $this->modification === true;
+    }
+
+    /**
      * Property
      */
     public function getProperty(): array
     {
-        return $this->property ?: [];
+        return $this->property ? json_decode($this->property, false, 512, JSON_THROW_ON_ERROR) : [];
     }
 
     /**
@@ -97,7 +90,7 @@ final class WbBarcodeSettingsResult
      */
     public function getCustom(): array
     {
-        return $this->custom ?: [];
+        return $this->custom ? json_decode($this->custom, false, 512, JSON_THROW_ON_ERROR) : [];
     }
 
 }
