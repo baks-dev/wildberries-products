@@ -66,7 +66,9 @@ final class PrintController extends AbstractController
 
     ): Response
     {
-        /** Получаем информацию о продукте */
+        /**
+         * Получаем информацию о продукте
+         */
 
         $ProductDetail = $ProductDetailByUid
             ->event($event)
@@ -89,14 +91,6 @@ final class PrintController extends AbstractController
 
             return new Response('Продукция в упаковке не найдена', Response::HTTP_NOT_FOUND);
         }
-
-        /**
-         * Получаем настройки бокового стикера
-         */
-
-        $BarcodeSettings = $ProductDetail['main'] ? $WbBarcodeSettings
-            ->forProduct($ProductDetail['main'])
-            ->find() : false;
 
 
         /**
@@ -125,12 +119,22 @@ final class PrintController extends AbstractController
         $render = trim($render);
 
 
-        return $this->render([
-            'barcode' => $render,
-            'counter' => $BarcodeSettings->getCounter(),
-            'total' => $request->get('total', 1),
-            'card' => $ProductDetail
-        ]);
-    }
+        /**
+         * Получаем настройки бокового стикера
+         */
 
+        $BarcodeSettings = $ProductDetail['main'] ?
+            $WbBarcodeSettings->forProduct($ProductDetail['main'])->find() : false;
+
+
+        return $this->render(
+            parameters: [
+                'barcode' => $render,
+                'settings' => $BarcodeSettings,
+                'total' => $request->get('total', 1),
+                'product' => $ProductDetail,
+            ],
+            file: 'print.html.twig'
+        );
+    }
 }
