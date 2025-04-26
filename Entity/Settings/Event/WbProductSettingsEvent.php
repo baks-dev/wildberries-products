@@ -62,21 +62,21 @@ class WbProductSettingsEvent extends EntityEvent
     private CategoryProductUid $main;
 
     /** One To One */
-    #[ORM\OneToOne(targetEntity: WbProductSettingsInvariable::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbProductSettingsInvariable::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbProductSettingsInvariable $invariable = null;
 
     /**
      * Модификатор
      */
     #[Assert\Valid]
-    #[ORM\OneToOne(targetEntity: WbProductSettingsModify::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbProductSettingsModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private WbProductSettingsModify $modify;
 
     /**
      * Свойства карточки
      */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: WbProductSettingsProperty::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbProductSettingsProperty::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $property;
 
 
@@ -84,7 +84,7 @@ class WbProductSettingsEvent extends EntityEvent
      * Характеристики карточки
      */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: WbProductSettingsParameters::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbProductSettingsParameters::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $parameter;
 
 

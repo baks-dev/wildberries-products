@@ -46,7 +46,7 @@ class WbBarcodeModify extends EntityEvent
     #[Assert\NotBlank]
     #[Assert\Uuid]
     #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'modify', targetEntity: WbBarcodeEvent::class)]
+    #[ORM\OneToOne(targetEntity: WbBarcodeEvent::class, inversedBy: 'modify')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private WbBarcodeEvent $event;
 

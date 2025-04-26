@@ -61,40 +61,40 @@ class WbBarcodeEvent extends EntityEvent
     private CategoryProductUid $main;
 
     /** Количество стикеров */
-    #[ORM\OneToOne(targetEntity: WbBarcodeCounter::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeCounter::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbBarcodeCounter $counter = null;
 
     /** Флаг отображения звания в стикере */
-    #[ORM\OneToOne(targetEntity: WbBarcodeName::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeName::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbBarcodeName $name = null;
 
     /** Добавить Торговое предложение в стикер */
-    #[ORM\OneToOne(targetEntity: WbBarcodeOffer::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeOffer::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbBarcodeOffer $offer = null;
 
     /** Добавить Множественный вариант в стикер */
-    #[ORM\OneToOne(targetEntity: WbBarcodeVariation::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeVariation::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbBarcodeVariation $variation = null;
 
     /** Добавить модификацию множественного варианта в стикер */
-    #[ORM\OneToOne(targetEntity: WbBarcodeModification::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeModification::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private ?WbBarcodeModification $modification = null;
 
 
     /** Коллекция свойств продукта */
     #[Assert\Valid]
     #[ORM\OrderBy(['sort' => 'ASC'])]
-    #[ORM\OneToMany(targetEntity: WbBarcodeProperty::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbBarcodeProperty::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $property;
 
     /** Коллекция пользовательских свойств */
     #[Assert\Valid]
-    #[ORM\OneToMany(targetEntity: WbBarcodeCustom::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToMany(targetEntity: WbBarcodeCustom::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private Collection $custom;
 
     /** Модификатор */
     #[Assert\Valid]
-    #[ORM\OneToOne(targetEntity: WbBarcodeModify::class, mappedBy: 'event', cascade: ['all'])]
+    #[ORM\OneToOne(targetEntity: WbBarcodeModify::class, mappedBy: 'event', cascade: ['all'], fetch: 'EAGER')]
     private WbBarcodeModify $modify;
 
     public function __construct()

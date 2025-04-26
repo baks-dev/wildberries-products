@@ -47,12 +47,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Index(columns: ['action'])]
 class WbProductSettingsModify extends EntityEvent
 {
-
-
     /** ID события */
     #[Assert\NotBlank]
     #[ORM\Id]
-    #[ORM\OneToOne(inversedBy: 'modify', targetEntity: WbProductSettingsEvent::class)]
+    #[ORM\OneToOne(targetEntity: WbProductSettingsEvent::class, inversedBy: 'modify')]
     #[ORM\JoinColumn(name: 'event', referencedColumnName: 'id')]
     private WbProductSettingsEvent $event;
 
