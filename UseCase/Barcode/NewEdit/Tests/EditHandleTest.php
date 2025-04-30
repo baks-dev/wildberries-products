@@ -77,11 +77,20 @@ final class EditHandleTest extends KernelTestCase
         $WbBarcodeDTO = new WbBarcodeDTO();
         $WbBarcodeEvent->getDto($WbBarcodeDTO);
 
+        self::assertTrue($WbBarcodeDTO->getName()->getValue());
+        $WbBarcodeDTO->getName()->setValue(false);
 
-        self::assertTrue($WbBarcodeDTO->getOffer());
-        self::assertTrue($WbBarcodeDTO->getVariation());
-        self::assertEquals(3, $WbBarcodeDTO->getCounter());
+        self::assertTrue($WbBarcodeDTO->getOffer()->getValue());
+        $WbBarcodeDTO->getOffer()->setValue(false);
 
+        self::assertTrue($WbBarcodeDTO->getVariation()->getValue());
+        $WbBarcodeDTO->getVariation()->setValue(false);
+
+        self::assertTrue($WbBarcodeDTO->getModification()->getValue());
+        $WbBarcodeDTO->getModification()->setValue(false);
+
+        self::assertEquals(3, $WbBarcodeDTO->getCounter()->getValue());
+        $WbBarcodeDTO->getCounter()->setValue(5);
 
         /** @var WbBarcodePropertyDTO $WbBarcodePropertyDTO */
         $WbBarcodePropertyDTO = $WbBarcodeDTO->getProperty()->current();
@@ -101,10 +110,6 @@ final class EditHandleTest extends KernelTestCase
 
         /** EDIT */
 
-        // Barcode
-        $WbBarcodeDTO->setOffer(false);
-        $WbBarcodeDTO->setVariation(false);
-        $WbBarcodeDTO->setCounter(5);
 
         // Property
         $WbBarcodePropertyDTO->setOffer(new  CategoryProductSectionFieldUid());

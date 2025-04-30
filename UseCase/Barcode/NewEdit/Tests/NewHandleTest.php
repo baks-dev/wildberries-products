@@ -85,17 +85,24 @@ final class NewHandleTest extends KernelTestCase
         $WbBarcodeDTO->setMain($CategoryProductUid);
         self::assertSame($CategoryProductUid, $WbBarcodeDTO->getMain());
 
+        $WbBarcodeDTO->getName()->setValue(true);
+        self::assertTrue($WbBarcodeDTO->getName()->getValue());
+
         // setOffer
-        $WbBarcodeDTO->setOffer(true);
-        self::assertTrue($WbBarcodeDTO->getOffer());
+        $WbBarcodeDTO->getOffer()->setValue(true);
+        self::assertTrue($WbBarcodeDTO->getOffer()->getValue());
 
         // setVariation
-        $WbBarcodeDTO->setVariation(true);
-        self::assertTrue($WbBarcodeDTO->getVariation());
+        $WbBarcodeDTO->getVariation()->setValue(true);
+        self::assertTrue($WbBarcodeDTO->getVariation()->getValue());
+
+        // setModification
+        $WbBarcodeDTO->getModification()->setValue(true);
+        self::assertTrue($WbBarcodeDTO->getModification()->getValue());
 
         // setCounter
-        $WbBarcodeDTO->setCounter(3);
-        self::assertEquals(3, $WbBarcodeDTO->getCounter());
+        $WbBarcodeDTO->getCounter()->setValue(3);
+        self::assertEquals(3, $WbBarcodeDTO->getCounter()->getValue());
 
 
         $WbBarcodePropertyDTO = new WbBarcodePropertyDTO();

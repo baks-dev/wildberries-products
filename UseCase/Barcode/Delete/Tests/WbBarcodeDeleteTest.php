@@ -84,9 +84,11 @@ final class WbBarcodeDeleteTest extends KernelTestCase
         $WbBarcodeEvent->getDto($WbBarcodeDTO);
 
 
-        self::assertFalse($WbBarcodeDTO->getOffer());
-        self::assertFalse($WbBarcodeDTO->getVariation());
-        self::assertEquals(5, $WbBarcodeDTO->getCounter());
+        self::assertFalse($WbBarcodeDTO->getName()->getValue());
+        self::assertFalse($WbBarcodeDTO->getOffer()->getValue());
+        self::assertFalse($WbBarcodeDTO->getVariation()->getValue());
+        self::assertFalse($WbBarcodeDTO->getModification()->getValue());
+        self::assertEquals(5, $WbBarcodeDTO->getCounter()->getValue());
 
 
         /** @var WbBarcodePropertyDTO $WbBarcodePropertyDTO */
