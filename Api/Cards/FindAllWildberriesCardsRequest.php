@@ -30,6 +30,7 @@ use DateInterval;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Generator;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\ItemInterface;
 
 final class FindAllWildberriesCardsRequest extends Wildberries
@@ -43,6 +44,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
     /**
      * @return array{WildberriesCardDTO}
      *
+     * @throws InvalidArgumentException
      * @see https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1get~1cards~1list/post
      */
     public function findAll(string|null|false $search = null): Generator|false
@@ -53,7 +55,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
             $key = md5(self::class.$this->getProfile().$this->nomenclature.$search);
             // $cache->deleteItem($key);
 
-            $content = $cache->get($key, function(ItemInterface $item) use ($search) {
+            $content = $cache->get($key, function(ItemInterface $item) use ($search): array|false {
 
                 $item->expiresAfter(DateInterval::createFromDateString('1 seconds'));
 
@@ -69,7 +71,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
                             "textSearch" => $search ?: '',
                             "withPhoto" => 1,
                         ],
-                    ]
+                    ],
                 ];
 
                 $response = $this->content()->TokenHttpClient()
@@ -84,11 +86,21 @@ final class FindAllWildberriesCardsRequest extends Wildberries
                     return false;
                 }
 
+                if(empty($content) || empty($content['cards']))
+                {
+                    return false;
+                }
+
                 $item->expiresAfter(DateInterval::createFromDateString('1 hours'));
 
                 return $response->toArray(false);
 
             });
+
+            if(false === $content)
+            {
+                return false;
+            }
 
 
             if(empty($content['cursor']))

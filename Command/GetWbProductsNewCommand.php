@@ -166,7 +166,7 @@ class GetWbProductsNewCommand extends Command
 
         $WildberriesCards = $this->WildberriesCardsRequest
             ->profile($profile)
-            ->findAll($article);
+            ->findAll();
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         foreach($WildberriesCards as $WildberriesCardDTO)
@@ -179,7 +179,8 @@ class GetWbProductsNewCommand extends Command
                 continue;
             }
 
-            $WildberriesCardNewMassage = new WildberriesCardNewMassage($profile, $article);
+            /** Передаем на обновление найденный артикул */
+            $WildberriesCardNewMassage = new WildberriesCardNewMassage($profile, $WildberriesCardDTO->getArticle());
 
             $this->messageDispatch->dispatch(
                 $WildberriesCardNewMassage,
