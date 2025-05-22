@@ -37,7 +37,8 @@ final class FastenerWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
-        WildberriesProductProperty::CATEGORY_SABO
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_STRAPS,
     ];
 
     public const int ID = 4;

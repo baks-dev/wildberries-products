@@ -35,8 +35,10 @@ final class PocketsWildberriesProductParameters implements WildberriesProductPar
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SHIRTS,
+        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_HOODIE,
     ];
 
     public const int ID = 48;

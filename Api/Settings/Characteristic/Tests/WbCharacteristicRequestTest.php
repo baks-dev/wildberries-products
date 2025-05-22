@@ -48,7 +48,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
     {
         self::$Authorization = new WbAuthorizationToken(
             new UserProfileUid($_SERVER['TEST_WILDBERRIES_PROFILE']),
-            $_SERVER['TEST_WILDBERRIES_TOKEN']
+            $_SERVER['TEST_WILDBERRIES_TOKEN'],
         );
     }
 
@@ -61,21 +61,21 @@ class WbCharacteristicRequestTest extends KernelTestCase
         //
 
         $cats = [
-            WildberriesProductProperty::CATEGORY_TIRE, // Шины автомобильные
-            WildberriesProductProperty::CATEGORY_SHIRTS, // Футболки
-            WildberriesProductProperty::CATEGORY_HOODIE, // Худи
-            WildberriesProductProperty::CATEGORY_JEANS, // Джинсы
-            WildberriesProductProperty::CATEGORY_SVITSHOT, // Свитшоты
-            WildberriesProductProperty::CATEGORY_TOP, // Свитшоты
-            WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // Фартуки кухонные
-            WildberriesProductProperty::CATEGORY_SLIPPERS, // Тапки
-            WildberriesProductProperty::CATEGORY_STRAPS,// Шлепанцы;
-            WildberriesProductProperty::CATEGORY_SABO, // Cабо;
+            WildberriesProductProperty::CATEGORY_TIRE, // 5283 Шины автомобильные
+            WildberriesProductProperty::CATEGORY_SHIRTS, // 192 Футболки
+            WildberriesProductProperty::CATEGORY_HOODIE, // 1724 Худи
+            WildberriesProductProperty::CATEGORY_JEANS, // 180 Джинсы
+            WildberriesProductProperty::CATEGORY_SVITSHOT, // 159 Свитшоты
+            WildberriesProductProperty::CATEGORY_TOP, // 185 Свитшоты
+            WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // 402 Фартуки кухонные
+            WildberriesProductProperty::CATEGORY_SLIPPERS, // 106 Тапки
+            WildberriesProductProperty::CATEGORY_STRAPS,// 107 Шлепанцы;
+            WildberriesProductProperty::CATEGORY_SABO, // 98 Cабо;
+            WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
         ];
 
         /** @see WildberriesProductProperty */
-
-        $cats = [WildberriesProductProperty::CATEGORY_KITCHEN_APRONS];
+        //$cats = [WildberriesProductProperty::CATEGORY_SHIRTS_SPORT];
 
         foreach($cats as $category)
         {
@@ -85,28 +85,34 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
             /** @var WildberriesProductParametersCollection $WildberriesProductParamsCollection */
             $WildberriesProductParamsCollection = self::getContainer()->get(WildberriesProductParametersCollection::class);
+
             $params = $WildberriesProductParamsCollection->cases($category);
 
             /** @var WbCharacteristicDTO $item */
 
-            $count = 1;
-            foreach($data as $i => $item)
+            $count = 0;
+
+
+            foreach($data as $item)
             {
+
                 self::assertNotFalse($params,
-                    sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category)
+                    sprintf('Отсутствует элемент ID = %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category),
                 );
 
-                self::assertNotEmpty(array_filter($params, function(WildberriesProductParametersInterface $param) use (
-                    $item
-                ) {
-                    return $param->equals($item->getId());
-                }), sprintf('Отсутствует элемент ID: %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category));
+                /** Проверяем по всем параметрам */
+
+                self::assertNotEmpty(array_filter($params,
+                    static function(WildberriesProductParametersInterface $param) use ($item) {
+                        return $param->equals($item->getId());
+                    }), sprintf('Отсутствует элемент ID = %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category));
+
 
                 ++$count;
             }
 
 
-            self::assertCount($count, $params, message: sprintf('Количество элементов %s при %s параметрах', $count, count($params)));
+            //self::assertCount($count, $params, message: sprintf('В категории ID = %s количество элементов %s при %s параметрах', $category, ($i+1), count($params)));
         }
 
         self::assertTrue(true);

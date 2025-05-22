@@ -35,6 +35,7 @@ final class NecklineWildberriesProductParameters implements WildberriesProductPa
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SHIRTS,
+        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_TOP,
     ];
 

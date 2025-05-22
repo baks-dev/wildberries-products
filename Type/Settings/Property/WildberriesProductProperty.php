@@ -43,6 +43,7 @@ final class WildberriesProductProperty
     public const int CATEGORY_SLIPPERS = 106; // Тапки;
     public const int CATEGORY_STRAPS = 107; // Шлепанцы;
     public const int CATEGORY_SABO = 98; // Cабо;
+    public const int CATEGORY_SHIRTS_SPORT = 5217; // Футболка спортивная;
 
     /** @see WbCharacteristicRequestTest */
     public static function caseCategory(): array
@@ -59,6 +60,7 @@ final class WildberriesProductProperty
             self::CATEGORY_SLIPPERS => ['Тапки', 'Тапочки', 'Домашние'],
             self::CATEGORY_STRAPS => ['Шлепанцы'],
             self::CATEGORY_SABO => ['Cабо'],
+            self::CATEGORY_SHIRTS_SPORT => ['Футболки', 'Футболка спортивная'],
         ];
     }
 

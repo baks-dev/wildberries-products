@@ -31,22 +31,17 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class TypeWildberriesProductParameters implements WildberriesProductParametersInterface
+final class TiresomontateTireWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_SHIRTS,
-        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
-        WildberriesProductProperty::CATEGORY_JEANS,
-        WildberriesProductProperty::CATEGORY_SVITSHOT,
-        WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_TIRE,
     ];
 
-    public const int ID = 213929;
+    public const int ID = 15002841;
 
     public function getName(): string
     {
-        return 'Тип ростовки';
+        return 'Шиномонтаж';
     }
 
     public function required(): bool
@@ -82,7 +77,7 @@ final class TypeWildberriesProductParameters implements WildberriesProductParame
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -91,11 +86,15 @@ final class TypeWildberriesProductParameters implements WildberriesProductParame
         return true;
     }
 
+
     public function getData(array $data, ?TranslatorInterface $translator = null): mixed
     {
+
+
         if(isset($data['product_params']))
         {
             $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
+
 
             foreach($product_params as $product_param)
             {
@@ -104,7 +103,7 @@ final class TypeWildberriesProductParameters implements WildberriesProductParame
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value,
                     ];
                 }
             }
