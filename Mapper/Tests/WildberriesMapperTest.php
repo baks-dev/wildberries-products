@@ -29,7 +29,7 @@ use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
-use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\YaMarketProductsCardInterface;
+use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
@@ -67,7 +67,7 @@ class WildberriesMapperTest extends KernelTestCase
 
         $AllProductsIdentifier->forProduct('01914cb3-f049-7526-9a82-bd576278fbc4');
 
-        foreach($AllProductsIdentifier->findAll() as $item)
+        foreach($AllProductsIdentifier->findAllArray() as $item)
         {
             if($item['product_id'] !== '01914cb3-f049-7526-9a82-bd576278fbc4')
             {
