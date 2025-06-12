@@ -49,7 +49,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
         /** @var AllProductsIdentifierInterface $AllProductsIdentifier */
         $AllProductsIdentifier = self::getContainer()->get(AllProductsIdentifierInterface::class);
 
-        foreach($AllProductsIdentifier->findAllArray() as $key => $item)
+        foreach($AllProductsIdentifier->findAll() as $key => $ProductsIdentifierResult)
         {
             if($key >= 10)
             {
@@ -57,10 +57,10 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
             }
 
             $new = $WildberriesProductsCard
-                ->forProduct($item['product_id'])
-                ->forOfferConst($item['offer_const'])
-                ->forVariationConst($item['variation_const'])
-                ->forModificationConst($item['modification_const'])
+                ->forProduct($ProductsIdentifierResult->getProductId())
+                ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
+                ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
+                ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
                 ->find();
 
             if($new === false)

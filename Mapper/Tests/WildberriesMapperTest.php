@@ -67,18 +67,18 @@ class WildberriesMapperTest extends KernelTestCase
 
         $AllProductsIdentifier->forProduct('01914cb3-f049-7526-9a82-bd576278fbc4');
 
-        foreach($AllProductsIdentifier->findAllArray() as $item)
+        foreach($AllProductsIdentifier->findAll() as $ProductsIdentifierResult)
         {
-            if($item['product_id'] !== '01914cb3-f049-7526-9a82-bd576278fbc4')
+            if(false === $ProductsIdentifierResult->getProductId()->equals('01914cb3-f049-7526-9a82-bd576278fbc4'))
             {
                 continue;
             }
 
             $WildberriesProductsCard = $WildberriesProductsCardRepository
-                ->forProduct($item['product_id'])
-                ->forOfferConst($item['offer_const'])
-                ->forVariationConst($item['variation_const'])
-                ->forModificationConst($item['modification_const'])
+                ->forProduct($ProductsIdentifierResult->getProductId())
+                ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
+                ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
+                ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
                 ->find();
 
             if(empty($WildberriesProductsCard))
