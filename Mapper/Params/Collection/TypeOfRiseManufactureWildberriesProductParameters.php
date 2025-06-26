@@ -31,18 +31,18 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class TypeToeWildberriesProductParameters implements WildberriesProductParametersInterface
+final class TypeOfRiseManufactureWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
+        WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
     ];
 
-    public const int ID = 25065;
+    public const int ID = 15003148;
 
     public function getName(): string
     {
-        return 'Вид мыска';
+        return 'Тип подъема';
     }
 
     public function required(): bool
@@ -78,7 +78,7 @@ final class TypeToeWildberriesProductParameters implements WildberriesProductPar
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -87,14 +87,13 @@ final class TypeToeWildberriesProductParameters implements WildberriesProductPar
         return true;
     }
 
+
     public function getData(array $data, ?TranslatorInterface $translator = null): mixed
     {
-
 
         if(isset($data['product_params']))
         {
             $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
-
 
             foreach($product_params as $product_param)
             {
@@ -103,7 +102,7 @@ final class TypeToeWildberriesProductParameters implements WildberriesProductPar
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value,
                     ];
                 }
             }
