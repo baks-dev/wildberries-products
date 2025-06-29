@@ -71,6 +71,7 @@ use Doctrine\ORM\Mapping\Table;
 use Psr\Log\LoggerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -83,8 +84,8 @@ final readonly class WildberriesCardNewDispatcher
 {
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
-        #[TaggedIterator('baks.reference.choice')] private iterable $reference,
-        #[TaggedIterator('baks.fields.choice')] private iterable $fields,
+        #[AutowireIterator('baks.reference.choice')] private iterable $reference,
+        #[AutowireIterator('baks.fields.choice')] private iterable $fields,
         private FindAllWildberriesCardsRequest $WildberriesCardsRequest,
         private SettingsByCategoryInterface $SettingsByCategory,
         private ExistProductArticleInterface $ExistProductArticle,
