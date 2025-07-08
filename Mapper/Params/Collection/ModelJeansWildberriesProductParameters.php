@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -84,13 +85,13 @@ final class ModelJeansWildberriesProductParameters implements WildberriesProduct
     }
 
 
-    public function getData(array $data, ?TranslatorInterface $translator = null): mixed
+    public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
 
 
-        if(isset($data['product_params']))
+        if(false === empty($data->getProductParams()))
         {
-            $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
+            $product_params = json_decode($data->getProductParams(), false, 512, JSON_THROW_ON_ERROR);
 
 
             foreach($product_params as $product_param)

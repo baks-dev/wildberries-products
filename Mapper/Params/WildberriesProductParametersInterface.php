@@ -23,6 +23,7 @@
 
 namespace BaksDev\Wildberries\Products\Mapper\Params;
 
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -32,7 +33,7 @@ interface WildberriesProductParametersInterface
     /**
      * Возвращает состояние
      */
-    public function getData(array $data, ?TranslatorInterface $translator = null): mixed;
+    public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): mixed;
 
     public function getName(): string;
 

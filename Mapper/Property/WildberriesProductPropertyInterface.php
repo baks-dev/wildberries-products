@@ -23,6 +23,7 @@
 
 namespace BaksDev\Wildberries\Products\Mapper\Property;
 
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -36,7 +37,7 @@ interface WildberriesProductPropertyInterface
     /**
      * Метод возвращает результат, присваиваемый к значению
      */
-    public function getData(array $data): mixed;
+    public function getData(WildberriesProductsCardResult $data): mixed;
 
     /**
      * Возвращает значение по умолчанию

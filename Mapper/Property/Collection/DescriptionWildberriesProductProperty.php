@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
-use BaksDev\Yandex\Market\Products\Mapper\Properties\Collection\YaMarketProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.ya.product.property')]
@@ -80,8 +80,8 @@ final class DescriptionWildberriesProductProperty implements WildberriesProductP
         return false;
     }
 
-    public function getData(array $data): mixed
+    public function getData(WildberriesProductsCardResult $data): ?string
     {
-        return $data['product_preview'] ?? null;
+        return $data->getProductPreview() ?? null;
     }
 }

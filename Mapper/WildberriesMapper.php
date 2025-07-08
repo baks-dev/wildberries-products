@@ -26,8 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
-use BaksDev\Yandex\Market\Products\Mapper\Properties\Collection\YaMarketProductPropertyInterface;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 final readonly class WildberriesMapper
@@ -36,7 +35,7 @@ final readonly class WildberriesMapper
         #[AutowireIterator('baks.wb.product.property', defaultPriorityMethod: 'priority')] private iterable $property,
     ) {}
 
-    public function getData(array $card): array|false
+    public function getData(WildberriesProductsCardResult $card): array|false
     {
         $request = null;
 

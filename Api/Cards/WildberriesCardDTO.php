@@ -42,7 +42,7 @@ final class WildberriesCardDTO
     /**
      * Идентификатор товара (Артикул WB)
      */
-    private $nomenclature;
+    private int $nomenclature;
 
 
     /**
@@ -88,6 +88,8 @@ final class WildberriesCardDTO
 
     private ArrayObject $dimensions;
 
+    private ArrayObject $chrt;
+
 
     public function __construct(array $data, UserProfileUid $profile)
     {
@@ -115,8 +117,6 @@ final class WildberriesCardDTO
 
         foreach($data['characteristics'] as $characteristic)
         {
-            //$key = mb_strtolower($characteristic['id']);
-
             $values = $characteristic['value'];
             $value = is_array($values) ? implode(', ', $values) : $values;
 
@@ -129,6 +129,7 @@ final class WildberriesCardDTO
 
 
         $this->offers = new ArrayObject();
+        $this->chrt = new ArrayObject();
 
         foreach($data['sizes'] as $size)
         {
@@ -139,6 +140,7 @@ final class WildberriesCardDTO
 
             $barcode = current($size['skus']);
             $this->offers->offsetSet($barcode, $size['techSize']);
+            $this->chrt->offsetSet($size['techSize'], $size['chrtID']);
         }
 
         $this->dimensions = new ArrayObject($data['dimensions']);
@@ -314,5 +316,11 @@ final class WildberriesCardDTO
     public function getOffer($barcode): string
     {
         return $this->offers->offsetGet($barcode);
+    }
+
+    // $size - '4XL'
+    public function getChrt(string $size): int|false
+    {
+        return $this->chrt->offsetGet($size)?: false;
     }
 }

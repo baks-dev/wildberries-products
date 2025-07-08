@@ -54,8 +54,7 @@ class WildberriesCardRequestTest extends KernelTestCase
         $WildberriesGetCardsRequest = self::getContainer()->get(FindAllWildberriesCardsRequest::class);
         $WildberriesGetCardsRequest->TokenHttpClient(self::$Authorization);
 
-        $data = $WildberriesGetCardsRequest->findAll();
-
+        $data = $WildberriesGetCardsRequest->findAll('78346396');
         /** @var WildberriesCardDTO $Card */
         foreach($data as $Card)
         {
@@ -77,6 +76,8 @@ class WildberriesCardRequestTest extends KernelTestCase
             self::assertTrue($Card->getCharacteristicsCollection()->count() > 0);
 
             self::assertTrue($Card->getOffersCollection()->count() > 0);
+
+            self::assertTrue($Card->getChrt('XL') === false || is_int($Card->getChrt('XL')));
 
             break;
         }

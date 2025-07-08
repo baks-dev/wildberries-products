@@ -53,11 +53,14 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use InvalidArgumentException;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
+
 
 final class WildberriesProductsCardRepository implements WildberriesProductsCardInterface
 {
@@ -71,6 +74,8 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         return $this;
     }
 
+    private UserProfileUid|false $profile = false;
+
     /**
      * ID продукта
      */
@@ -79,21 +84,51 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
     /**
      * Постоянный уникальный идентификатор ТП
      */
-    private ProductOfferConst|null|false $offerConst = false;
+    private ProductOfferConst|false $offerConst = false;
 
     /**
      * Постоянный уникальный идентификатор варианта
      */
-    private ProductVariationConst|null|false $variationConst = false;
+    private ProductVariationConst|false $variationConst = false;
 
     /**
      * Постоянный уникальный идентификатор модификации
      */
-    private ProductModificationConst|null|false $modificationConst = false;
+    private ProductModificationConst|false $modificationConst = false;
 
+    public function forProfile(UserProfile|UserProfileUid|string $profile): self
+    {
+        if(empty($profile))
+        {
+            $this->profile = false;
+
+            return $this;
+        }
+
+        if(is_string($profile))
+        {
+            $profile = new UserProfileUid($profile);
+        }
+
+        if($profile instanceof UserProfile)
+        {
+            $profile = $profile->getId();
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
 
     public function forProduct(Product|ProductUid|string $product): self
     {
+        if(empty($product))
+        {
+            $this->product = false;
+
+            return $this;
+        }
+
         if(is_string($product))
         {
             $product = new ProductUid($product);
@@ -113,7 +148,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
     {
         if(empty($offerConst))
         {
-            $this->offerConst = null;
+            $this->offerConst = false;
             return $this;
         }
 
@@ -131,7 +166,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
     {
         if(empty($variationConst))
         {
-            $this->variationConst = null;
+            $this->variationConst = false;
             return $this;
         }
 
@@ -149,7 +184,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
     {
         if(empty($modificationConst))
         {
-            $this->modificationConst = null;
+            $this->modificationConst = false;
             return $this;
         }
 
@@ -163,92 +198,56 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         return $this;
     }
 
-    /**
-     * Метод получает активную карточку по идентификатору
-     */
-    public function find(): array|false
+    public function builder(): DBALQueryBuilder
     {
         if($this->product === false)
         {
             throw new InvalidArgumentException('Invalid Argument product');
         }
 
-        if($this->offerConst === false)
+        if($this->profile === false)
         {
-            throw new InvalidArgumentException('Invalid Argument offerConst');
+            throw new InvalidArgumentException('Invalid Argument profile');
         }
-
-        if($this->variationConst === false)
-        {
-            throw new InvalidArgumentException('Invalid Argument variationConst');
-        }
-
-        if($this->modificationConst === false)
-        {
-            throw new InvalidArgumentException('Invalid Argument modificationConst');
-        }
-
 
         $dbal = $this->DBALQueryBuilder
             ->createQueryBuilder(self::class)
             ->bindLocal();
 
-        /*
-                $dbal
-                    ->from(YaMarketProductsCard::class, 'card')
-                    ->where('card.id = :card')
-                    ->setParameter('card', $card, YaMarketProductsCardUid::TYPE);
-
-
-                $dbal
-                    ->addSelect('card_market.profile')
-                    ->addSelect('card_market.sku AS article')
-                    ->addSelect('card_market.product AS product_uid')
-                    ->addSelect('card_market.offer AS offer_const')
-                    ->addSelect('card_market.variation AS variation_const')
-                    ->addSelect('card_market.modification AS modification_const')
-                    ->leftJoin(
-                        'card',
-                        YaMarketProductsCardMarket::class,
-                        'card_market',
-                        'card_market.main = card.id'
-                    );
-        */
-
         $dbal
-            ->addSelect('product.id AS product_uid')
+            ->select('product.id AS product_uid')
             ->from(Product::class, 'product')
             ->where('product.id = :product')
             ->setParameter('product', $this->product, ProductUid::TYPE);
 
 
         /* ProductInfo */
-
+        /** Передаем профиль, т.к. необходимо будет его использовать для обращения по апи */
         $dbal
             ->addSelect('product_info.article AS product_card')
-            ->leftJoin(
+            ->addSelect(':profile AS profile')
+            ->join(
                 'product',
                 ProductInfo::class,
                 'product_info',
-                'product_info.product = product.id'
-            );
+                'product_info.product = product.id AND (product_info.profile IS NULL OR product_info.profile = :profile)'
+            )
+            ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
 
-
-        if($this->offerConst)
+        if($this->variationConst instanceof ProductVariationConst)
         {
             $dbal
                 ->addSelect('product_offer.const AS offer_const')
                 ->addSelect('product_offer.value AS product_offer_value')
                 ->addSelect('product_offer.postfix AS product_offer_postfix')
-                ->join(
+                ->leftJoin(
                     'product',
                     ProductOffer::class,
                     'product_offer',
-                    '
-                    product_offer.event = product.event AND 
-                    product_offer.const = :offer_const
-            '
-                )->setParameter(
+                    'product_offer.event = product.event AND
+                               product_offer.const = :offer_const'
+                )
+                ->setParameter(
                     'offer_const',
                     $this->offerConst,
                     ProductOfferConst::TYPE
@@ -257,139 +256,92 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         else
         {
             $dbal
-                ->addSelect('product_offer.const AS offer_const')
-                ->addSelect('product_offer.value AS product_offer_value')
-                ->addSelect('product_offer.postfix AS product_offer_postfix')
-                ->join(
+                ->addSelect('NULL AS offer_const')
+                ->addSelect('NULL.value AS product_offer_value')
+                ->addSelect('NULL.postfix AS product_offer_postfix')
+                ->leftJoin(
                     'product',
                     ProductOffer::class,
                     'product_offer',
-                    'product_offer.event = product.event AND 
-                    product_offer.const IS NULL'
+                    'product_offer.event = product.event'
                 );
         }
 
-        if($this->variationConst)
+        if($this->modificationConst instanceof ProductModificationConst)
         {
             $dbal
-                //->addSelect('product_variation.const AS variation_const')
-                //->addSelect('product_variation.value AS product_variation_value')
-                //->addSelect('product_variation.postfix AS product_variation_postfix')
-                ->{($this->modificationConst ? 'join' : 'leftJoin')} (
+                ->addSelect('product_variation.const AS variation_const')
+                ->addSelect('product_variation.value AS product_variation_value')
+                ->addSelect('product_variation.postfix AS product_variation_postfix')
+                ->leftJoin(
                     'product_offer',
                     ProductVariation::class,
                     'product_variation',
-                    'product_variation.offer = product_offer.id '.($this->modificationConst ? 'AND  product_variation.const = :variation_const' : '')
+                    'product_variation.offer = product_offer.id AND product_variation.const = :variation_const'
                 )
                 ->setParameter(
                     'variation_const',
                     $this->variationConst,
                     ProductVariationConst::TYPE
                 );
-
-
-            if($this->modificationConst)
-            {
-                $dbal
-                    ->addSelect('product_variation.const AS variation_const')
-                    ->addSelect('product_variation.value AS product_variation_value')
-                    ->addSelect('product_variation.postfix AS product_variation_postfix');
-            }
-            else
-            {
-                $dbal->addSelect(
-                    "JSON_AGG ( DISTINCT
-        
-                            JSONB_BUILD_OBJECT(
-                            
-                                'value', product_variation.value,
-                                'barcode', product_variation.barcode,
-                                
-                                'price', COALESCE(
-                                    NULLIF(product_modification_price.price, 0), 
-                                    NULLIF(product_variation_price.price, 0), 
-                                    NULLIF(product_offer_price.price, 0), 
-                                    NULLIF(product_price.price, 0),
-                                    0
-                                )
-                                
-                            )
-                    )
-                    AS product_size
-                ");
-            }
-
         }
         else
         {
             $dbal
-                ///->addSelect('product_variation.const AS variation_const')
-                //->addSelect('product_variation.value AS variation_value')
-                //->addSelect('product_variation.postfix AS variation_postfix')
+                ->addSelect('NULL AS variation_const')
+                ->addSelect('NULL AS product_variation_value')
+                ->addSelect('NULL AS product_variation_postfix')
                 ->leftJoin(
                     'product_offer',
                     ProductVariation::class,
                     'product_variation',
-                    '
-                product_variation.offer = product_offer.id AND 
-                product_variation.const IS NULL
-            '
+                    'product_variation.offer = product_offer.id'
                 );
         }
 
-
-        if($this->modificationConst)
-        {
-            $dbal
-                //->addSelect('product_modification.const AS modification_const')
-                //->addSelect('product_modification.value AS modification_value')
-                //->addSelect('product_modification.postfix AS modification_postfix')
-                ->join(
-                    'product_variation',
-                    ProductModification::class,
-                    'product_modification',
-                    '
-                product_modification.variation = product_variation.id AND 
-                product_modification.const = :modification_const
-            '
-                )->setParameter(
-                    'modification_const',
-                    $this->modificationConst,
-                    ProductModificationConst::TYPE
-                );
-
-
-            $dbal->addSelect(
-                "JSON_AGG
-			( DISTINCT
-
-					JSONB_BUILD_OBJECT
-					(
-						'modification_const', product_modification.const,
-						'modification_value', product_modification.value,
-						'modification_postfix', product_modification.postfix
-						
-					)
-			)
-			AS product_size"
+        $dbal
+            ->leftJoin(
+                'product_variation',
+                ProductModification::class,
+                'product_modification',
+                'product_modification.variation = product_variation.id'
             );
 
+        if($this->offerConst instanceof ProductOfferConst)
+        {
+            $dbal->addSelect(
+                "JSON_AGG
+                ( DISTINCT
+
+                    JSONB_BUILD_OBJECT(
+
+                        'value', COALESCE(
+                            product_modification.value,
+                            product_variation.value,
+                            product_offer.value
+                        ),
+                        'barcode', COALESCE(
+                            product_modification.barcode,
+                            product_variation.barcode,
+                            product_offer.barcode,
+                            product_info.barcode
+                        ),
+
+                        'price', COALESCE(
+                            NULLIF(product_modification_price.price, 0),
+                            NULLIF(product_variation_price.price, 0),
+                            NULLIF(product_offer_price.price, 0),
+                            NULLIF(product_price.price, 0),
+                            0
+                        )
+                    )
+                ) AS product_size"
+            );
         }
         else
         {
-            $dbal
-                //->addSelect('product_modification.const AS modification_const')
-                //->addSelect('product_modification.value AS modification_value')
-                //->addSelect('product_modification.postfix AS modification_postfix')
-                ->leftJoin(
-                    'product_variation',
-                    ProductModification::class,
-                    'product_modification',
-                    'product_modification.variation = product_variation.id AND 
-                        product_modification.const IS NULL'
-                );
+            $dbal->addSelect('NULL AS product_size');
         }
-
 
         $dbal
             ->addSelect('product_trans.name AS product_name')
@@ -419,7 +371,6 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_category.event = product.event AND product_category.root = true'
         );
 
-
         $dbal->join(
             'product_category',
             CategoryProduct::class,
@@ -436,43 +387,39 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'category_trans.event = category.event AND category_trans.local = :local'
             );
 
-
         $dbal
-            ->addSelect('product_package.length') // Длина упаковки в см.
-            ->addSelect('product_package.width') // Ширина упаковки в см.
-            ->addSelect('product_package.height') // Высота упаковки в см.
-            ->addSelect('product_package.weight') // Вес товара в кг с учетом упаковки (брутто).
+            ->addSelect('MAX(product_package.length) AS length') // Длина упаковки в см.
+            ->addSelect('MAX(product_package.width) AS width') // Ширина упаковки в см.
+            ->addSelect('MAX(product_package.height) AS height') // Высота упаковки в см.
+            ->addSelect('MAX(product_package.weight) AS weight') // Вес товара в кг с учетом упаковки (брутто).
             ->leftJoin(
                 'product_variation',
                 DeliveryPackageProductParameter::class,
                 'product_package',
-                '
-                    product_package.product = product.id 
-                    
-                    AND 
-                    
+                'product_package.product = product.id
+
+                    AND
+
                     (
-                        (product_offer.const IS NOT NULL AND product_package.offer = product_offer.const) OR 
+                        (product_offer.const IS NOT NULL AND product_package.offer = product_offer.const) OR
                         (product_offer.const IS NULL AND product_package.offer IS NULL)
                     )
-                    
+
                     AND
-                     
+
                     (
-                        (product_variation.const IS NOT NULL AND product_package.variation = product_variation.const) OR 
+                        (product_variation.const IS NOT NULL AND product_package.variation = product_variation.const) OR
                         (product_variation.const IS NULL AND product_package.variation IS NULL)
                     )
-                     
+
                    AND
-                   
+
                    (
-                        (product_modification.const IS NOT NULL AND product_package.modification = product_modification.const) OR 
+                        (product_modification.const IS NOT NULL AND product_package.modification = product_modification.const) OR
                         (product_modification.const IS NULL AND product_package.modification IS NULL)
                    )
-                    
                 '
             );
-
 
         $dbal
             ->join(
@@ -482,26 +429,22 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'settings.id = product_category.category'
             );
 
-
         /**
          * Категория, согласно настройкам соотношений
          */
-
-        //        $dbal
-        //            ->addSelect('settings_event.category AS market_category')
-        //            ->leftJoin(
-        //                'settings',
-        //                WbProductSettingsEvent::class,
-        //                'settings_event',
-        //                'settings_event.id = settings.event'
-        //            );
+        $dbal
+            ->addSelect('settings_invariable.category AS market_category')
+            ->leftJoin(
+                'settings',
+                WbProductSettingsInvariable::class,
+                'settings_invariable',
+                'settings_invariable.main = settings.id'
+            );
 
 
         /**
          * Свойства по умолчанию
          */
-
-
         $dbal
             ->leftJoin(
                 'settings',
@@ -527,7 +470,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 					JSONB_BUILD_OBJECT
 					(
 						'type', settings_property.type,
-			
+
 						'value', CASE
 						   WHEN product_property.value IS NOT NULL THEN product_property.value
 						   WHEN settings_property.def IS NOT NULL THEN settings_property.def
@@ -542,8 +485,6 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         /**
          * Параметры
          */
-
-
         $dbal
             ->leftJoin(
                 'settings',
@@ -560,13 +501,12 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 ProductProperty::class,
                 'product_property_params',
                 '
-                product_property_params.event = product.event AND 
+                product_property_params.event = product.event AND
                 product_property_params.field = settings_params.field
             ');
 
 
         // Получаем значение из модификации множественного варианта
-
         $dbal
             ->leftJoin(
                 'settings_params',
@@ -577,7 +517,6 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     product_offer_params.category_offer = settings_params.field
             '
             );
-
 
         $dbal
             ->leftJoin(
@@ -590,7 +529,6 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
            '
             );
 
-
         $dbal
             ->leftJoin(
                 'settings_params',
@@ -602,21 +540,20 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             '
             );
 
-
         $dbal->addSelect(
             "JSON_AGG
 			( DISTINCT
 					JSONB_BUILD_OBJECT
 					(
 						'name', settings_params.type,
-						
+
 						'value', CASE
 						   WHEN product_property_params.value IS NOT NULL THEN product_property_params.value
 						   WHEN product_modification_params.value IS NOT NULL THEN product_modification_params.value
 						   WHEN product_variation_params.value IS NOT NULL THEN product_variation_params.value
 						   WHEN product_offer_params.value IS NOT NULL THEN product_offer_params.value
 						   ELSE NULL
-						END 
+						END
 					)
 			)
 			AS product_params"
@@ -667,7 +604,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 
         $dbal->addSelect(
             "JSON_AGG
-		( DISTINCT
+		    ( DISTINCT
 				CASE 
 				
 				WHEN product_offer_images.ext IS NOT NULL 
@@ -709,8 +646,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 
 				END
 	 
-			) AS product_images
-	    "
+			) AS product_images"
         );
 
 
@@ -747,21 +683,9 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_modification_price.modification = product_modification.id'
         );
 
-        /* Стоимость продукта */
-
-        //        $dbal->addSelect('
-        //			COALESCE(
-        //                NULLIF(product_modification_price.price, 0),
-        //                NULLIF(product_variation_price.price, 0),
-        //                NULLIF(product_offer_price.price, 0),
-        //                NULLIF(product_price.price, 0),
-        //                0
-        //            ) AS product_price
-        //		');
-
         /* Предыдущая стоимость продукта */
 
-        $dbal->addSelect("
+        $dbal->addSelect('
 			COALESCE(
                 NULLIF(product_modification_price.old, 0),
                 NULLIF(product_variation_price.old, 0),
@@ -769,7 +693,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 NULLIF(product_price.old, 0),
                 0
             ) AS product_old_price
-		");
+		');
 
         /* Валюта продукта */
 
@@ -816,9 +740,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_modification_quantity.modification = product_modification.id'
         );
 
-
         /* Наличие продукта за вычетом резерва  */
-
         $dbal->addSelect('
             COALESCE(
                 CASE WHEN product_modification_quantity.quantity > 0 AND product_modification_quantity.quantity > product_modification_quantity.reserve 
@@ -833,18 +755,31 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 		');
 
 
-        /** Артикул продукта */
         $dbal->addSelect('
-            COALESCE(
-                product_modification.article, 
-                product_variation.article, 
-                product_offer.article, 
-                product_info.article
+            JSON_AGG
+            ( DISTINCT
+                COALESCE(
+                    product_modification.article,
+                    product_variation.article,
+                    product_offer.article,
+                    product_info.article
+                )
             ) AS article
 		');
 
 
         $dbal->allGroupByExclude();
+
+        return $dbal;
+    }
+
+    /**
+     * @deprecated
+     * Метод получает активную карточку по идентификатору в виде массива
+     */
+    public function find(): array|false
+    {
+        $dbal = $this->builder();
 
         $dbal->setMaxResults($this->limit);
 
@@ -853,4 +788,19 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             ->fetchAssociative() ?: false;
     }
 
+    /**
+     * @see WildberriesProductsCardResult
+     * Метод получает активную карточку по идентификатору и гидрирует на резалт
+     */
+    public function findResult(): ?WildberriesProductsCardResult
+    {
+        $dbal = $this->builder();
+
+        $dbal->setMaxResults($this->limit);
+
+        return $dbal
+            ->enableCache('products-product', 5)
+            ->fetchAllHydrate(WildberriesProductsCardResult::class)
+            ->current();
+    }
 }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -78,11 +79,11 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
         return true;
     }
 
-    public function getData(array $data): mixed
+    public function getData(WildberriesProductsCardResult $data): mixed
     {
-        if(isset($data['product_property']))
+        if(false === empty($data->getProductProperty()))
         {
-            $property = json_decode($data['product_property'], false, 512, JSON_THROW_ON_ERROR);
+            $property = json_decode($data->getProductProperty(), false, 512, JSON_THROW_ON_ERROR);
 
             $filter = current(array_filter($property, static function($element) {
                 return self::equals($element->type);
@@ -95,9 +96,9 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
         }
 
 
-        if(isset($data['category_name']))
+        if(false === empty($data->getCategoryName()))
         {
-            return $data['category_name'];
+            return $data->getCategoryName();
         }
 
         return null;
