@@ -78,7 +78,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
             self::assertTrue($new->getProductOfferValue() === null || true === is_string($new->getProductOfferValue()));
             self::assertTrue($new->getProductOfferPostfix() === null || true === is_string($new->getProductOfferPostfix()));
             self::assertTrue($new->getProductCard() === null || true === is_string($new->getProductCard()));
-            self::assertTrue($new->getArticle() === null || true === is_string($new->getArticle()));
+            self::assertTrue($new->getArticle() === false || true === is_array($new->getArticle()));
             self::assertTrue($new->getSearchArticle() === null || true === is_string($new->getSearchArticle()));
             self::assertTrue($new->getVariationConst() === null || $new->getVariationConst() instanceof ProductVariationConst);
             self::assertTrue($new->getProductVariationValue() === null || true === is_string($new->getProductVariationValue()));

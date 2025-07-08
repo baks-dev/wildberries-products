@@ -33,9 +33,11 @@ final class WildberriesProductsCardResult
 {
     private array|null|false $product_params_decoded = null;
 
-    public array|null|false $product_property_decoded = null;
+    private array|null|false $product_property_decoded = null;
 
-    public array|null|false $product_size_decoded = null;
+    private array|null|false $product_size_decoded = null;
+
+    private array|null|false $product_article_decoded = null;
 
     public function __construct(
         private readonly string $product_uid,
@@ -100,9 +102,23 @@ final class WildberriesProductsCardResult
         return $this->product_card;
     }
 
-    public function getArticle(): ?string
+    public function getArticle(): array|false
     {
-        return $this->article;
+        if(is_null($this->product_article_decoded) && is_string($this->article) && json_validate($this->article))
+        {
+            $product_article_decoded = json_decode($this->article, false, 512, JSON_THROW_ON_ERROR);
+
+            if(true === empty($product_artice_decoded))
+            {
+                $this->product_article_decoded = false;
+
+                return false;
+            }
+
+            $this->product_article_decoded = $product_article_decoded;
+        }
+
+        return $this->product_article_decoded;
     }
 
     public function getVariationConst(): ?ProductVariationConst
@@ -122,7 +138,7 @@ final class WildberriesProductsCardResult
 
     public function getProductSize(): array|false
     {
-        if(is_null($this->product_size_decoded))
+        if(is_null($this->product_size_decoded) && is_string($this->product_size) && json_validate($this->product_size))
         {
             $product_size_decoded = json_decode($this->product_size, false, 512, JSON_THROW_ON_ERROR);
 
@@ -176,7 +192,11 @@ final class WildberriesProductsCardResult
 
     public function getProductProperty(): array|false
     {
-        if(is_null($this->product_property_decoded))
+        if(
+            is_null($this->product_property_decoded) &&
+            is_string($this->product_property) &&
+            json_validate($this->product_property)
+        )
         {
             $product_property_decoded = json_decode($this->product_property, false, 512, JSON_THROW_ON_ERROR);
 
@@ -195,7 +215,11 @@ final class WildberriesProductsCardResult
 
     public function getProductParams(): array|false
     {
-        if(is_null($this->product_params_decoded))
+        if(
+            is_null($this->product_params_decoded) &&
+            is_string($this->product_params) &&
+            json_validate($this->product_params)
+        )
         {
             $product_params_decoded = json_decode($this->product_params, false, 512, JSON_THROW_ON_ERROR);
 
@@ -229,9 +253,9 @@ final class WildberriesProductsCardResult
     
     public function getSearchArticle(): ?string
     {
-        $articles = json_decode($this->article, false, 512, JSON_THROW_ON_ERROR);
+        $articles = $this->getArticle();
 
-        if(false === empty($articles))
+        if(false !== $articles)
         {
             $article = $articles[0];
 
