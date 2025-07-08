@@ -87,10 +87,10 @@ final class CompletePackWildberriesProductParameters implements WildberriesProdu
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
-        if(false === empty($data['product_params']))
-        {
-            $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
+        $product_params = $data->getProductParams();
 
+        if(false !== $data->getProductParams())
+        {
             foreach($product_params as $product_param)
             {
                 if($this->equals($product_param->name))

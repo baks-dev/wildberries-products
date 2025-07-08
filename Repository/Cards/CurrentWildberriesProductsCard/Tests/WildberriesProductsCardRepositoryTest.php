@@ -83,7 +83,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
             self::assertTrue($new->getVariationConst() === null || $new->getVariationConst() instanceof ProductVariationConst);
             self::assertTrue($new->getProductVariationValue() === null || true === is_string($new->getProductVariationValue()));
             self::assertTrue($new->getProductVariationPostfix() === null || true === is_string($new->getProductVariationPostfix()));
-            self::assertTrue($new->getProductSize() === null || true === is_string($new->getProductSize()));
+            self::assertTrue($new->getProductSize() === false || true === is_array($new->getProductSize()));
             self::assertTrue($new->getProductName() === null || true === is_string($new->getProductName()));
             self::assertTrue($new->getProductPreview() === null || true === is_string($new->getProductPreview()));
             self::assertTrue($new->getCategoryName() === null || true === is_string($new->getCategoryName()));
@@ -91,8 +91,8 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
             self::assertTrue($new->getWidth() === null || true === is_int($new->getWidth()));
             self::assertTrue($new->getHeight() === null || true === is_int($new->getHeight()));
             self::assertTrue($new->getWeight() === null || true === is_int($new->getWeight()));
-            self::assertTrue($new->getProductProperty() === null || true === is_string($new->getProductProperty()));
-            self::assertTrue($new->getProductParams() === null || true === is_string($new->getProductParams()));
+            self::assertTrue($new->getProductProperty() === false || true === is_array($new->getProductProperty()));
+            self::assertTrue($new->getProductParams() === false || true === is_array($new->getProductParams()));
             self::assertTrue($new->getProductCurrency() === null || true === is_string($new->getProductCurrency()));
             self::assertTrue($new->getProductQuantity() === null || true === is_int($new->getProductQuantity()));
             self::assertTrue($new->getMarketCategory() === null || true === is_int($new->getMarketCategory()));

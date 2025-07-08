@@ -55,10 +55,12 @@ final class WildberriesProductCreateCardRequest extends Wildberries
             return true;
         }
 
-        $response = $this->TokenHttpClient()
+        $response = $this
+            ->content()
+            ->TokenHttpClient()
             ->request(
                 'POST',
-                'https://content-api.wildberries.ru/content/v2/cards/upload',
+                '/content/v2/cards/upload',
                 ['json' => $card],
             );
 

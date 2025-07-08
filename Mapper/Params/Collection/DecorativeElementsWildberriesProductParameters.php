@@ -101,17 +101,20 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
     {
         if(false === empty($data->getProductParams()))
         {
-            $product_params = json_decode($data->getProductParams(), false, 512, JSON_THROW_ON_ERROR);
+            $product_params = $data->getProductParams();
 
-            foreach($product_params as $product_param)
+            if(false !== $product_params)
             {
-                if($this->equals($product_param->name))
+                foreach($product_params as $product_param)
                 {
-                    return [
-                        'id' => $this::ID,
-                        'name' => $this->getName(),
-                        'value' => $product_param->value
-                    ];
+                    if($this->equals($product_param->name))
+                    {
+                        return [
+                            'id' => $this::ID,
+                            'name' => $this->getName(),
+                            'value' => $product_param->value
+                        ];
+                    }
                 }
             }
         }

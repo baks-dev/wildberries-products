@@ -81,10 +81,10 @@ final class BrandWildberriesProductProperty implements WildberriesProductPropert
 
     public function getData(WildberriesProductsCardResult $data): mixed
     {
-        if(false === empty($data->getProductProperty()))
-        {
-            $property = json_decode($data->getProductProperty(), false, 512, JSON_THROW_ON_ERROR);
+        $property = $data->getProductProperty();
 
+        if(false !== $data->getProductProperty())
+        {
             $filter = current(array_filter($property, static function($element) {
                 return self::equals($element->type);
             }));

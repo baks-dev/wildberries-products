@@ -45,7 +45,7 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
 
     public const string PARAM = 'sizes';
 
-    public function __construct(private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest) {}
+    public function __construct(private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest) {}
 
     public function getIndex(): string
     {
@@ -97,10 +97,10 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
      */
     public function getData(WildberriesProductsCardResult $data): array|false
     {
-        if(false === empty($data->getProductSize()))
-        {
-            $sizes = json_decode($data->getProductSize(), false, 512, JSON_THROW_ON_ERROR);
+        $sizes = $data->getProductSize();
 
+        if(false !== $data->getProductSize())
+        {
             if(empty($sizes))
             {
                 return false;

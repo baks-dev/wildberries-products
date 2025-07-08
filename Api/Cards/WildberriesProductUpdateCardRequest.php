@@ -54,10 +54,12 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             return true;
         }
 
-        $response = $this->TokenHttpClient()
+        $response = $this
+            ->content()
+            ->TokenHttpClient()
             ->request(
                 'POST',
-                'https://content-api.wildberries.ru/content/v2/cards/update',
+                '/content/v2/cards/update',
                 ['json' => $card],
             );
 

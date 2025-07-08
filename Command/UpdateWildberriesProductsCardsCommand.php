@@ -28,14 +28,12 @@ namespace BaksDev\Wildberries\Products\Command;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifierResult;
-use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByConstInterface;
 use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreateMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
-use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -44,7 +42,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByConstRepository;
 
 /**
  * Обновляем карточки товаров на WB
@@ -175,7 +172,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
          * Получаем все имеющиеся карточки в системе.
          * Для тестирования используем вызов метода ->forProduct('0197a6d6-c8e6-7df0-b979-a44f2800eca8') перед findALl
          * */
-        $products = $this->AllProductsIdentifier->forProduct('0197a6d6-c8e6-7df0-b979-a44f2800eca8')->findAll();
+        $products = $this->AllProductsIdentifier->findAll();
 
         if(false === $products || false === $products->valid())
         {
@@ -217,7 +214,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 ->findAll($CurrentWildberriesProductCardResult->getProductBarcode());
 
             /** В случае, если на WB нужная карточка уже существует */
-            if(false !== $wbCard)
+            if(false !== $wbCard && false !== $wbCard->valid())
             {
                 $wbCard = $wbCard->current();
 

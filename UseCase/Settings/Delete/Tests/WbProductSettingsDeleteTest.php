@@ -32,13 +32,11 @@ use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControlle
 use BaksDev\Wildberries\Products\Entity\Barcode\Event\WbBarcodeEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Mapper\Property\Collection\BarcodeWildberriesProductsProperty;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettingsHandler;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -103,7 +101,6 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
 
         $WbProductSettingsPropertyDTO = $WbProductCardDTO->getProperty()->current();
 
-        self::assertTrue($WbProductSettingsPropertyDTO->getType()->equals(BarcodeWildberriesProductsProperty::class));
         self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
 
 

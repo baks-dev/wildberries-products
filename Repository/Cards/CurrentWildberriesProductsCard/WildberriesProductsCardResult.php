@@ -29,34 +29,40 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 
-final readonly class WildberriesProductsCardResult
+final class WildberriesProductsCardResult
 {
+    private array|null|false $product_params_decoded = null;
+
+    public array|null|false $product_property_decoded = null;
+
+    public array|null|false $product_size_decoded = null;
+
     public function __construct(
-        private string $product_uid,
-        private string $product_images,
-        private int $product_old_price,
-        private string $profile,
-        private ?string $product_card,
-        private ?string $article,
-        private ?string $offer_const,
-        private ?string $product_offer_value,
-        private ?string $product_offer_postfix,
-        private ?string $variation_const,
-        private ?string $product_variation_value,
-        private ?string $product_variation_postfix,
-        private ?string $product_size,
-        private ?string $product_name,
-        private ?string $product_preview,
-        private ?string $category_name,
-        private ?int $length,
-        private ?int $width,
-        private ?int $height,
-        private ?int $weight,
-        private ?string $product_property,
-        private ?string $product_params,
-        private ?string $product_currency,
-        private ?int $product_quantity,
-        private ?int $market_category,
+        private readonly string $product_uid,
+        private readonly string $product_images,
+        private readonly int $product_old_price,
+        private readonly string $profile,
+        private readonly ?string $product_card,
+        private readonly ?string $article,
+        private readonly ?string $offer_const,
+        private readonly ?string $product_offer_value,
+        private readonly ?string $product_offer_postfix,
+        private readonly ?string $variation_const,
+        private readonly ?string $product_variation_value,
+        private readonly ?string $product_variation_postfix,
+        private readonly ?string $product_size,
+        private readonly ?string $product_name,
+        private readonly ?string $product_preview,
+        private readonly ?string $category_name,
+        private readonly ?int $length,
+        private readonly ?int $width,
+        private readonly ?int $height,
+        private readonly ?int $weight,
+        private readonly ?string $product_property,
+        private readonly ?string $product_params,
+        private readonly ?string $product_currency,
+        private readonly ?int $product_quantity,
+        private readonly ?int $market_category,
     ) {}
 
     public function getProductUid(): ProductUid
@@ -114,9 +120,23 @@ final readonly class WildberriesProductsCardResult
         return $this->product_variation_postfix;
     }
 
-    public function getProductSize(): ?string
+    public function getProductSize(): array|false
     {
-        return $this->product_size;
+        if(is_null($this->product_size_decoded))
+        {
+            $product_size_decoded = json_decode($this->product_size, false, 512, JSON_THROW_ON_ERROR);
+
+            if(true === empty($product_size_decoded))
+            {
+                $this->product_size_decoded = false;
+
+                return false;
+            }
+
+            $this->product_size_decoded = $product_size_decoded;
+        }
+
+        return $this->product_size_decoded;
     }
 
     public function getProductName(): ?string
@@ -136,32 +156,60 @@ final readonly class WildberriesProductsCardResult
 
     public function getLength(): ?int
     {
-        return $this->length;
+        return (int) ($this->length / 10);
     }
 
     public function getWidth(): ?int
     {
-        return $this->width;
+        return (int) ($this->width / 10);
     }
 
     public function getHeight(): ?int
     {
-        return $this->height;
+        return (int) ($this->height / 10);
     }
 
     public function getWeight(): ?int
     {
-        return $this->weight;
+        return (int) ($this->weight / 10);
     }
 
-    public function getProductProperty(): ?string
+    public function getProductProperty(): array|false
     {
-        return $this->product_property;
+        if(is_null($this->product_property_decoded))
+        {
+            $product_property_decoded = json_decode($this->product_property, false, 512, JSON_THROW_ON_ERROR);
+
+            if(true === empty($product_property_decoded))
+            {
+                $this->product_property_decoded = false;
+
+                return false;
+            }
+
+            $this->product_property_decoded = $product_property_decoded;
+        }
+
+        return $this->product_property_decoded;
     }
 
-    public function getProductParams(): ?string
+    public function getProductParams(): array|false
     {
-        return $this->product_params;
+        if(is_null($this->product_params_decoded))
+        {
+            $product_params_decoded = json_decode($this->product_params, false, 512, JSON_THROW_ON_ERROR);
+
+            if(true === empty($product_params_decoded))
+            {
+                $this->product_params_decoded = false;
+
+                return false;
+            }
+
+            $this->product_params_decoded = $product_params_decoded;
+        }
+
+        return $this->product_params_decoded;
     }
 
     public function getProductCurrency(): ?string

@@ -25,16 +25,13 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests;
 
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Products\Category\Type\Section\Field\Id\CategoryProductSectionFieldUid;
 use BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\EditControllerTest;
 use BaksDev\Wildberries\Products\Entity\Settings\Event\WbProductSettingsEvent;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
-use BaksDev\Wildberries\Products\Mapper\Property\Collection\BarcodeWildberriesProductsProperty;
 use BaksDev\Wildberries\Products\Mapper\Property\Collection\BrandWildberriesProductProperty;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
-use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsHandler;
@@ -79,7 +76,6 @@ final class WbProductSettingsEditTest extends KernelTestCase
         $WbProductSettingsPropertyDTO = $WbProductsSettingsDTO->getProperty()->current();
 
         self::assertTrue($WbProductSettingsPropertyDTO->getType()->equals(BrandWildberriesProductProperty::class));
-        $WbProductSettingsPropertyDTO->setType(new WildberriesProductProperty(BarcodeWildberriesProductsProperty::class));
 
         self::assertEquals(CategoryProductSectionFieldUid::TEST, (string) $WbProductSettingsPropertyDTO->getField());
         $WbProductSettingsPropertyDTO->setField(new CategoryProductSectionFieldUid());

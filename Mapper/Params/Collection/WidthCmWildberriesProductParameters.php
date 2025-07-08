@@ -91,11 +91,10 @@ final class WidthCmWildberriesProductParameters implements WildberriesProductPar
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
-        if(false === empty($data->getProductParams()))
+        $product_params = $data->getProductParams();
+
+        if(false !== $data->getProductParams())
         {
-            $product_params = json_decode($data->getProductParams(), false, 512, JSON_THROW_ON_ERROR);
-
-
             foreach($product_params as $product_param)
             {
                 if($this->equals($product_param->name))
