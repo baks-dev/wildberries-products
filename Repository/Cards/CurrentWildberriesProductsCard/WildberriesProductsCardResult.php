@@ -104,7 +104,12 @@ final class WildberriesProductsCardResult
 
     public function getArticle(): array|false
     {
-        if(is_null($this->product_article_decoded) && is_string($this->article) && json_validate($this->article))
+        if(false === is_string($this->article) || false === json_validate($this->article))
+        {
+            return false;
+        }
+
+        if(is_null($this->product_article_decoded))
         {
             $product_article_decoded = json_decode($this->article, false, 512, JSON_THROW_ON_ERROR);
 
@@ -138,7 +143,12 @@ final class WildberriesProductsCardResult
 
     public function getProductSize(): array|false
     {
-        if(is_null($this->product_size_decoded) && is_string($this->product_size) && json_validate($this->product_size))
+        if(false === is_string($this->product_size) || false === json_validate($this->product_size))
+        {
+            return false;
+        }
+
+        if(is_null($this->product_size_decoded))
         {
             $product_size_decoded = json_decode($this->product_size, false, 512, JSON_THROW_ON_ERROR);
 
@@ -192,11 +202,12 @@ final class WildberriesProductsCardResult
 
     public function getProductProperty(): array|false
     {
-        if(
-            is_null($this->product_property_decoded) &&
-            is_string($this->product_property) &&
-            json_validate($this->product_property)
-        )
+        if(false === is_string($this->product_property) || false === json_validate($this->product_property))
+        {
+            return false;
+        }
+
+        if(is_null($this->product_property_decoded))
         {
             $product_property_decoded = json_decode($this->product_property, false, 512, JSON_THROW_ON_ERROR);
 
@@ -215,11 +226,12 @@ final class WildberriesProductsCardResult
 
     public function getProductParams(): array|false
     {
-        if(
-            is_null($this->product_params_decoded) &&
-            is_string($this->product_params) &&
-            json_validate($this->product_params)
-        )
+        if(false === is_string($this->product_params) || false === json_validate($this->product_params))
+        {
+            return false;
+        }
+
+        if(is_null($this->product_params_decoded))
         {
             $product_params_decoded = json_decode($this->product_params, false, 512, JSON_THROW_ON_ERROR);
 
