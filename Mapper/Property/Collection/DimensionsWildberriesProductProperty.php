@@ -26,7 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
-use BaksDev\Yandex\Market\Products\Mapper\Properties\Collection\YaMarketProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -83,14 +83,19 @@ final class DimensionsWildberriesProductProperty implements WildberriesProductPr
     }
 
 
-    public function getData(array $data): mixed
+    public function getData(WildberriesProductsCardResult $data): ?array
     {
-        if(isset($data['length'], $data['width'], $data['height'], $data['weight']))
+        if(
+            false === empty($data->getLength()) &&
+            false === empty($data->getWidth()) &&
+            false === empty($data->getHeight()) &&
+            false === empty($data->getWeight())
+        )
         {
             return [
-                'length' => (int) ($data['length'] / 10),
-                'width' => (int) ($data['width'] / 10),
-                'height' => (int) ($data['height'] / 10),
+                'length' => $data->getLength(),
+                'width' => $data->getWidth(),
+                'height' => $data->getHeight(),
             ];
         }
 

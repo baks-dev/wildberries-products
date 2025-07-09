@@ -27,7 +27,10 @@ namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Shirts;
 
 use BaksDev\Reference\Clothing\Type\SizeClothing;
 use BaksDev\Reference\Money\Type\Money;
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -41,6 +44,8 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
     public const array CATEGORY = [192];
 
     public const string PARAM = 'sizes';
+
+    public function __construct(private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest) {}
 
     public function getIndex(): string
     {
@@ -90,18 +95,48 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
     /**
      * Возвращает состояние
      */
-    public function getData(array $data): array|false
+    public function getData(WildberriesProductsCardResult $data): array|false
     {
+        $sizes = $data->getProductSize();
 
-        if(isset($data['product_size']))
+        if(false !== $data->getProductSize())
         {
-            $sizes = json_decode($data['product_size'], false, 512, JSON_THROW_ON_ERROR);
-
             if(empty($sizes))
             {
                 return false;
             }
 
+            $size = [];
+
+            $card = $this->FindAllWildberriesCardsRequest
+                ->profile($data->getProfile())
+                ->findAll($data->getSearchArticle());
+
+            /** При обновлении существующей карточки */
+            if(false !== $card)
+            {
+                $card = $card->current();
+
+                /** @var WildberriesCardDTO $card */
+                foreach($sizes as $item)
+                {
+                    $value = new SizeClothing($item->value)->getSize();
+
+                    $price = new Money($item->price, true);
+
+                    $size[] = [
+                        'chrtID' => $card->getChrt($item->value),
+                        'techSize' => $value->getValue(),
+                        'wbSize' => $value->getRus(), // Российский размер товара
+                        'price' => $price->getRoundValue(), // Российский размер товара
+                        'skus' => [$item->barcode], // Российский размер товара
+                    ];
+                }
+
+                return $size;
+            }
+
+            /** При создании новой карточки */
             foreach($sizes as $item)
             {
                 $value = new SizeClothing($item->value)->getSize();
@@ -109,17 +144,15 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
                 $price = new Money($item->price, true);
 
                 $size[] = [
-                    'chrtID' => $value->getWb(),
                     'techSize' => $value->getValue(),
                     'wbSize' => $value->getRus(), // Российский размер товара
                     'price' => $price->getRoundValue(), // Российский размер товара
                     'skus' => [$item->barcode], // Российский размер товара
                 ];
+
+                return $size;
             }
-
-            return $size;
         }
-
 
         return false;
     }

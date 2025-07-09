@@ -21,6 +21,8 @@
  *  THE SOFTWARE.
  */
 
+declare(strict_types=1);
+
 namespace BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard;
 
 use BaksDev\Products\Product\Entity\Product;
@@ -28,11 +30,14 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
-use BaksDev\Yandex\Market\Products\Type\Card\Id\YaMarketProductsCardUid;
-use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
+use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use Generator;
 
 interface WildberriesProductsCardInterface
 {
+    public function forProfile(UserProfile|UserProfileUid|string $profile): self;
+
     public function forProduct(Product|ProductUid|string $product): self;
 
     public function forOfferConst(ProductOfferConst|string|null $offerConst): self;
@@ -42,8 +47,14 @@ interface WildberriesProductsCardInterface
     public function forModificationConst(ProductModificationConst|string|null $modificationConst): self;
 
     /**
-     * Метод получает активную карточку по идентификатору
+     * @deprecated
+     * Метод получает активную карточку по идентификатору в виде массива
      */
     public function find(): array|false;
 
+    /**
+     * @see WildberriesProductsCardResult
+     * Метод получает активную карточку по идентификатору и гидрирует на резалт
+     */
+    public function findResult(): ?WildberriesProductsCardResult;
 }

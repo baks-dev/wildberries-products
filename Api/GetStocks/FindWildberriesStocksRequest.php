@@ -31,7 +31,6 @@ use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
-#[Autoconfigure(public: true)] /* TODO: удалить !!! */
 final class FindWildberriesStocksRequest extends Wildberries
 {
     /**

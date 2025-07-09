@@ -25,13 +25,13 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\Tests;
 
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
+use BaksDev\Products\Product\Type\Id\ProductUid;
+use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
+use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
-use BaksDev\Yandex\Market\Products\Entity\Card\Market\YaMarketProductsCardMarket;
-use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardInterface;
-use BaksDev\Yandex\Market\Products\Type\Card\Id\YaMarketProductsCardUid;
-use Doctrine\ORM\EntityManagerInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -41,7 +41,7 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[When(env: 'test')]
 class WildberriesProductsCardRepositoryTest extends KernelTestCase
 {
-    public function testUseCase(): void
+    public function testResult(): void
     {
         /** @var WildberriesProductsCardInterface $WildberriesProductsCard */
         $WildberriesProductsCard = self::getContainer()->get(WildberriesProductsCardInterface::class);
@@ -57,49 +57,49 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
             }
 
             $new = $WildberriesProductsCard
+                ->forProfile(UserProfileUid::TEST)
                 ->forProduct($ProductsIdentifierResult->getProductId())
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
                 ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
-                ->find();
+                ->findResult();
 
-            if($new === false)
+            if(true === empty($new))
             {
                 continue;
             }
 
-            self::assertTrue(array_key_exists("product_uid", $new));
-            self::assertTrue(array_key_exists("product_card", $new));
-            self::assertTrue(array_key_exists("offer_const", $new));
-            self::assertTrue(array_key_exists("offer_const", $new));
-            self::assertTrue(array_key_exists("product_offer_value", $new));
-            self::assertTrue(array_key_exists("product_offer_postfix", $new));
-            self::assertTrue(array_key_exists("variation_const", $new));
-            self::assertTrue(array_key_exists("product_variation_value", $new));
-            self::assertTrue(array_key_exists("product_variation_postfix", $new));
-            self::assertTrue(array_key_exists("modification_const", $new));
-            self::assertTrue(array_key_exists("product_modification_value", $new));
-            self::assertTrue(array_key_exists("product_modification_postfix", $new));
-            self::assertTrue(array_key_exists("product_name", $new));
-            self::assertTrue(array_key_exists("product_preview", $new));
-            self::assertTrue(array_key_exists("category_name", $new));
-            self::assertTrue(array_key_exists("length", $new));
-            self::assertTrue(array_key_exists("width", $new));
-            self::assertTrue(array_key_exists("height", $new));
-            self::assertTrue(array_key_exists("weight", $new));
-            self::assertTrue(array_key_exists("market_category", $new));
-            self::assertTrue(array_key_exists("product_propertys", $new));
-            self::assertTrue(array_key_exists("product_params", $new));
-            self::assertTrue(array_key_exists("product_images", $new));
-            self::assertTrue(array_key_exists("product_price", $new));
-            self::assertTrue(array_key_exists("product_currency", $new));
-            self::assertTrue(array_key_exists("product_quantity", $new));
-            self::assertTrue(array_key_exists("article", $new));
+            /** @var WildberriesProductsCardResult $new */
+            self::assertInstanceOf(ProductUid::class, $new->getProductUid());
+            self::assertInstanceOf(ProductOfferConst::class, $new->getOfferConst());
+            self::assertIsString($new->getProductImages());
+            self::assertIsInt($new->getProductOldPrice());
+
+            self::assertTrue($new->getProductOfferValue() === null || true === is_string($new->getProductOfferValue()));
+            self::assertTrue($new->getProductOfferPostfix() === null || true === is_string($new->getProductOfferPostfix()));
+            self::assertTrue($new->getProductCard() === null || true === is_string($new->getProductCard()));
+            self::assertTrue($new->getArticle() === false || true === is_array($new->getArticle()));
+            self::assertTrue($new->getSearchArticle() === null || true === is_string($new->getSearchArticle()));
+            self::assertTrue($new->getVariationConst() === null || $new->getVariationConst() instanceof ProductVariationConst);
+            self::assertTrue($new->getProductVariationValue() === null || true === is_string($new->getProductVariationValue()));
+            self::assertTrue($new->getProductVariationPostfix() === null || true === is_string($new->getProductVariationPostfix()));
+            self::assertTrue($new->getProductSize() === false || true === is_array($new->getProductSize()));
+            self::assertTrue($new->getProductName() === null || true === is_string($new->getProductName()));
+            self::assertTrue($new->getProductPreview() === null || true === is_string($new->getProductPreview()));
+            self::assertTrue($new->getCategoryName() === null || true === is_string($new->getCategoryName()));
+            self::assertTrue($new->getLength() === null || true === is_int($new->getLength()));
+            self::assertTrue($new->getWidth() === null || true === is_int($new->getWidth()));
+            self::assertTrue($new->getHeight() === null || true === is_int($new->getHeight()));
+            self::assertTrue($new->getWeight() === null || true === is_int($new->getWeight()));
+            self::assertTrue($new->getProductProperty() === false || true === is_array($new->getProductProperty()));
+            self::assertTrue($new->getProductParams() === false || true === is_array($new->getProductParams()));
+            self::assertTrue($new->getProductCurrency() === null || true === is_string($new->getProductCurrency()));
+            self::assertTrue($new->getProductQuantity() === null || true === is_int($new->getProductQuantity()));
+            self::assertTrue($new->getMarketCategory() === null || true === is_int($new->getMarketCategory()));
 
             break;
         }
 
         self::assertTrue(true);
-
     }
 }

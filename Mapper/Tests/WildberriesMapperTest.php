@@ -25,12 +25,10 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Mapper\Tests;
 
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
-use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -49,7 +47,6 @@ class WildberriesMapperTest extends KernelTestCase
     public function testUseCase(): void
     {
         self::assertTrue(true);
-        return;
 
         // Бросаем событие консольной комманды
         $dispatcher = self::getContainer()->get(EventDispatcherInterface::class);
@@ -65,43 +62,37 @@ class WildberriesMapperTest extends KernelTestCase
         /** @var WildberriesMapper $WildberriesMapper */
         $WildberriesMapper = self::getContainer()->get(WildberriesMapper::class);
 
-        $AllProductsIdentifier->forProduct('01914cb3-f049-7526-9a82-bd576278fbc4');
-
         foreach($AllProductsIdentifier->findAll() as $ProductsIdentifierResult)
         {
-            if(false === $ProductsIdentifierResult->getProductId()->equals('01914cb3-f049-7526-9a82-bd576278fbc4'))
-            {
-                continue;
-            }
-
             $WildberriesProductsCard = $WildberriesProductsCardRepository
+                ->forProfile(UserProfileUid::TEST)
                 ->forProduct($ProductsIdentifierResult->getProductId())
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
                 ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
-                ->find();
+                ->findResult();
 
             if(empty($WildberriesProductsCard))
             {
                 continue;
             }
 
-            if(empty($WildberriesProductsCard['length']))
+            if(empty($WildberriesProductsCard->getLength()))
             {
                 continue;
             }
 
-            if(empty($WildberriesProductsCard['width']))
+            if(empty($WildberriesProductsCard->getWidth()))
             {
                 continue;
             }
 
-            if(empty($WildberriesProductsCard['height']))
+            if(empty($WildberriesProductsCard->getHeight()))
             {
                 continue;
             }
 
-            if(empty($WildberriesProductsCard['weight']))
+            if(empty($WildberriesProductsCard->getWeight()))
             {
                 continue;
             }
@@ -109,22 +100,17 @@ class WildberriesMapperTest extends KernelTestCase
 
             $request = $WildberriesMapper->getData($WildberriesProductsCard);
 
-            return;
-
-            self::assertEquals($request['offerId'], $YaMarketCard['article']);
-            self::assertEquals(current($request['tags']), $YaMarketCard['product_card']);
-            self::assertNotFalse(stripos($request['name'], $YaMarketCard['product_name']));
-            self::assertEquals($request['marketCategoryId'], $YaMarketCard['market_category']);
-            self::assertEquals($request['description'], $YaMarketCard['product_preview']);
+            self::assertEquals($request['offerId'], $WildberriesProductsCard->getArticle());
+            self::assertEquals(current($request['tags']), $WildberriesProductsCard->getProductCard());
+            self::assertNotFalse(stripos($request['name'], $WildberriesProductsCard->getProductName()));
+            self::assertEquals($request['marketCategoryId'], $WildberriesProductsCard->getMarketCategory());
+            self::assertEquals($request['description'], $WildberriesProductsCard->getProductPreview());
 
 
-            self::assertEquals($request['weightDimensions']['length'], $YaMarketCard['length'] / 10);
-            self::assertEquals($request['weightDimensions']['width'], $YaMarketCard['width'] / 10);
-            self::assertEquals($request['weightDimensions']['height'], $YaMarketCard['height'] / 10);
-            self::assertEquals($request['weightDimensions']['weight'], $YaMarketCard['weight'] / 100);
-
-            //dd($YaMarketCard);
-
+            self::assertEquals($request['weightDimensions']['length'], $WildberriesProductsCard->getLength() / 10);
+            self::assertEquals($request['weightDimensions']['width'], $WildberriesProductsCard->getWidth() / 10);
+            self::assertEquals($request['weightDimensions']['height'], $WildberriesProductsCard->getHeight() / 10);
+            self::assertEquals($request['weightDimensions']['weight'], $WildberriesProductsCard->getWeight() / 100);
 
             break;
         }

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Shirts;
 
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
@@ -87,9 +88,9 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         return true;
     }
 
-    public function getData(array $data): mixed
+    public function getData(WildberriesProductsCardResult $data): ?string
     {
-        if(!isset($data['market_category']) || $data['market_category'] !== WildberriesProductProperty::CATEGORY_SHIRTS)
+        if(true === empty($data->getMarketCategory()) || $data->getMarketCategory() !== WildberriesProductProperty::CATEGORY_SHIRTS)
         {
             return null;
         }
@@ -103,39 +104,18 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         $name = mb_strtoupper($firstChar, 'UTF-8').$then;
 
 
-        $name = trim($name).' '.$data['product_name'];
+        $name = trim($name).' '.$data->getProductName();
 
-        if(!empty($data['product_variation_value']))
+        if(false === empty($data->getProductOfferValue()))
         {
-            $name = trim($name).' '.$data['product_variation_value'];
+            $name = trim($name).' '.$data->getProductOfferValue();
         }
 
-        if(!empty($data['product_modification_value']))
+        if(false === empty($data->getProductOfferPostfix()))
         {
-            $name = trim($name).' '.$data['product_modification_value'];
+            $name = trim($name).' '.$data->getProductOfferPostfix();
         }
 
-        if(!empty($data['product_offer_value']))
-        {
-            $name = trim($name).' '.$data['product_offer_value'];
-        }
-
-        if(!empty($data['product_offer_postfix']))
-        {
-            $name = trim($name).' '.$data['product_offer_postfix'];
-        }
-
-        if(!empty($data['product_variation_postfix']))
-        {
-            $name = trim($name).' '.$data['product_variation_postfix'];
-        }
-
-        if(!empty($data['product_modification_postfix']))
-        {
-            $name = trim($name).' '.$data['product_modification_postfix'];
-        }
-
-
-        return empty($name) ? null : trim($name);
+        return true === empty($name) ? null : trim($name);
     }
 }

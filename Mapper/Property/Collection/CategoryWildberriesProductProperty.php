@@ -25,9 +25,8 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
-use BaksDev\Ozon\Products\Mapper\Property\OzonProductsPropertyInterface;
-use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -92,9 +91,9 @@ final class CategoryWildberriesProductProperty implements WildberriesProductProp
     /**
      * Возвращает состояние
      */
-    public function getData(array $data): int|false
+    public function getData(WildberriesProductsCardResult $data): int|false
     {
-        return $data['market_category'] ?: false;
+        return $data->getMarketCategory() ?: false;
 
     }
 }

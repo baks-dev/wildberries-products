@@ -28,6 +28,7 @@ namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersCollection;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -87,16 +88,16 @@ final class CharacteristicsWildberriesProductProperty implements WildberriesProd
     }
 
 
-    public function getData(array $data): mixed
+    public function getData(WildberriesProductsCardResult $data): ?array
     {
 
-        if(!isset($data['market_category']))
+        if(true === empty($data->getMarketCategory()))
         {
             return null;
         }
 
         /** Получаем параметры категории */
-        $cases = $this->paramsCollection->cases($data['market_category']);
+        $cases = $this->paramsCollection->cases($data->getMarketCategory());
 
         /** @var WildberriesProductParametersInterface $param */
         foreach($cases as $param)
@@ -110,7 +111,6 @@ final class CharacteristicsWildberriesProductProperty implements WildberriesProd
             )
             {
                 $params[] = $parameter;
-                continue;
             }
         }
 

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -87,24 +88,24 @@ final class HeelWildberriesProductParameters implements WildberriesProductParame
     }
 
 
-    public function getData(array $data, ?TranslatorInterface $translator = null): mixed
+    public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
-
-
-        if(isset($data['product_params']))
+        if(false === empty($data->getProductParams()))
         {
-            $product_params = json_decode($data['product_params'], false, 512, JSON_THROW_ON_ERROR);
+            $product_params = $data->getProductParams();
 
-
-            foreach($product_params as $product_param)
+            if(false !== $product_params)
             {
-                if($this->equals($product_param->name))
+                foreach($product_params as $product_param)
                 {
-                    return [
-                        'id' => $this::ID,
-                        'name' => $this->getName(),
-                        'value' => $product_param->value
-                    ];
+                    if($this->equals($product_param->name))
+                    {
+                        return [
+                            'id' => $this::ID,
+                            'name' => $this->getName(),
+                            'value' => $product_param->value
+                        ];
+                    }
                 }
             }
         }

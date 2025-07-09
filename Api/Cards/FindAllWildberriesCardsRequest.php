@@ -53,7 +53,6 @@ final class FindAllWildberriesCardsRequest extends Wildberries
         {
             $cache = $this->getCacheInit('wildberries-products');
             $key = md5(self::class.$this->getProfile().$this->nomenclature.$search);
-            // $cache->deleteItem($key);
 
             $content = $cache->get($key, function(ItemInterface $item) use ($search): array|false {
 
@@ -94,14 +93,12 @@ final class FindAllWildberriesCardsRequest extends Wildberries
                 $item->expiresAfter(DateInterval::createFromDateString('1 hours'));
 
                 return $response->toArray(false);
-
             });
 
             if(false === $content)
             {
                 return false;
             }
-
 
             if(empty($content['cursor']))
             {
@@ -122,7 +119,6 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
             $this->updated = new DateTimeImmutable($cursor['updatedAt']);
             $this->nomenclature = $cursor['nmID'];
-
         }
     }
 }

@@ -96,7 +96,7 @@ final readonly class WildberriesCardNewDispatcher
         private ProductSettingsCategoryPropertyInterface $ProductSettingsCategoryProperty,
         private ProductSettingsCategoryParametersInterface $ProductSettingsCategoryParameters,
         private ProductEventByArticleInterface $ProductEventByArticle,
-    ) {}
+     ) {}
 
     public function __invoke(WildberriesCardNewMassage $message): void
     {
