@@ -72,10 +72,11 @@ class WbCharacteristicRequestTest extends KernelTestCase
             WildberriesProductProperty::CATEGORY_STRAPS,// 107 Шлепанцы;
             WildberriesProductProperty::CATEGORY_SABO, // 98 Cабо;
             WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
+            WildberriesProductProperty::CATEGORY_CZECH, // 1586 Чешки;
         ];
 
         /** @see WildberriesProductProperty */
-        //$cats = [WildberriesProductProperty::CATEGORY_SHIRTS_SPORT];
+        $cats = [WildberriesProductProperty::CATEGORY_CZECH];
 
         foreach($cats as $category)
         {

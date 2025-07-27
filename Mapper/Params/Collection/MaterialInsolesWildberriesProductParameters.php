@@ -37,6 +37,7 @@ final class MaterialInsolesWildberriesProductParameters implements WildberriesPr
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
     public const int ID = 1023;

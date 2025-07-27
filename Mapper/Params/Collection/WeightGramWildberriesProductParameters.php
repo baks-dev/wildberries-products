@@ -32,28 +32,17 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class CompoundWildberriesProductParameters implements WildberriesProductParametersInterface
+final class WeightGramWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_SHIRTS,
-        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
-        WildberriesProductProperty::CATEGORY_JEANS,
-        WildberriesProductProperty::CATEGORY_SVITSHOT,
-        WildberriesProductProperty::CATEGORY_TOP,
-        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
-        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_STRAPS,
-        WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
-    public const int ID = 14177450;
+    public const int ID = 89008;
 
     public function getName(): string
     {
-        return 'Состав';
+        return 'Вес товара без упаковки (г)';
     }
 
     public function required(): bool
@@ -89,7 +78,7 @@ final class CompoundWildberriesProductParameters implements WildberriesProductPa
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -112,7 +101,7 @@ final class CompoundWildberriesProductParameters implements WildberriesProductPa
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value,
                     ];
                 }
             }

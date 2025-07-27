@@ -44,6 +44,7 @@ final class FeaturesModelWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
     public const int ID = 23771;

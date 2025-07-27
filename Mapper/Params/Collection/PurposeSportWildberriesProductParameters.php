@@ -36,6 +36,7 @@ final class PurposeSportWildberriesProductParameters implements WildberriesProdu
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
     public const int ID = 640;
