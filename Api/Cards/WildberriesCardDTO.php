@@ -1,17 +1,17 @@
 <?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
- *
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,6 +27,7 @@ namespace BaksDev\Wildberries\Products\Api\Cards;
 
 use ArrayObject;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 
 
 final class WildberriesCardDTO
@@ -131,16 +132,30 @@ final class WildberriesCardDTO
         $this->offers = new ArrayObject();
         $this->chrt = new ArrayObject();
 
+
+        // по умолчанию размеры присваиваем из techSize
+        $keySize = 'techSize';
+
+        // Для определенных категорий присваиваем wbSize
+        if(
+            in_array($this->category, [
+                WildberriesProductProperty::CATEGORY_CZECH, // Чешки
+            ])
+        )
+        {
+            $keySize = 'wbSize';
+        }
+
         foreach($data['sizes'] as $size)
         {
-            if(empty($size['techSize']))
+            if(empty($size[$keySize]))
             {
                 break;
             }
 
             $barcode = current($size['skus']);
-            $this->offers->offsetSet($barcode, $size['techSize']);
-            $this->chrt->offsetSet($size['techSize'], $size['chrtID']);
+            $this->offers->offsetSet($barcode, $size[$keySize]);
+            $this->chrt->offsetSet($size[$keySize], $size['chrtID']);
         }
 
         $this->dimensions = new ArrayObject($data['dimensions']);
@@ -321,6 +336,6 @@ final class WildberriesCardDTO
     // $size - '4XL'
     public function getChrt(string $size): int|false
     {
-        return $this->chrt->offsetGet($size)?: false;
+        return $this->chrt->offsetGet($size) ?: false;
     }
 }
