@@ -50,25 +50,30 @@ final class DeleteController extends AbstractController
         WbBarcodeDeleteHandler $WbBarcodeDeleteHandler,
     ): Response
     {
-
         $WbBarcodeDeleteDTO = new WbBarcodeDeleteDTO();
         $WbBarcodeEvent->getDto($WbBarcodeDeleteDTO);
 
-        $form = $this->createForm(WbBarcodeDeleteForm::class, $WbBarcodeDeleteDTO, [
-            'action' => $this->generateUrl('wildberries-products:admin.barcode.delete', ['id' => $WbBarcodeDeleteDTO->getEvent()]),
-        ]);
-        $form->handleRequest($request);
+        $form = $this
+            ->createForm(
+                type: WbBarcodeDeleteForm::class,
+                data: $WbBarcodeDeleteDTO,
+                options: ['action' => $this->generateUrl(
+                    'wildberries-products:admin.barcode.delete',
+                    ['id' => $WbBarcodeDeleteDTO->getEvent()]),
+                ],
+            )
+            ->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid() && $form->has('wb_barcode_delete'))
         {
-            $handle = $WbBarcodeDeleteHandler->handle($WbBarcodeDeleteDTO);
+            $handle = $WbBarcodeDeleteHandler->handle($WbBarcodeDeleteDTO, $this->getProfileUid());
 
             $this->addFlash
             (
                 'admin.page.delete',
                 $handle instanceof WbBarcode ? 'admin.success.delete' : 'admin.danger.delete',
                 'admin.wb.products.barcode',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('wildberries-products:admin.barcode.index');

@@ -181,11 +181,10 @@ final class WbBarcodeForm extends AbstractType
 
                 if($data->getMain() && $data->isHiddenCategory())
                 {
-
                     $category = $this->categoryChoice
                         ->category($data->getMain())
+                        ->onlyActive()
                         ->find();
-
 
                     $builder->add('main', ChoiceType::class, [
                         'choices' => $this->categoryChoice->findAll(),
