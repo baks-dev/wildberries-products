@@ -38,22 +38,17 @@ use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property\WbBarcodePrope
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\EditHandleTest;
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\WbBarcodeDTO;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-barcode
- *
- * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\EditHandleTest::class
- *
- * @see     EditHandleTest
- *
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class WbBarcodeDeleteTest extends KernelTestCase
 {
-
+    #[DependsOnClass(EditHandleTest::class)]
     public function testUseCase(): void
     {
         self::bootKernel();
@@ -73,7 +68,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
             ->leftJoin(WbBarcodeEvent::class,
                 'event',
                 'WITH',
-                'event.id = barcode.event'
+                'event.id = barcode.event',
             );
 
 
@@ -128,9 +123,7 @@ final class WbBarcodeDeleteTest extends KernelTestCase
 
     }
 
-    /**
-     * @depends testUseCase
-     */
+    #[Depends('testUseCase')]
     public function testComplete(): void
     {
 

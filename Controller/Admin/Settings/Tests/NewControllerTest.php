@@ -27,14 +27,12 @@ use BaksDev\Products\Category\Entity\CategoryProduct;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\User\Tests\TestUserAccount;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class NewControllerTest extends WebTestCase
 {
     private const string URL = '/admin/wb/product/setting/new/%s/Футболки';

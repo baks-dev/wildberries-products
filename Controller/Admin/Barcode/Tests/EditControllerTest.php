@@ -27,22 +27,20 @@ use BaksDev\Users\User\Tests\TestUserAccount;
 use BaksDev\Wildberries\Products\Type\Barcode\Event\WbBarcodeEventUid;
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-barcode
- *
- * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::class
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class EditControllerTest extends WebTestCase
 {
     private const string URL = '/admin/wb/barcode/edit/%s';
 
     private const string ROLE = 'ROLE_WB_BARCODE_EDIT';
 
+    #[DependsOnClass(NewHandleTest::class)]
     public function testRoleSuccessful(): void
     {
         self::ensureKernelShutdown();
@@ -65,6 +63,7 @@ final class EditControllerTest extends WebTestCase
     /**
      * Доступ по роли ROLE_ADMIN
      */
+    #[DependsOnClass(NewHandleTest::class)]
     public function testRoleAdminSuccessful(): void
     {
 
@@ -88,6 +87,7 @@ final class EditControllerTest extends WebTestCase
     /**
      * Доступ по роли ROLE_USER
      */
+    #[DependsOnClass(NewHandleTest::class)]
     public function testRoleUserDeny(): void
     {
 
@@ -108,6 +108,7 @@ final class EditControllerTest extends WebTestCase
     }
 
     /** Доступ по без роли */
+    #[DependsOnClass(NewHandleTest::class)]
     public function testGuestFiled(): void
     {
 
@@ -126,6 +127,7 @@ final class EditControllerTest extends WebTestCase
 
     }
 
+    #[DependsOnClass(NewHandleTest::class)]
     public function testComplete(): void
     {
         self::assertTrue(true);

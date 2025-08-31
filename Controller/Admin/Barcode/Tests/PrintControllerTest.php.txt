@@ -26,8 +26,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/** @group wildberries-products-card */
-#[When(env: 'test')]
 final class PrintControllerTest extends WebTestCase
 {
     private const URL = '/admin/wb/barcode/print/%s';
@@ -47,9 +45,6 @@ final class PrintControllerTest extends WebTestCase
 
     /**
      * Доступ по роли
-     *
-     * @depends BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Tests\NewHandleTest::testComplete
-     *
      */
     public function testRoleSuccessful(): void
     {

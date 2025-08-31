@@ -36,20 +36,16 @@ use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSett
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- *
- * @depends BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\EditControllerTest::class
- *
- * @see     EditControllerTest
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class WbProductSettingsEditTest extends KernelTestCase
 {
+    #[DependsOnClass(EditControllerTest::class)]
     public function testUseCase(): void
     {
         $container = self::getContainer();

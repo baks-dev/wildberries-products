@@ -27,23 +27,20 @@ use BaksDev\Users\User\Tests\TestUserAccount;
 use BaksDev\Wildberries\Products\Type\Settings\Event\WbProductSettingsEventUid;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- *
- * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest::class
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class DeleteControllerTest extends WebTestCase
 {
     private const string URL = '/admin/wb/product/setting/delete/%s';
 
     private const string ROLE = 'ROLE_WB_PRODUCTS_SETTING_DELETE';
 
-
+    #[DependsOnClass(WbProductSettingsNewTest::class)]
     public function testRoleSuccessful(): void
     {
 
@@ -67,6 +64,7 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     // доступ по роли ROLE_ADMIN
+    #[DependsOnClass(WbProductSettingsNewTest::class)]
     public function testRoleAdminSuccessful(): void
     {
 
@@ -90,6 +88,7 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     // доступ по роли ROLE_USER
+    #[DependsOnClass(WbProductSettingsNewTest::class)]
     public function testRoleUserDeny(): void
     {
 
@@ -111,6 +110,7 @@ final class DeleteControllerTest extends WebTestCase
     }
 
     /** Доступ по без роли */
+    #[DependsOnClass(WbProductSettingsNewTest::class)]
     public function testGuestFiled(): void
     {
 

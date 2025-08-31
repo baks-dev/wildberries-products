@@ -32,14 +32,12 @@ use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersColle
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-
-/**
- * @group wildberries-products
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 class WbCharacteristicRequestTest extends KernelTestCase
 {
     private static WbAuthorizationToken $Authorization;

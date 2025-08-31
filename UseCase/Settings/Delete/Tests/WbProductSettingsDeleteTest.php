@@ -37,23 +37,17 @@ use BaksDev\Wildberries\Products\UseCase\Settings\Delete\DeleteWbProductSettings
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsNewTest;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
+use PHPUnit\Framework\Attributes\DependsOnClass;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- *
- * @depends BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests\DeleteControllerTest::class
- * @depends BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Tests\WbProductSettingsEditTest::class
- *
- * @see     WbProductSettingsEditTest
- * @see     DeleteControllerTest
- *
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class WbProductSettingsDeleteTest extends KernelTestCase
 {
+    #[DependsOnClass(DeleteControllerTest::class)]
+    #[DependsOnClass(WbProductSettingsEditTest::class)]
     public function testUseCase(): void
     {
         $container = self::getContainer();

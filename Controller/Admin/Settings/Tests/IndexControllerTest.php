@@ -24,14 +24,12 @@
 namespace BaksDev\Wildberries\Products\Controller\Admin\Settings\Tests;
 
 use BaksDev\Users\User\Tests\TestUserAccount;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class IndexControllerTest extends WebTestCase
 {
     private const string URL = '/admin/wb/product/settings';

@@ -28,13 +28,12 @@ namespace BaksDev\Wildberries\Products\Api\Settings\Category\Tests;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Settings\Category\FindAllWbCategoryRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 class WbCategoryTest extends KernelTestCase
 {
     private static WbAuthorizationToken $Authorization;

@@ -36,13 +36,12 @@ use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderDTO;
 use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderHandler;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 class WbParentCategoryTest extends KernelTestCase
 {
     private static WbAuthorizationToken $Authorization;

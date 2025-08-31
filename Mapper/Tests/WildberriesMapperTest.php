@@ -29,6 +29,7 @@ use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentif
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -37,11 +38,8 @@ use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\DependencyInjection\Attribute\When;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-
-/**
- * @group wildberries-products
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 class WildberriesMapperTest extends KernelTestCase
 {
     public function testUseCase(): void

@@ -36,14 +36,12 @@ use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSett
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\WbProductsSettingsHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-settings
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class WbProductSettingsNewTest extends KernelTestCase
 {
     public static function setUpBeforeClass(): void

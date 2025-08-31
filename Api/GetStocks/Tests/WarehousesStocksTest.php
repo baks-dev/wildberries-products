@@ -31,14 +31,12 @@ use BaksDev\Wildberries\Api\Token\Warehouse\PartnerWildberries\SellerWarehouses;
 use BaksDev\Wildberries\Products\Api\GetStocks\FindWildberriesStocksRequest;
 use BaksDev\Wildberries\Products\Api\GetStocks\WildberriesStocksDTO;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries
- * @group wildberries-stocks
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class WarehousesStocksTest extends KernelTestCase
 {
     private static $tocken;

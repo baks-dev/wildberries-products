@@ -35,14 +35,12 @@ use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\Property\WbBarcodePrope
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\WbBarcodeDTO;
 use BaksDev\Wildberries\Products\UseCase\Barcode\NewEdit\WbBarcodeHandler;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
-/**
- * @group wildberries-products
- * @group wildberries-products-barcode
- */
 #[When(env: 'test')]
+#[Group('wildberries-products')]
 final class NewHandleTest extends KernelTestCase
 {
     /**
