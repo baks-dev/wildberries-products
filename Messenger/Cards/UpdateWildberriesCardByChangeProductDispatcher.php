@@ -1,17 +1,17 @@
 <?php
 /*
- * Copyright 2025.  Baks.dev <admin@baks.dev>
- *
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
  *  in the Software without restriction, including without limitation the rights
  *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  *  copies of the Software, and to permit persons to whom the Software is furnished
  *  to do so, subject to the following conditions:
- *
+ *  
  *  The above copyright notice and this permission notice shall be included in all
  *  copies or substantial portions of the Software.
- *
+ *  
  *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,14 +28,16 @@ namespace BaksDev\Wildberries\Products\Messenger\Cards;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Messenger\ProductMessage;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
+use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifierResult;
 use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
 use BaksDev\Products\Product\Type\Event\ProductEventUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreateMessage;
-use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
-use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -80,18 +82,20 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
             return;
         }
 
+        /** @var ProductsIdentifierResult $ProductsIdentifierResult */
+
         foreach($products as $ProductsIdentifierResult)
         {
             foreach($profiles as $UserProfileUid)
             {
                 $currentProduct = $this->WildberriesProductsCardRepository
                     ->forProduct($ProductsIdentifierResult->getProductId())
-                    ->forOfferConst($ProductsIdentifierResult->getOfferConst())
-                    ->forVariationConst($ProductsIdentifierResult->getVariationConst())
-                    ->forModificationConst($ProductsIdentifierResult->getModificationConst())
+                    ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
+                    ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
+                    ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
                     ->findResult();
 
-                if(true === empty($currentProduct))
+                if(false === ($currentProduct instanceof WildberriesProductsCardResult))
                 {
                     $this->logger->warning(
                         sprintf('Ошибка: %s. Информация о продукте не была найдена',
@@ -105,9 +109,9 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                 {
                     $lastProduct = $this->ProductDetailByUidRepository
                         ->event($message->getLast())
-                        ->offer($ProductsIdentifierResult->getOfferId())
-                        ->variation($ProductsIdentifierResult->getVariationId())
-                        ->modification($ProductsIdentifierResult->getModificationId())
+                        ->offer($ProductsIdentifierResult->getProductOfferId())
+                        ->variation($ProductsIdentifierResult->getProductVariationId())
+                        ->modification($ProductsIdentifierResult->getProductModificationId())
                         ->findResult();
 
                     if(true === empty($lastProduct))
@@ -120,7 +124,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                         continue;
                     }
 
-                    $filter = $lastProduct->getProductArticle() === null ? null : $lastProduct->getProductArticle();
+                    $filter = $lastProduct->getProductArticle();
 
                     if($filter === null)
                     {
@@ -146,7 +150,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                         /** Транспорт LOW чтобы не мешать общей очереди */
                         $this->messageDispatch->dispatch(
                             message: $wbUpdateMessage,
-                            transport: (string) $UserProfileUid.'-low',
+                            transport: $UserProfileUid.'-low',
                         );
 
                         continue;
@@ -164,7 +168,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                 /** Транспорт LOW чтобы не мешать общей очереди */
                 $this->messageDispatch->dispatch(
                     message: $wbCreateMessage,
-                    transport: (string) $UserProfileUid.'-low',
+                    transport: $UserProfileUid.'-low',
                 );
             }
         }
