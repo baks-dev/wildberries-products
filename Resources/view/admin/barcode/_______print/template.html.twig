@@ -3,7 +3,7 @@
 
 {# ---- CSS ------------------------------------------------------------ #}
 {% block stylesheets %}
-    <link href="/assets/css/print.min.css" rel="stylesheet" type="text/css">
+    <link href="/assets/{{ version }}/css/print.min.css" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {# ---- КОНТЕНТ-БЛОК ------------------------------------------------------------ #}
@@ -13,6 +13,6 @@
 
 
 {% block javascript %}
-<script async nonce="{{ csp_nonce() }}" src="/assets/ls/print.min.js?v={{ version }}"></script>
+<script async nonce="{{ csp_nonce() }}" src="/assets/{{ version }}/js/print.min.js?v={{ version }}"></script>
 {% endblock %}
 
