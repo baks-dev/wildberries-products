@@ -43,7 +43,8 @@ final class PictureWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
-        WildberriesProductProperty::CATEGORY_SABO
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 12;

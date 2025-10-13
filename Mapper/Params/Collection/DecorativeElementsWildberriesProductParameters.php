@@ -44,7 +44,9 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_SABO
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+
     ];
 
     public const int ID = 50;

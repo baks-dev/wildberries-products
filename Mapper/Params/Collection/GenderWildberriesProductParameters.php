@@ -46,6 +46,7 @@ final class GenderWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 204557;

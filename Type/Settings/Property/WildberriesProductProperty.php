@@ -45,6 +45,9 @@ final class WildberriesProductProperty
     public const int CATEGORY_SABO = 98; // Cабо;
     public const int CATEGORY_SHIRTS_SPORT = 5217; // Футболка спортивная;
     public const int CATEGORY_CZECH = 1586; // Чешки;
+    public const int CATEGORY_LONGSLEEVE = 217; // Лонгслив;
+
+
 
 
 
@@ -65,6 +68,7 @@ final class WildberriesProductProperty
             self::CATEGORY_SABO => ['Cабо'],
             self::CATEGORY_SHIRTS_SPORT => ['Футболки', 'Футболка спортивная'],
             self::CATEGORY_CZECH => ['Чешки'],
+            self::CATEGORY_LONGSLEEVE => ['Лонгслив', 'Лонгсливы'],
         ];
     }
 

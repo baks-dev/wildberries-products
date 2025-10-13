@@ -45,6 +45,7 @@ final class CollectionWildberriesProductParameters implements WildberriesProduct
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 7488315;

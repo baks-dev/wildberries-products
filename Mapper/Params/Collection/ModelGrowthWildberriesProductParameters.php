@@ -41,6 +41,7 @@ final class ModelGrowthWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 165482;

@@ -40,6 +40,7 @@ final class HeroesWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 51;

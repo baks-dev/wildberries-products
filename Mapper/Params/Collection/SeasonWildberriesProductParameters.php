@@ -39,6 +39,7 @@ final class SeasonWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 18769;

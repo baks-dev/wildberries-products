@@ -38,6 +38,7 @@ final class NecklineWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_SHIRTS,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 6;
