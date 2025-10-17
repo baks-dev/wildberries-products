@@ -97,6 +97,11 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
      */
     public function getData(WildberriesProductsCardResult $data): array|false
     {
+        if(false === class_exists(SizeClothing::class))
+        {
+            return false;
+        }
+
         $sizes = $data->getProductSize();
 
         if(false !== $data->getProductSize())

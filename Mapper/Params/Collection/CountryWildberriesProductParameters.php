@@ -73,7 +73,7 @@ final class CountryWildberriesProductParameters implements WildberriesProductPar
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -93,10 +93,20 @@ final class CountryWildberriesProductParameters implements WildberriesProductPar
             {
                 if($this->equals($product_param->name))
                 {
+                    $value = $product_param->value;
+
+                    if($translator instanceof TranslatorInterface)
+                    {
+                        $value = $translator->trans(
+                            id: $product_param->value,
+                            domain: 'field-country',
+                        );
+                    }
+
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $value,
                     ];
                 }
             }
