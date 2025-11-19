@@ -78,7 +78,7 @@ final class PurposeTireWildberriesProductParameters implements WildberriesProduc
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -103,7 +103,15 @@ final class PurposeTireWildberriesProductParameters implements WildberriesProduc
                         return [
                             'id' => $this::ID,
                             'name' => $this->getName(),
-                            'value' => $product_param->value
+                            'value' =>
+                                match ($product_param->value)
+                                {
+                                    'jeep' => 'для внедорожников',
+                                    'bus' => 'для коммерческого транспорта',
+                                    'truck' => 'для грузовых автомобилей',
+                                    'passenger' => 'для легковых автомобилей',
+                                    default => false,
+                                },
                         ];
                     }
                 }

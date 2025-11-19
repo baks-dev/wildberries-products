@@ -101,7 +101,9 @@ final class StudsWildberriesProductParameters implements WildberriesProductParam
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => ($product_param->value === 'true' || $product_param->value === true)
+                            ? 'да'
+                            : 'нет',
                     ];
                 }
             }

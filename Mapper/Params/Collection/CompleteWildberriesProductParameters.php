@@ -27,12 +27,17 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class CompleteWildberriesProductParameters implements WildberriesProductParametersInterface
 {
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_TIRE,
+    ];
+
     public const int ID = 378533;
 
     public function getName(): string
@@ -47,7 +52,7 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
 
     public function default(): ?string
     {
-        return null;
+        return '1';
     }
 
     /** Массив допустимых значений */
@@ -96,7 +101,7 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value ?? 1,
                     ];
                 }
             }

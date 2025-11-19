@@ -28,6 +28,7 @@ namespace BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProduc
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
+use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 
 final class WildberriesProductsCardResult
 {
@@ -46,12 +47,19 @@ final class WildberriesProductsCardResult
         private readonly string $profile,
         private readonly ?string $product_card,
         private readonly ?string $article,
+
         private readonly ?string $offer_const,
         private readonly ?string $product_offer_value,
         private readonly ?string $product_offer_postfix,
+
         private readonly ?string $variation_const,
         private readonly ?string $product_variation_value,
         private readonly ?string $product_variation_postfix,
+
+        private readonly ?string $modification_const,
+        private readonly ?string $product_modification_value,
+        private readonly ?string $product_modification_postfix,
+
         private readonly ?string $product_size,
         private readonly ?string $product_name,
         private readonly ?string $product_preview,
@@ -70,21 +78,6 @@ final class WildberriesProductsCardResult
     public function getProductUid(): ProductUid
     {
         return new ProductUid($this->product_uid);
-    }
-
-    public function getOfferConst(): ProductOfferConst
-    {
-        return new ProductOfferConst($this->offer_const);
-    }
-
-    public function getProductOfferValue(): ?string
-    {
-        return $this->product_offer_value;
-    }
-
-    public function getProductOfferPostfix(): ?string
-    {
-        return $this->product_offer_postfix;
     }
 
     public function getProductImages(): string
@@ -126,6 +119,29 @@ final class WildberriesProductsCardResult
         return $this->product_article_decoded;
     }
 
+    /**
+     * ProductOffer
+     */
+
+    public function getOfferConst(): ProductOfferConst
+    {
+        return new ProductOfferConst($this->offer_const);
+    }
+
+    public function getProductOfferValue(): ?string
+    {
+        return $this->product_offer_value;
+    }
+
+    public function getProductOfferPostfix(): ?string
+    {
+        return $this->product_offer_postfix;
+    }
+
+    /**
+     * ProductVariation
+     */
+
     public function getVariationConst(): ?ProductVariationConst
     {
         return null === $this->variation_const ? null : new ProductVariationConst($this->variation_const);
@@ -140,6 +156,28 @@ final class WildberriesProductsCardResult
     {
         return $this->product_variation_postfix;
     }
+
+
+    /**
+     * ProductModification
+     */
+
+    public function getModificationConst(): ?ProductModificationConst
+    {
+        return null === $this->modification_const ? null : new ProductModificationConst($this->variation_const);
+    }
+
+    public function getProductModificationValue(): ?string
+    {
+        return $this->product_modification_value;
+    }
+
+    public function getProductModificationPostfix(): ?string
+    {
+        return $this->product_modification_postfix;
+    }
+
+
 
     public function getProductSize(): array|false
     {

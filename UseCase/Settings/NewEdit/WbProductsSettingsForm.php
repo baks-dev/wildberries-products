@@ -23,18 +23,17 @@
 
 namespace BaksDev\Wildberries\Products\UseCase\Settings\NewEdit;
 
+use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\ModificationCategoryProductSectionField\ModificationCategoryProductSectionFieldInterface;
+use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\OffersCategoryProductSectionField\OffersCategoryProductSectionFieldInterface;
 use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\PropertyFieldsCategoryChoiceInterface;
-use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectName;
-use BaksDev\Wildberries\Api\Token\Reference\Characteristics\WbCharacteristicByObjectNameDTO;
+use BaksDev\Products\Category\Repository\PropertyFieldsCategoryChoice\VariationCategoryProductSectionField\VariationCategoryProductSectionFieldInterface;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersCollection;
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyCollection;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
-use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Name\WbProductsSettingsNameForm;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Parameters\WbProductSettingsParametersDTO;
 use BaksDev\Wildberries\Products\UseCase\Settings\NewEdit\Property\WbProductSettingsPropertyDTO;
-use BaksDev\Wildberries\Repository\WbTokenByProfile\WbTokenByProfileInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -47,12 +46,13 @@ final class WbProductsSettingsForm extends AbstractType
 {
     public function __construct(
         private readonly PropertyFieldsCategoryChoiceInterface $propertyFields,
-        private readonly WbCharacteristicByObjectName $wbCharacteristic,
-        private readonly WbTokenByProfileInterface $wbTokenByProfile,
+
+        private readonly OffersCategoryProductSectionFieldInterface $offersCategoryProductSectionField,
+        private readonly VariationCategoryProductSectionFieldInterface $variationCategoryProductSectionField,
+        private readonly ModificationCategoryProductSectionFieldInterface $modificationCategoryProductSectionField,
 
         private readonly WildberriesProductPropertyCollection $wildberriesProductPropertyCollection,
         private readonly WildberriesProductParametersCollection $wildberriesProductParamsCollection
-
     ) {}
 
 
@@ -72,6 +72,37 @@ final class WbProductsSettingsForm extends AbstractType
             $property_fields = $this->propertyFields
                 ->category($data->getMain())
                 ->getPropertyFieldsCollection();
+
+            /**
+             * Добавляем к выбору ТП, варианты и модификации
+             */
+            $offer = $this->offersCategoryProductSectionField
+                ->category($data->getMain())
+                ->findAllCategoryProductSectionField();
+
+            if($offer)
+            {
+                array_unshift($property_fields, $offer);
+
+                $variation = $this->variationCategoryProductSectionField
+                    ->offer($offer->getValue())
+                    ->findAllCategoryProductSectionField();
+
+                if($variation)
+                {
+                    array_unshift($property_fields, $variation);
+
+                    $modification = $this->modificationCategoryProductSectionField
+                        ->variation($variation->getValue())
+                        ->findAllCategoryProductSectionField();
+
+                    if($modification)
+                    {
+                        array_unshift($property_fields, $modification);
+                    }
+                }
+            }
+
 
             /* Category Trans */
             $form->add('property', CollectionType::class, [

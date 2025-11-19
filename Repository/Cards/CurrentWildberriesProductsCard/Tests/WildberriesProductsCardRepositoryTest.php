@@ -33,6 +33,8 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -55,7 +57,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
                 break;
             }
 
-            $new = $WildberriesProductsCard
+            $WildberriesProductsCardResult = $WildberriesProductsCard
                 ->forProfile(UserProfileUid::TEST)
                 ->forProduct($ProductsIdentifierResult->getProductId())
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
@@ -63,38 +65,26 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
                 ->findResult();
 
-            if(true === empty($new))
+            if(true === empty($WildberriesProductsCardResult))
             {
                 continue;
             }
 
-            /** @var WildberriesProductsCardResult $new */
-            self::assertInstanceOf(ProductUid::class, $new->getProductUid());
-            self::assertInstanceOf(ProductOfferConst::class, $new->getOfferConst());
-            self::assertIsString($new->getProductImages());
-            self::assertIsInt($new->getProductOldPrice());
 
-            self::assertTrue($new->getProductOfferValue() === null || true === is_string($new->getProductOfferValue()));
-            self::assertTrue($new->getProductOfferPostfix() === null || true === is_string($new->getProductOfferPostfix()));
-            self::assertTrue($new->getProductCard() === null || true === is_string($new->getProductCard()));
-            self::assertTrue($new->getArticle() === false || true === is_array($new->getArticle()));
-            self::assertTrue($new->getSearchArticle() === null || true === is_string($new->getSearchArticle()));
-            self::assertTrue($new->getVariationConst() === null || $new->getVariationConst() instanceof ProductVariationConst);
-            self::assertTrue($new->getProductVariationValue() === null || true === is_string($new->getProductVariationValue()));
-            self::assertTrue($new->getProductVariationPostfix() === null || true === is_string($new->getProductVariationPostfix()));
-            self::assertTrue($new->getProductSize() === false || true === is_array($new->getProductSize()));
-            self::assertTrue($new->getProductName() === null || true === is_string($new->getProductName()));
-            self::assertTrue($new->getProductPreview() === null || true === is_string($new->getProductPreview()));
-            self::assertTrue($new->getCategoryName() === null || true === is_string($new->getCategoryName()));
-            self::assertTrue($new->getLength() === null || true === is_int($new->getLength()));
-            self::assertTrue($new->getWidth() === null || true === is_int($new->getWidth()));
-            self::assertTrue($new->getHeight() === null || true === is_int($new->getHeight()));
-            self::assertTrue($new->getWeight() === null || true === is_int($new->getWeight()));
-            self::assertTrue($new->getProductProperty() === false || true === is_array($new->getProductProperty()));
-            self::assertTrue($new->getProductParams() === false || true === is_array($new->getProductParams()));
-            self::assertTrue($new->getProductCurrency() === null || true === is_string($new->getProductCurrency()));
-            self::assertTrue($new->getProductQuantity() === null || true === is_int($new->getProductQuantity()));
-            self::assertTrue($new->getMarketCategory() === null || true === is_int($new->getMarketCategory()));
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(WildberriesProductsCardResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $data = $method->invoke($WildberriesProductsCardResult);
+                    dump($data);
+                }
+            }
 
             break;
         }

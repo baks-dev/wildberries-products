@@ -55,11 +55,11 @@ use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
 use BaksDev\Wildberries\Products\Entity\Settings\WbProductSettings;
 use InvalidArgumentException;
-use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
 
 
 final class WildberriesProductsCardRepository implements WildberriesProductsCardInterface
@@ -230,11 +230,16 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'product',
                 ProductInfo::class,
                 'product_info',
-                'product_info.product = product.id AND (product_info.profile IS NULL OR product_info.profile = :profile)'
+                'product_info.product = product.id AND (product_info.profile IS NULL OR product_info.profile = :profile)',
             )
             ->setParameter('profile', $this->profile, UserProfileUid::TYPE);
 
-        if($this->variationConst instanceof ProductVariationConst)
+
+        /**
+         * ProductOffer
+         */
+
+        if($this->offerConst instanceof ProductOfferConst)
         {
             $dbal
                 ->addSelect('product_offer.const AS offer_const')
@@ -245,12 +250,12 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     ProductOffer::class,
                     'product_offer',
                     'product_offer.event = product.event AND
-                               product_offer.const = :offer_const'
+                               product_offer.const = :offer_const',
                 )
                 ->setParameter(
                     'offer_const',
                     $this->offerConst,
-                    ProductOfferConst::TYPE
+                    ProductOfferConst::TYPE,
                 );
         }
         else
@@ -263,11 +268,15 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     'product',
                     ProductOffer::class,
                     'product_offer',
-                    'product_offer.event = product.event'
+                    'product_offer.event = product.event',
                 );
         }
 
-        if($this->modificationConst instanceof ProductModificationConst)
+        /**
+         * ProductVariation
+         */
+
+        if($this->variationConst instanceof ProductVariationConst)
         {
             $dbal
                 ->addSelect('product_variation.const AS variation_const')
@@ -277,12 +286,12 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     'product_offer',
                     ProductVariation::class,
                     'product_variation',
-                    'product_variation.offer = product_offer.id AND product_variation.const = :variation_const'
+                    'product_variation.offer = product_offer.id AND product_variation.const = :variation_const',
                 )
                 ->setParameter(
                     'variation_const',
                     $this->variationConst,
-                    ProductVariationConst::TYPE
+                    ProductVariationConst::TYPE,
                 );
         }
         else
@@ -295,17 +304,46 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                     'product_offer',
                     ProductVariation::class,
                     'product_variation',
-                    'product_variation.offer = product_offer.id'
+                    'product_variation.offer = product_offer.id',
                 );
         }
 
-        $dbal
-            ->leftJoin(
-                'product_variation',
-                ProductModification::class,
-                'product_modification',
-                'product_modification.variation = product_variation.id'
-            );
+        /**
+         * ProductModification
+         */
+
+        if($this->modificationConst instanceof ProductModificationConst)
+        {
+            $dbal
+                ->addSelect('product_modification.const AS modification_const')
+                ->addSelect('product_modification.value AS product_modification_value')
+                ->addSelect('product_modification.postfix AS product_modification_postfix')
+                ->leftJoin(
+                    'product_variation',
+                    ProductModification::class,
+                    'product_modification',
+                    'product_modification.variation = product_variation.id AND product_modification.const = :modification_const',
+                )
+                ->setParameter(
+                    'modification_const',
+                    $this->modificationConst,
+                    ProductModificationConst::TYPE,
+                );
+        }
+        else
+        {
+            $dbal
+                ->addSelect('NULL AS modification_const')
+                ->addSelect('NULL AS product_modification_value')
+                ->addSelect('NULL AS product_modification_postfix')
+                ->leftJoin(
+                    'product_variation',
+                    ProductModification::class,
+                    'product_modification',
+                    'product_modification.variation = product_variation.id',
+                );
+        }
+
 
         if($this->offerConst instanceof ProductOfferConst)
         {
@@ -335,7 +373,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                             0
                         )
                     )
-                ) AS product_size"
+                ) AS product_size",
             );
         }
         else
@@ -349,7 +387,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'product',
                 ProductTrans::class,
                 'product_trans',
-                'product_trans.event = product.event'
+                'product_trans.event = product.event',
             );
 
 
@@ -359,7 +397,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'product',
                 ProductDescription::class,
                 'product_desc',
-                'product_desc.event = product.event AND product_desc.device = :device '
+                'product_desc.event = product.event AND product_desc.device = :device ',
             )->setParameter('device', 'pc');
 
 
@@ -368,14 +406,14 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product',
             ProductCategory::class,
             'product_category',
-            'product_category.event = product.event AND product_category.root = true'
+            'product_category.event = product.event AND product_category.root = true',
         );
 
         $dbal->join(
             'product_category',
             CategoryProduct::class,
             'category',
-            'category.id = product_category.category'
+            'category.id = product_category.category',
         );
 
         $dbal
@@ -384,7 +422,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'category',
                 CategoryProductTrans::class,
                 'category_trans',
-                'category_trans.event = category.event AND category_trans.local = :local'
+                'category_trans.event = category.event AND category_trans.local = :local',
             );
 
         $dbal
@@ -418,7 +456,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                         (product_modification.const IS NOT NULL AND product_package.modification = product_modification.const) OR
                         (product_modification.const IS NULL AND product_package.modification IS NULL)
                    )
-                '
+                ',
             );
 
         $dbal
@@ -426,7 +464,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'product_category',
                 WbProductSettings::class,
                 'settings',
-                'settings.id = product_category.category'
+                'settings.id = product_category.category',
             );
 
         /**
@@ -438,7 +476,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'settings',
                 WbProductSettingsInvariable::class,
                 'settings_invariable',
-                'settings_invariable.main = settings.id'
+                'settings_invariable.main = settings.id',
             );
 
 
@@ -450,7 +488,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'settings',
                 WbProductSettingsProperty::class,
                 'settings_property',
-                'settings_property.event = settings.event'
+                'settings_property.event = settings.event',
             );
 
 
@@ -460,7 +498,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'settings_property',
                 ProductProperty::class,
                 'product_property',
-                'product_property.event = product.event AND product_property.field = settings_property.field'
+                'product_property.event = product.event AND product_property.field = settings_property.field',
             );
 
         $dbal->addSelect(
@@ -478,7 +516,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 						END
 					)
 			)
-			AS product_property"
+			AS product_property",
         );
 
 
@@ -490,7 +528,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 'settings',
                 WbProductSettingsParameters::class,
                 'settings_params',
-                'settings_params.event = settings.event'
+                'settings_params.event = settings.event',
             );
 
 
@@ -515,7 +553,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 '
                     product_offer_params.id = product_offer.id AND
                     product_offer_params.category_offer = settings_params.field
-            '
+            ',
             );
 
         $dbal
@@ -526,7 +564,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 '
                     product_variation_params.id = product_variation.id AND
                     product_variation_params.category_variation = settings_params.field
-           '
+           ',
             );
 
         $dbal
@@ -537,7 +575,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 '
                     product_modification_params.id = product_modification.id AND
                     product_modification_params.category_modification = settings_params.field
-            '
+            ',
             );
 
         $dbal->addSelect(
@@ -556,7 +594,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 						END
 					)
 			)
-			AS product_params"
+			AS product_params",
         );
 
 
@@ -570,7 +608,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_modification',
             ProductModificationImage::class,
             'product_modification_image',
-            'product_modification_image.modification = product_modification.id'
+            'product_modification_image.modification = product_modification.id',
         );
 
 
@@ -580,7 +618,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_offer',
             ProductVariationImage::class,
             'product_variation_image',
-            'product_variation_image.variation = product_variation.id'
+            'product_variation_image.variation = product_variation.id',
         );
 
 
@@ -590,7 +628,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_offer',
             ProductOfferImage::class,
             'product_offer_images',
-            'product_offer_images.offer = product_offer.id'
+            'product_offer_images.offer = product_offer.id',
         );
 
         /* Фото продукта */
@@ -599,7 +637,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product',
             ProductPhoto::class,
             'product_photo',
-            'product_photo.event = product.event'
+            'product_photo.event = product.event',
         );
 
         $dbal->addSelect(
@@ -646,7 +684,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 
 				END
 	 
-			) AS product_images"
+			) AS product_images",
         );
 
 
@@ -655,7 +693,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product',
             ProductPrice::class,
             'product_price',
-            'product_price.event = product.event'
+            'product_price.event = product.event',
         );
 
         /* Цена торгового предложения */
@@ -663,7 +701,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_offer',
             ProductOfferPrice::class,
             'product_offer_price',
-            'product_offer_price.offer = product_offer.id'
+            'product_offer_price.offer = product_offer.id',
         );
 
         /* Цена множественного варианта */
@@ -671,7 +709,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_variation',
             ProductVariationPrice::class,
             'product_variation_price',
-            'product_variation_price.variation = product_variation.id'
+            'product_variation_price.variation = product_variation.id',
         );
 
 
@@ -680,7 +718,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_modification',
             ProductModificationPrice::class,
             'product_modification_price',
-            'product_modification_price.modification = product_modification.id'
+            'product_modification_price.modification = product_modification.id',
         );
 
         /* Предыдущая стоимость продукта */
@@ -712,7 +750,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 CASE WHEN product_price.price IS NOT NULL AND product_price.price > 0 
                      THEN product_price.currency END
             ) AS product_currency
-		'
+		',
         );
 
 
@@ -721,7 +759,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_offer',
             ProductOfferQuantity::class,
             'product_offer_quantity',
-            'product_offer_quantity.offer = product_offer.id'
+            'product_offer_quantity.offer = product_offer.id',
         );
 
         /* Наличие и резерв множественного варианта */
@@ -729,7 +767,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_variation',
             ProductVariationQuantity::class,
             'product_variation_quantity',
-            'product_variation_quantity.variation = product_variation.id'
+            'product_variation_quantity.variation = product_variation.id',
         );
 
         /* Наличие и резерв модификации множественного варианта */
@@ -737,7 +775,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             'product_modification',
             ProductModificationQuantity::class,
             'product_modification_quantity',
-            'product_modification_quantity.modification = product_modification.id'
+            'product_modification_quantity.modification = product_modification.id',
         );
 
         /* Наличие продукта за вычетом резерва  */

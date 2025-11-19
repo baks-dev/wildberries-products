@@ -78,7 +78,7 @@ final class RunflatWildberriesProductParameters implements WildberriesProductPar
 
         return in_array($param, [
             (string) self::ID,
-            mb_strtolower($this->getName())
+            mb_strtolower($this->getName()),
         ], true);
     }
 
@@ -101,7 +101,9 @@ final class RunflatWildberriesProductParameters implements WildberriesProductPar
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => ($product_param->value === 'true' || $product_param->value === true)
+                            ? 'да'
+                            : 'нет',
                     ];
                 }
             }

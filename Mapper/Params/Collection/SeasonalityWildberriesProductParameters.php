@@ -101,7 +101,14 @@ final class SeasonalityWildberriesProductParameters implements WildberriesProduc
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' =>
+                            match ($product_param->value)
+                            {
+                                'summer' => 'лето',
+                                'winter' => 'зима',
+                                'all' => 'всесезонные',
+                                default => false,
+                            },
                     ];
                 }
             }

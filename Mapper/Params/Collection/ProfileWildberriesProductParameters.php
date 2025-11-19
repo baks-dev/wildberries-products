@@ -90,6 +90,8 @@ final class ProfileWildberriesProductParameters implements WildberriesProductPar
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
+
+
         $product_params = $data->getProductParams();
 
         if(false !== $data->getProductParams())

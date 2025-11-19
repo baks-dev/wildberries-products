@@ -96,6 +96,7 @@ final class DimensionsWildberriesProductProperty implements WildberriesProductPr
                 'length' => $data->getLength(),
                 'width' => $data->getWidth(),
                 'height' => $data->getHeight(),
+                'weightBrutto' => $data->getWeight(),
             ];
         }
 

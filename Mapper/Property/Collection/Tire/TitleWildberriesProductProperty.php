@@ -113,10 +113,10 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
             $name .= $data->getProductVariationValue();
         }
 
-//        if(false === empty($data->getModificationValue()))
-//        {
-//            $name .= '/'.$data->getModificationValue().' ';
-//        }
+        if(false === empty($data->getProductModificationValue()))
+        {
+            $name .= '/'.$data->getProductModificationValue().' ';
+        }
 
         if(false === empty($data->getProductOfferValue()))
         {
@@ -133,10 +133,10 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
             $name .= $data->getProductVariationPostfix().' ';
         }
 
-//        if($data->getModificationPostfix())
-//        {
-//            $name .= $data->getModificationPostfix().' ';
-//        }
+        if($data->getProductModificationPostfix())
+        {
+            $name .= $data->getProductModificationPostfix().' ';
+        }
 
         
         return empty($name) ? null : trim($name);
