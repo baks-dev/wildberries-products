@@ -31,6 +31,7 @@ use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]
@@ -41,7 +42,9 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
      */
 
     /** @see WildberriesProductProperty */
-    public const array CATEGORY = [192];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_SHIRTS,
+    ];
 
     public const string PARAM = 'sizes';
 

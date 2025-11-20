@@ -41,6 +41,27 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
     private ?int $nomenclature = null;
 
+    private int $photo = -1;
+
+    public function onlyPhoto(): self
+    {
+        $this->photo = 1;
+        return $this;
+    }
+
+    public function onlyNoPhoto(): self
+    {
+        $this->photo = 0;
+        return $this;
+    }
+
+    public function allPhoto(): self
+    {
+        $this->photo = -1;
+        return $this;
+    }
+
+
     /**
      * @return array{WildberriesCardDTO}
      *
@@ -68,7 +89,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
                         ],
                         "filter" => [
                             "textSearch" => $search ?: '',
-                            "withPhoto" => 1,
+                            "withPhoto" => $this->photo,
                         ],
                     ],
                 ];

@@ -29,6 +29,7 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 
 final class WildberriesProductsCardResult
 {
@@ -235,7 +236,7 @@ final class WildberriesProductsCardResult
 
     public function getWeight(): ?int
     {
-        return (int) ($this->weight / 10);
+        return (int) ($this->weight / 100);
     }
 
     public function getProductProperty(): array|false
@@ -304,6 +305,12 @@ final class WildberriesProductsCardResult
     public function getSearchArticle(): ?string
     {
         $articles = $this->getArticle();
+
+        /** Артикул шин публикуем как есть */
+        if($this->market_category === WildberriesProductProperty::CATEGORY_TIRE)
+        {
+            return $articles ? current($articles) : null;
+        }
 
         if(false !== $articles)
         {

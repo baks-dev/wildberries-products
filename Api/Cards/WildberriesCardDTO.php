@@ -109,9 +109,12 @@ final class WildberriesCardDTO
 
         $this->media = new ArrayObject();
 
-        foreach($data['photos'] as $key => $photos)
+        if(false === empty($data['photos']))
         {
-            $this->media->offsetSet($key, $photos['big'] ?: current($photos));
+            foreach($data['photos'] as $key => $photos)
+            {
+                $this->media->offsetSet($key, $photos['big'] ?: current($photos));
+            }
         }
 
         $this->characteristics = new ArrayObject();
@@ -148,7 +151,7 @@ final class WildberriesCardDTO
 
         foreach($data['sizes'] as $size)
         {
-            if(empty($size[$keySize]))
+            if(false === isset($size[$keySize]))
             {
                 break;
             }

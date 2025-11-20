@@ -53,6 +53,7 @@ final class WildberriesCardUpdateMessage
         ProductVariationConst|false $variationConst,
         ProductModificationConst|false $modificationConst,
         private readonly int $nmId,
+        private readonly ?array $barcodes,
     )
     {
         $this->profile = (string) $profile;
@@ -91,4 +92,10 @@ final class WildberriesCardUpdateMessage
     {
         return $this->nmId;
     }
+
+    public function getBarcodes(): ?array
+    {
+        return $this->barcodes;
+    }
+
 }

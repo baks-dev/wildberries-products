@@ -25,12 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
 
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 
 #[AsMessageHandler(priority: 0)]
 final readonly class WildberriesCardUpdateDispatcher
@@ -75,6 +75,25 @@ final readonly class WildberriesCardUpdateDispatcher
         }
 
         $requestData['nmId'] = $message->getNmId();
+
+        /** Удаляем имеющиеся штрихкоды */
+        foreach($requestData['sizes'] as $i => $size)
+        {
+            foreach($message->getBarcodes() as $barcode => $number)
+            {
+                $key = array_search($barcode, $size['skus'], true);
+
+                if($key !== false)
+                {
+                    unset($requestData['sizes'][$i]['skus'][$key]);
+                }
+            }
+
+            if(empty($requestData['sizes'][$i]['skus']))
+            {
+                unset($requestData['sizes'][$i]['skus']);
+            }
+        }
 
         $update = $this->WildberriesProductUpdateCardRequest
             ->profile($message->getProfile())

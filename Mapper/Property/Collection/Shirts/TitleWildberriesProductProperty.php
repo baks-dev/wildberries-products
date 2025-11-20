@@ -38,7 +38,9 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
      */
 
     /** @see WildberriesProductProperty */
-    public const array CATEGORY = [192];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_SHIRTS,
+    ];
 
     public const string PARAM = 'title';
 
