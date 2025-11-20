@@ -25,10 +25,15 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
 
+use BaksDev\Core\Messenger\MessageDelay;
+use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductMediaCardRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
+use BaksDev\Wildberries\Products\Messenger\Cards\CardMedia\WildberriesCardMediaUpdateMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Psr\Log\LoggerInterface;
@@ -44,6 +49,7 @@ final readonly class WildberriesCardUpdateDispatcher
         private WildberriesProductUpdateCardRequest $WildberriesProductUpdateCardRequest,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private WildberriesMapper $wildberriesMapper,
+        private MessageDispatchInterface $messageDispatch,
     ) {}
 
     public function __invoke(WildberriesCardUpdateMessage $message): void
@@ -85,6 +91,7 @@ final readonly class WildberriesCardUpdateDispatcher
             return;
         }
 
+
         $requestData = $this->wildberriesMapper->getData($CurrentWildberriesProductCardResult);
 
         if(false === $requestData)
@@ -97,33 +104,32 @@ final readonly class WildberriesCardUpdateDispatcher
             return;
         }
 
+
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         $WildberriesCardDTO = $wbCard->current();
-        $requestData['nmId'] = $WildberriesCardDTO->getNomenclature();
-
+        $requestData['nmId'] = $WildberriesCardDTO->getId();
 
         /** Удаляем имеющиеся штрихкоды */
         foreach($requestData['sizes'] as $i => $size)
         {
-            foreach($message->getBarcodes() as $barcode => $number)
+            /** Получаем идентификаторы chrt для штрихкодов */
+
+            foreach($WildberriesCardDTO->getOffersCollection() as $barcode => $number)
             {
                 $key = array_search($barcode, $size['skus'], true);
 
                 if($key !== false)
                 {
+                    /** Удаляем штрихкод и задаем идентификатор свойства */
                     unset($requestData['sizes'][$i]['skus'][$key]);
+                    $requestData['sizes'][$i]['chrtID'] = $WildberriesCardDTO->getChrt($number);
                 }
-            }
-
-            if(empty($requestData['sizes'][$i]['skus']))
-            {
-                unset($requestData['sizes'][$i]['skus']);
             }
         }
 
         $update = $this->WildberriesProductUpdateCardRequest
             ->profile($message->getProfile())
-            ->update([$requestData]);
+            ->update($requestData);
 
         if(false === $update)
         {
@@ -132,10 +138,29 @@ final readonly class WildberriesCardUpdateDispatcher
              *
              * @see WildberriesProductUpdateCardRequest
              */
+
             return;
         }
 
-        /** TODO Сделать обновление цены и остатков */
+        /**
+         * Обновляем файлы изображений
+         */
+
+        $WildberriesCardMediaUpdateMessage = new WildberriesCardMediaUpdateMessage(
+            profile: $message->getProfile(),
+            product: $message->getProduct(),
+            offerConst: $message->getOfferConst(),
+            variationConst: $message->getVariationConst(),
+            modificationConst: $message->getModificationConst(),
+            article: $message->getArticle(),
+        );
+
+        $this->messageDispatch->dispatch(
+            message: $WildberriesCardMediaUpdateMessage,
+            stamps: [new MessageDelay('10 seconds')],
+            transport: $message->getProfile().'-low',
+        );
+
         $this->logger->info(sprintf('Обновили карточку товара %s', $message->getProduct()));
     }
 }

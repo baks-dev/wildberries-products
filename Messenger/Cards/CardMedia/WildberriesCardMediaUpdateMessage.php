@@ -23,18 +23,18 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
+namespace BaksDev\Wildberries\Products\Messenger\Cards\CardMedia;
+
 
 use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\DependencyInjection\Attribute\Exclude;
 
-#[Exclude]
-final readonly class WildberriesCardUpdateMessage
+final class WildberriesCardMediaUpdateMessage
 {
+
     private string $profile;
 
     private string $product;
@@ -52,7 +52,7 @@ final readonly class WildberriesCardUpdateMessage
         ProductOfferConst|false $offerConst,
         ProductVariationConst|false $variationConst,
         ProductModificationConst|false $modificationConst,
-        private string $article
+        private readonly string $article
     )
     {
         $this->profile = (string) $profile;

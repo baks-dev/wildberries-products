@@ -25,29 +25,48 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Api\Cards;
 
-use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Api\Wildberries;
 
-final class WildberriesProductUpdateCardRequest extends Wildberries
+final class WildberriesProductMediaCardRequest extends Wildberries
 {
+
+
     /**
-     * Метод обновляет карточки товаров.
+     * Загрузить медиафайлы по ссылкам
      *
-     * Карточка товара перезаписывается при обновлении. Поэтому в запросе нужно передать все параметры карточки, в том
-     * числе те, которые вы не собираетесь обновлять.
+     * Требования к ссылкам:
      *
-     * Нельзя редактировать или удалять баркоды, но можно добавить дополнительный баркод к карточке товара. Параметры
-     * photos, video и tags редактировать или удалять через данный метод нельзя.
-     * Габариты товаров можно указать только в сантиметрах, вес товара с упаковкой — в килограммах.
+     * ссылка должна вести прямо на файл. Убедитесь, что ссылка не ведёт на страницу предпросмотра или авторизации,
+     * например. Если по ссылке открывается текстовая страница TXT или HTML, ссылка считается некорректной для доступа
+     * к файлу по ссылке не нужна авторизация
      *
-     * В одном запросе можно отредактировать максимум 3000 карточек товаров (nmID). Максимальный размер запроса 10 Мб.
+     * Требования к изображениям:
      *
-     * Лимит — 10 запросов в минуту на один аккаунт продавца
+     * максимум изображений для одной карточки товара — 30
+     * минимальное разрешение — 700×900 px
+     * максимальный размер — 32 Мб
+     * минимальное качество — 65%
+     * форматы — JPG, PNG, BMP, GIF (статичные), WebP
      *
-     * @see https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1cards~1update/post
+     * Требования к видео:
+     *
+     * максимум одно видео для одной карточки товара
+     * максимальный размер — 50 Мб
+     * форматы — MOV, MP4
+     *
+     * @see https://dev.wildberries.ru/openapi/work-with-products#tag/Mediafajly/paths/~1content~1v3~1media~1save/post
      */
 
-    public function update(array $card): bool
+    private int $nomenclature;
+
+    public function nomenclature(int $nomenclature): self
+    {
+        $this->nomenclature = $nomenclature;
+
+        return $this;
+    }
+
+    public function update(array $media): bool
     {
         if($this->isExecuteEnvironment() === false)
         {
@@ -55,22 +74,16 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             return true;
         }
 
-        /** Обновляем стоимость всех размеров согласно настройке токена */
-        foreach($card['sizes'] as $i => $size)
-        {
-            $price = new Money($size['price'])
-                ->applyString($this->getPercent());
-
-            $card['sizes'][$i]['price'] = $price->getRoundValue();
-        }
-
         $response = $this
             ->content()
             ->TokenHttpClient()
             ->request(
                 'POST',
-                '/content/v2/cards/update',
-                ['json' => [$card]],
+                '/content/v3/media/save',
+                ['json' => [
+                    'nmId' => $this->nomenclature,
+                    'data' => $media,
+                ]],
             );
 
         $content = $response->toArray(false);
@@ -81,16 +94,16 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             {
                 $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                     $response->getStatusCode(),
-                    $content['errorText']
-                ), [self::class.':'.__LINE__, $card]);
+                    $content['errorText'],
+                ), [self::class.':'.__LINE__]);
 
                 return false;
             }
 
             $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                 $content['status'],
-                $content['statusText']
-            ), [self::class.':'.__LINE__, $card]);
+                $content['statusText'],
+            ), [self::class.':'.__LINE__]);
 
             return false;
         }

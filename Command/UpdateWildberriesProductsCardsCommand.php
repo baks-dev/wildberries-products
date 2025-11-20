@@ -222,6 +222,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                     variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                     modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                    article: $CurrentWildberriesProductCardResult->getProductArticle(),
                 );
 
                 /** Консольную комманду выполняем синхронно */
