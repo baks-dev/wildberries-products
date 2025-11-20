@@ -212,7 +212,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             $wbCard = $this->FindAllWildberriesCardsRequest
                 ->profile($UserProfileUid)
                 ->allPhoto()
-                ->findAll($CurrentWildberriesProductCardResult->getProductBarcode());
+                ->findAll($CurrentWildberriesProductCardResult->getProductArticle());
 
             /** В случае, если на WB нужная карточка уже существует */
             if(false !== $wbCard)
@@ -226,8 +226,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                     variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                     modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
-                    nmId: $wbCard->getId(),
-                    barcodes: $wbCard->getOffersCollection()->getArrayCopy(),
+                    article: $CurrentWildberriesProductCardResult->getProductArticle(),
                 );
 
                 /** Консольную комманду выполняем синхронно */

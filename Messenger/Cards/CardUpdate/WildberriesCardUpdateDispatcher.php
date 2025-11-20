@@ -25,9 +25,12 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
 
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -39,6 +42,7 @@ final readonly class WildberriesCardUpdateDispatcher
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private WildberriesProductUpdateCardRequest $WildberriesProductUpdateCardRequest,
+        private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private WildberriesMapper $wildberriesMapper,
     ) {}
 
@@ -52,11 +56,30 @@ final readonly class WildberriesCardUpdateDispatcher
             ->forModificationConst($message->getModificationConst())
             ->findResult();
 
-        if(true === empty($CurrentWildberriesProductCardResult))
+        if(false === ($CurrentWildberriesProductCardResult instanceof WildberriesProductsCardResult))
         {
             $this->logger->warning(
-                sprintf('Ошибка: Product Uid: %s. Информация о продукте не была найдена',
-                    $message->getProduct())
+                sprintf('%s: Информация о продукте не была найдена',
+                    $message->getArticle()),
+                [self::class.':'.__LINE__, var_export($message, true)],
+            );
+
+            return;
+        }
+
+        /** Получаем текущее состояние карточки Wildberries */
+
+        $wbCard = $this->FindAllWildberriesCardsRequest
+            ->profile($message->getProfile())
+            ->findAll($message->getArticle());
+
+
+        if(false === $wbCard || false === $wbCard->valid())
+        {
+            $this->logger->warning(
+                sprintf('%s: Карточка товара Wildberries не найдена по артикулу',
+                    $message->getArticle()),
+                [self::class.':'.__LINE__, var_export($message, true)],
             );
 
             return;
@@ -68,13 +91,16 @@ final readonly class WildberriesCardUpdateDispatcher
         {
             $this->logger->warning(
                 sprintf('Ошибка: Product Uid: %s. Ошибка маппера WB',
-                    $message->getProduct())
+                    $message->getProduct()),
             );
 
             return;
         }
 
-        $requestData['nmId'] = $message->getNmId();
+        /** @var WildberriesCardDTO $WildberriesCardDTO */
+        $WildberriesCardDTO = $wbCard->current();
+        $requestData['nmId'] = $WildberriesCardDTO->getNomenclature();
+
 
         /** Удаляем имеющиеся штрихкоды */
         foreach($requestData['sizes'] as $i => $size)
@@ -106,7 +132,7 @@ final readonly class WildberriesCardUpdateDispatcher
              *
              * @see WildberriesProductUpdateCardRequest
              */
-             return;
+            return;
         }
 
         /** TODO Сделать обновление цены и остатков */

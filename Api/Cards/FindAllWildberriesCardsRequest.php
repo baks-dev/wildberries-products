@@ -63,10 +63,8 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
 
     /**
-     * @return array{WildberriesCardDTO}
-     *
-     * @throws InvalidArgumentException
      * @see https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1get~1cards~1list/post
+     * @return Generator<WildberriesCardDTO>|false
      */
     public function findAll(string|null|false $search = null): Generator|false
     {

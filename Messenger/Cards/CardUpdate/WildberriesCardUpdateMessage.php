@@ -52,8 +52,7 @@ final class WildberriesCardUpdateMessage
         ProductOfferConst|false $offerConst,
         ProductVariationConst|false $variationConst,
         ProductModificationConst|false $modificationConst,
-        private readonly int $nmId,
-        private readonly ?array $barcodes,
+        private readonly string $article
     )
     {
         $this->profile = (string) $profile;
@@ -88,14 +87,8 @@ final class WildberriesCardUpdateMessage
         return null === $this->modificationConst ? null : new ProductModificationConst($this->modificationConst);
     }
 
-    public function getNmId(): int
+    public function getArticle(): string
     {
-        return $this->nmId;
+        return $this->article;
     }
-
-    public function getBarcodes(): ?array
-    {
-        return $this->barcodes;
-    }
-
 }

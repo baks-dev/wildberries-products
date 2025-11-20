@@ -144,8 +144,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                             offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                             variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                             modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
-                            nmId: $wbCard->getId(),
-                            barcodes: $wbCard->getOffersCollection()->getArrayCopy(),
+                            article: $lastProduct->getProductArticle(),
                         );
 
                         /** Транспорт LOW чтобы не мешать общей очереди */
