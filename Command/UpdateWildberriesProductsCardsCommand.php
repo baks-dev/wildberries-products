@@ -31,7 +31,6 @@ use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifier
 use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreateMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
@@ -214,28 +213,24 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 ->allPhoto()
                 ->findAll($CurrentWildberriesProductCardResult->getProductArticle());
 
-            /** В случае, если на WB нужная карточка уже существует */
-            if(false !== $wbCard)
+            /** Если карточка на WB не существует и ее нужно создать */
+            if(false === $wbCard || false === $wbCard->valid())
             {
-                $wbCard = $wbCard->current();
-
-                /** @var WildberriesCardDTO $wbCard */
-                $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
+                $wildberriesProductCardCreateMessage = new WildberriesCardCreateMessage(
                     profile: $UserProfileUid,
                     product: $ProductsIdentifierResult->getProductId(),
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                     variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                     modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
-                    article: $CurrentWildberriesProductCardResult->getProductArticle(),
                 );
 
                 /** Консольную комманду выполняем синхронно */
                 $this->messageDispatch->dispatch(
-                    message: $wildberriesProductCardUpdateMessage,
+                    message: $wildberriesProductCardCreateMessage,
                     transport: $async === true ? $UserProfileUid.'-low' : null,
                 );
 
-                $this->io->text(sprintf('Обновили артикул %s', $CurrentWildberriesProductCardResult->getProductArticle()));
+                $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $CurrentWildberriesProductCardResult->getProductArticle()));
 
                 if($CurrentWildberriesProductCardResult->getProductArticle() === $article)
                 {
@@ -245,22 +240,24 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 continue;
             }
 
-            /** Eсли карточка на WB н существует и ее нужно создатьее */
-            $wildberriesProductCardCreateMessage = new WildberriesCardCreateMessage(
+            /** В случае, если на WB нужная карточка уже существует */
+
+            $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
                 profile: $UserProfileUid,
                 product: $ProductsIdentifierResult->getProductId(),
                 offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                 variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                 modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                article: $CurrentWildberriesProductCardResult->getProductArticle(),
             );
 
             /** Консольную комманду выполняем синхронно */
             $this->messageDispatch->dispatch(
-                message: $wildberriesProductCardCreateMessage,
+                message: $wildberriesProductCardUpdateMessage,
                 transport: $async === true ? $UserProfileUid.'-low' : null,
             );
 
-            $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $CurrentWildberriesProductCardResult->getProductArticle()));
+            $this->io->text(sprintf('Обновили артикул %s', $CurrentWildberriesProductCardResult->getProductArticle()));
 
             if($CurrentWildberriesProductCardResult->getProductArticle() === $article)
             {
