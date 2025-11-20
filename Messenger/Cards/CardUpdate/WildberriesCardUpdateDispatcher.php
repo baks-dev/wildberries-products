@@ -30,10 +30,10 @@ use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductMediaCardRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardMedia\WildberriesCardMediaUpdateMessage;
+use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use Psr\Log\LoggerInterface;
@@ -142,6 +142,30 @@ final readonly class WildberriesCardUpdateDispatcher
             return;
         }
 
+        $this->logger->info(sprintf('Обновили карточку товара %s', $message->getProduct()));
+
+
+        /**
+         * Обновляем стоимость товара
+         */
+
+        $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage
+        (
+            profile: $message->getProfile(),
+            product: $message->getProduct(),
+            offerConst: $message->getOfferConst(),
+            variationConst: $message->getVariationConst(),
+            modificationConst: $message->getModificationConst(),
+            article: $message->getArticle(),
+        );
+
+        $this->messageDispatch->dispatch(
+            message: $UpdateWildberriesCardPriceMessage,
+            stamps: [new MessageDelay('5 seconds')],
+            transport: (string) $message->getProfile(),
+        );
+
+
         /**
          * Обновляем файлы изображений
          */
@@ -160,7 +184,5 @@ final readonly class WildberriesCardUpdateDispatcher
             stamps: [new MessageDelay('10 seconds')],
             transport: $message->getProfile().'-low',
         );
-
-        $this->logger->info(sprintf('Обновили карточку товара %s', $message->getProduct()));
     }
 }

@@ -55,6 +55,9 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             return true;
         }
 
+        /** Инициируем токен для вызова параметров */
+        $TokenHttpClient = $this->content()->TokenHttpClient();
+
         /** Обновляем стоимость всех размеров согласно настройке токена */
         foreach($card['sizes'] as $i => $size)
         {
@@ -64,14 +67,11 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             $card['sizes'][$i]['price'] = $price->getRoundValue();
         }
 
-        $response = $this
-            ->content()
-            ->TokenHttpClient()
-            ->request(
-                'POST',
-                '/content/v2/cards/update',
-                ['json' => [$card]],
-            );
+        $response = $TokenHttpClient->request(
+            'POST',
+            '/content/v2/cards/update',
+            ['json' => [$card]],
+        );
 
         $content = $response->toArray(false);
 
@@ -81,7 +81,7 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             {
                 $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                     $response->getStatusCode(),
-                    $content['errorText']
+                    $content['errorText'],
                 ), [self::class.':'.__LINE__, $card]);
 
                 return false;
@@ -89,7 +89,7 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
 
             $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                 $content['status'],
-                $content['statusText']
+                $content['statusText'],
             ), [self::class.':'.__LINE__, $card]);
 
             return false;

@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Api\Cards;
 
+use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Api\Wildberries;
 
 final class WildberriesProductCreateCardRequest extends Wildberries
@@ -36,10 +37,11 @@ final class WildberriesProductCreateCardRequest extends Wildberries
      * Габариты товаров можно указать только в сантиметрах, вес товара с упаковкой — в килограммах.
      *
      * Создание карточки товара происходит асинхронно. После отправки запрос становится в очередь на обработку.
-     * В одном запросе можно создать максимум 100 объединённых карточек товаров (imtID), по 30 карточек товаров в каждой.
-     * Максимальный размер запроса 10 Мб.
+     * В одном запросе можно создать максимум 100 объединённых карточек товаров (imtID), по 30 карточек товаров в
+     * каждой. Максимальный размер запроса 10 Мб.
      *
-     * Если ответ Успешно (200), но какие-то карточки не обновились, можно получить список несозданных карточек товаров.
+     * Если ответ Успешно (200), но какие-то карточки не обновились, можно получить список несозданных карточек
+     * товаров.
      * https://content-api.wildberries.ru/content/v2/cards/error/list
      *
      * Лимит — 10 запросов в минуту на один аккаунт продавца
@@ -55,14 +57,23 @@ final class WildberriesProductCreateCardRequest extends Wildberries
             return true;
         }
 
-        $response = $this
-            ->content()
-            ->TokenHttpClient()
-            ->request(
-                'POST',
-                '/content/v2/cards/upload',
-                ['json' => [$card]],
-            );
+        /** Инициируем токен для вызова параметров */
+        $TokenHttpClient = $this->content()->TokenHttpClient();
+
+        /** Обновляем стоимость всех размеров согласно настройке токена */
+        foreach($card['sizes'] as $i => $size)
+        {
+            $price = new Money($size['price'])
+                ->applyString($this->getPercent());
+
+            $card['sizes'][$i]['price'] = $price->getRoundValue();
+        }
+
+        $response = $TokenHttpClient->request(
+            'POST',
+            '/content/v2/cards/upload',
+            ['json' => [$card]],
+        );
 
         $content = $response->toArray(false);
 
@@ -72,7 +83,7 @@ final class WildberriesProductCreateCardRequest extends Wildberries
             {
                 $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                     $response->getStatusCode(),
-                    $content['errorText']
+                    $content['errorText'],
                 ), [self::class.':'.__LINE__, $card]);
 
                 return false;
@@ -80,7 +91,7 @@ final class WildberriesProductCreateCardRequest extends Wildberries
 
             $this->logger->critical(sprintf('wildberries-products: %s (%s)',
                 $content['status'],
-                $content['statusText']
+                $content['statusText'],
             ), [self::class.':'.__LINE__, $card]);
 
             return false;
