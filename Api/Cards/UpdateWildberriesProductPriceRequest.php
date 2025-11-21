@@ -33,17 +33,12 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
     /**
      * Установить цены для размеров
      *
-     * Метод устанавливает цены отдельно для размеров товаров.
+     * Метод устанавливает цены и скидки для товаров.
      *
-     * Работает только для товаров из категорий, где можно устанавливать цены отдельно для разных размеров. Для таких
-     * товаров "editableSizePrice":true.
-     *
-     * @see https://dev.wildberries.ru/openapi/work-with-products#tag/Ceny-i-skidki/paths/~1api~1v2~1upload~1task~1size/post
+     * @see https://dev.wildberries.ru/openapi/work-with-products#tag/Ceny-i-skidki/paths/~1api~1v2~1upload~1task/post
      */
 
     private int $nomenclature;
-
-    private int $size;
 
     private int $price;
 
@@ -51,22 +46,6 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
     public function nomenclature(int $nomenclature): self
     {
         $this->nomenclature = $nomenclature;
-
-        return $this;
-    }
-
-    /**
-     * ID размера.
-     *
-     * Можно получить с помощью методов^
-     * - Получить товары с ценами
-     * - Получить товары с ценами по артикулам, поле sizeID.
-     *
-     * В методах Контента это поле chrtID
-     */
-    public function size(int $size): self
-    {
-        $this->size = $size;
 
         return $this;
     }
@@ -88,7 +67,7 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
         }
 
         /** Инициируем токен для вызова параметров */
-        $TokenHttpClient = $this->content()->TokenHttpClient();
+        $TokenHttpClient = $this->discountsPrices()->TokenHttpClient();
 
         /** Применяем к стоимости надбавку токена */
         $price = new Money($this->price)
@@ -96,12 +75,14 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
 
         $response = $TokenHttpClient->request(
             'POST',
-            '/api/v2/upload/task/size',
+            '/api/v2/upload/task',
             ['json' => ['data' =>
                 [
-                    'nmID' => $this->nomenclature,
-                    'sizeID' => $this->size,
-                    'price' => $price,
+                    [
+                        'nmID' => $this->nomenclature,
+                        'price' => $price->getRoundValue(),
+                        'discount' => 0,
+                    ],
                 ],
             ]],
         );

@@ -109,26 +109,32 @@ final class UpdateWildberriesCardPriceDispatcher
             ->profile($message->getProfile())
             ->nomenclature($WildberriesCardDTO->getId());
 
-        /** Удаляем имеющиеся штрихкоды */
-        foreach($requestData['sizes'] as $i => $size)
-        {
-            /** Получаем идентификаторы chrt для штрихкодов */
-            foreach($WildberriesCardDTO->getOffersCollection() as $barcode => $number)
-            {
-                $key = array_search($barcode, $size['skus'], true);
 
-                if($key !== false)
-                {
-                    /** Задаем идентификатор размера */
-                    $requestData['sizes'][$i]['chrtID'] = $WildberriesCardDTO->getChrt($number);
-                }
-            }
-        }
+        /**
+         * Для товаров, позволяющих указывать цены на размеры - находим идентификатор размера
+         * реализовать метод
+         *
+         * @see https://dev.wildberries.ru/openapi/work-with-products#tag/Ceny-i-skidki/paths/~1api~1v2~1upload~1task~1size/post
+         */
+
+        //        foreach($requestData['sizes'] as $i => $size)
+        //        {
+        //            /** Получаем идентификаторы chrt для штрихкодов */
+        //            foreach($WildberriesCardDTO->getOffersCollection() as $barcode => $number)
+        //            {
+        //                $key = array_search($barcode, $size['skus'], true);
+        //
+        //                if($key !== false)
+        //                {
+        //                    /** Задаем идентификатор размера */
+        //                    $requestData['sizes'][$i]['chrtID'] = $WildberriesCardDTO->getChrt($number);
+        //                }
+        //            }
+        //        }
 
         foreach($requestData['sizes'] as $size)
         {
             $isUpdate = $this->UpdateWildberriesProductPriceRequest
-                ->size($size['chrtID'])
                 ->price($size['price'])
                 ->update();
 
