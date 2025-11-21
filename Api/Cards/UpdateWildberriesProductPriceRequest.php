@@ -91,18 +91,14 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
 
         if($response->getStatusCode() !== 200)
         {
-            if($response->getStatusCode() === 400 || $response->getStatusCode() === 403)
+            // Указанные цены и скидки уже установлены
+            if($content['errorText'] === 'The specified prices and discounts are already set')
             {
-                $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                    $response->getStatusCode(),
-                    $content['errorText'],
-                ), [self::class.':'.__LINE__]);
-
-                return false;
+                return true;
             }
 
             $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                $content['status'],
+                $response->getStatusCode(),
                 $content['statusText'],
             ), [self::class.':'.__LINE__]);
 
