@@ -61,12 +61,15 @@ final class WildberriesProductCreateCardRequest extends Wildberries
         $TokenHttpClient = $this->content()->TokenHttpClient();
 
         /** Обновляем стоимость всех размеров согласно настройке токена */
-        foreach($card['sizes'] as $i => $size)
+        foreach($card['variants'] as $k => $variant)
         {
-            $price = new Money($size['price'])
-                ->applyString($this->getPercent());
+            foreach($variant['sizes'] as $i => $size)
+            {
+                $price = new Money($size['price'])
+                    ->applyString($this->getPercent());
 
-            $card['sizes'][$i]['price'] = $price->getRoundValue();
+                $card['variants'][$k]['sizes'][$i]['price'] = $price->getRoundValue();
+            }
         }
 
         $response = $TokenHttpClient->request(
