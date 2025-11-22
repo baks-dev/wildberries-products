@@ -805,11 +805,13 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
             ) AS article
 		');
 
+        $dbal->addSelect('product_info.article AS card_article');
 
         $dbal->allGroupByExclude();
 
         return $dbal;
     }
+
 
     /**
      * @deprecated

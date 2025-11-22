@@ -237,7 +237,7 @@ final class WildberriesCardDTO
     /**
      * Nomenclature
      */
-    public function getNomenclature(): mixed
+    public function getNomenclature(): int
     {
         return $this->nomenclature;
     }

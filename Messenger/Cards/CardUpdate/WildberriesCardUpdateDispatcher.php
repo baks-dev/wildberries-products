@@ -25,20 +25,25 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
 
+use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDelay;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\UpdateGroupWildberriesProductCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
+use BaksDev\Wildberries\Products\Messenger\Cards\CardGroup\WildberriesCardGroupMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardMedia\WildberriesCardMediaUpdateMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+use Symfony\Contracts\Cache\ItemInterface;
 
 #[AsMessageHandler(priority: 0)]
 final readonly class WildberriesCardUpdateDispatcher
@@ -50,6 +55,7 @@ final readonly class WildberriesCardUpdateDispatcher
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private WildberriesMapper $wildberriesMapper,
         private MessageDispatchInterface $messageDispatch,
+        private AppCacheInterface $appCache,
     ) {}
 
     public function __invoke(WildberriesCardUpdateMessage $message): void
@@ -107,7 +113,27 @@ final readonly class WildberriesCardUpdateDispatcher
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         $WildberriesCardDTO = $wbCard->current();
+
+
+        /** Запоминаем imtID для группировки карточек */
+
+
+        /** Шины группируем по РадиусПрофильШирина */
+        if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
+        {
+            $key = $CurrentWildberriesProductCardResult->getProductOfferValue()
+                .$CurrentWildberriesProductCardResult->getProductVariationValue()
+                .$CurrentWildberriesProductCardResult->getProductModificationValue();
+        }
+        else
+        {
+            $key = $CurrentWildberriesProductCardResult->getArticle();
+        }
+
+        $cache = $this->appCache->init('wildberries-products');
+        $imtID = $cache->getItem($key)->get(); // Индикатор группировки карточки
         $requestData['nmId'] = $WildberriesCardDTO->getId();
+
 
         /** Удаляем имеющиеся штрихкоды */
         foreach($requestData['sizes'] as $i => $size)
@@ -116,7 +142,7 @@ final readonly class WildberriesCardUpdateDispatcher
 
             foreach($WildberriesCardDTO->getOffersCollection() as $barcode => $number)
             {
-                $key = array_search($barcode, $size['skus'], true);
+                $key = array_search($barcode, $size['skus']);
 
                 if($key !== false)
                 {
@@ -164,6 +190,24 @@ final readonly class WildberriesCardUpdateDispatcher
             stamps: [new MessageDelay('5 seconds')],
             transport: (string) $message->getProfile(),
         );
+
+        /**
+         * Обновляем группу карточек товаров
+         */
+        if($imtID)
+        {
+            $WildberriesCardGroupMessage = new WildberriesCardGroupMessage(
+                $message->getProfile(),
+                $WildberriesCardDTO->getId(),
+                $imtID,
+            );
+
+            $this->messageDispatch->dispatch(
+                message: $WildberriesCardGroupMessage,
+                stamps: [new MessageDelay('5 seconds')],
+                transport: (string) $message->getProfile(),
+            );
+        }
 
 
         /**

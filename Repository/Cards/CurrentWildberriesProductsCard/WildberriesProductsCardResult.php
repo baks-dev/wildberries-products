@@ -47,7 +47,9 @@ final class WildberriesProductsCardResult
         private readonly int $product_old_price,
         private readonly string $profile,
         private readonly ?string $product_card,
+
         private readonly ?string $article,
+        private readonly ?string $card_article,
 
         private readonly ?string $offer_const,
         private readonly ?string $product_offer_value,
@@ -94,6 +96,11 @@ final class WildberriesProductsCardResult
     public function getProductCard(): ?string
     {
         return $this->product_card;
+    }
+
+    public function getCardArticle(): ?string
+    {
+        return $this->card_article;
     }
 
     public function getArticle(): array|false

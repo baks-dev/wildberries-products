@@ -25,15 +25,19 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Command;
 
+use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifierResult;
 use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreateMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
+use DateInterval;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,6 +45,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Contracts\Cache\ItemInterface;
 
 /**
  * Обновляем карточки товаров на WB
@@ -60,6 +65,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
         private readonly ProductDetailByUidInterface $ProductDetailByUidRepository,
         private readonly MessageDispatchInterface $messageDispatch,
         private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
+        private readonly AppCacheInterface $appCache
     )
     {
         parent::__construct();
@@ -213,6 +219,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 ->allPhoto()
                 ->findAll($CurrentWildberriesProductCardResult->getProductArticle());
 
+
             /** Если карточка на WB не существует и ее нужно создать */
             if(false === $wbCard || false === $wbCard->valid())
             {
@@ -241,7 +248,39 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 continue;
             }
 
-            /** В случае, если на WB нужная карточка уже существует */
+            /**
+             * В случае, если на WB нужная карточка уже существует
+             *
+             * @var WildberriesCardDTO $WildberriesCardDTO
+             */
+            $WildberriesCardDTO = $wbCard->current();
+
+
+            /** Сохраняем идентификатор группировки карточек */
+
+
+            /** Шины группируем по РадиусПрофильШирина */
+            if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
+            {
+                $key = $CurrentWildberriesProductCardResult->getProductOfferValue()
+                    .$CurrentWildberriesProductCardResult->getProductVariationValue()
+                    .$CurrentWildberriesProductCardResult->getProductModificationValue();
+            }
+            else
+            {
+                $key = $CurrentWildberriesProductCardResult->getProductCardArticle();
+            }
+
+            $cache = $this->appCache->init('wildberries-products');
+
+            $cache->get($key, function(ItemInterface $item) use ($WildberriesCardDTO): int {
+
+                /** По умолчанию кешируем на 1 сек на случай, если результат вернет FALSE */
+                $item->expiresAfter(DateInterval::createFromDateString('1 day'));
+
+                return $WildberriesCardDTO->getNomenclature();
+            });
+
 
             $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
                 profile: $UserProfileUid,

@@ -25,11 +25,17 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection;
 
+use BaksDev\Wildberries\Products\Mapper\Params\Collection\PurposeTireWildberriesProductParameters;
+use BaksDev\Wildberries\Products\Mapper\Params\Collection\SeasonalityWildberriesProductParameters;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
+use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
+use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
+use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-#[AutoconfigureTag('baks.ya.product.property')]
+#[AutoconfigureTag('baks.wb.product.property')]
 final class DescriptionWildberriesProductProperty implements WildberriesProductPropertyInterface
 {
     /**
@@ -82,6 +88,118 @@ final class DescriptionWildberriesProductProperty implements WildberriesProductP
 
     public function getData(WildberriesProductsCardResult $data): ?string
     {
-        return $data->getProductPreview() ?? null;
+        if($data->getMarketCategory() !== WildberriesProductProperty::CATEGORY_TIRE)
+        {
+            return null;
+        }
+
+        $name = 'Шины ';
+
+        if($data->getProductParams() !== false)
+        {
+            /** Добавляем к названию сезонность */
+            $Season = new SeasonalityWildberriesProductParameters();
+
+            foreach($data->getProductParams() as $product_param)
+            {
+                if($Season->equals($product_param->name))
+                {
+                    $season_value = $Season->getData($data);
+
+                    $season_value = match ($season_value['value'])
+                    {
+                        'лето', 'summer' => 'летние',
+                        'зима', 'winter' => 'зимние',
+                        'всесезонные', 'all' => 'всесезонные',
+                        default => '',
+                    };
+
+                    if(false === empty($season_value))
+                    {
+                        $name .= $season_value.' ';
+                    }
+                }
+            }
+        }
+
+
+        /** Приводим к нижнему регистру и первой заглавной букве */
+        $name = mb_strtolower(trim($name));
+        $firstChar = mb_substr($name, 0, 1, 'UTF-8');
+        $then = mb_substr($name, 1, null, 'UTF-8');
+        $name = mb_strtoupper($firstChar, 'UTF-8').$then.' ';
+
+
+        $name .= $data->getProductName().' ';
+
+        if($data->getProductVariationValue())
+        {
+            $name .= $data->getProductVariationValue();
+        }
+
+        if($data->getProductModificationValue())
+        {
+            $name .= '/'.$data->getProductModificationValue().' ';
+        }
+
+        if($data->getProductOfferValue())
+        {
+            $name .= 'R'.$data->getProductOfferValue().' ';
+        }
+
+        if($data->getProductOfferPostfix())
+        {
+            $name .= $data->getProductOfferPostfix().' ';
+        }
+
+        if($data->getProductVariationPostfix())
+        {
+            $name .= $data->getProductVariationPostfix().' ';
+        }
+
+        if($data->getProductModificationPostfix())
+        {
+            $name .= $data->getProductModificationPostfix().' ';
+        }
+
+        if($data->getProductParams() !== false)
+        {
+            /** Добавляем к названию назначение */
+            $Purpose = new PurposeTireWildberriesProductParameters();
+
+            foreach($data->getProductParams() as $product_param)
+            {
+                if($Purpose->equals($product_param->name))
+                {
+                    $purpose_value = $Purpose->getData($data);
+
+                    if(false === empty($purpose_value['value']))
+                    {
+                        $name .= $purpose_value['value'].' ';
+                    }
+                }
+            }
+        }
+
+        $name .= PHP_EOL.PHP_EOL;
+        $name .= $data->getProductPreview();
+
+        if($data->getProductVariationValue())
+        {
+            $name .= PHP_EOL.PHP_EOL;
+            $name .= sprintf('Ширина профиля %s обеспечивает надежное сцепление с дорогой и стабильность на поворотах.',
+                $data->getProductVariationValue(),
+            );
+        }
+
+        if($data->getProductModificationValue())
+        {
+            $name .= PHP_EOL.PHP_EOL;
+            $name .= sprintf('Высота профиля %s обеспечивает оптимальное сочетание комфорта и управляемости.',
+                $data->getProductModificationValue());
+        }
+
+        return empty($name) ? null : trim(strip_tags($name));
+
     }
 }
