@@ -1,0 +1,26 @@
+page:
+  index: 'Настройка продукции для Wildberries'
+  new: 'Добавить продукцию для Wildberries'
+  edit: 'Редактировать продукцию для Wildberries'
+  delete: 'Удалить продукцию для Wildberries'
+
+breadcrumb:
+  index: 'Настройки продукции для Wildberries'
+  new: 'Добавить продукцию для Wildberries'
+  edit: 'Редактировать продукцию для Wildberries'
+  delete: 'Удалить продукцию для Wildberries'
+
+success:
+  new: 'Настройки продукции для Wildberries успешно добавлены'
+  edit: 'Настройки продукции для Wildberries успешно обновлены'
+  delete: 'Настройки продукции для Wildberries успешно удалены'
+  restore: 'Настройки продукции для Wildberries успешно восстановлены'
+
+danger:
+  new: '%s: Ошибка при добавлении настройки продукции для Wildberries'
+  edit: '%s: Ошибка при обновлении настройки продукции для Wildberries'
+  delete: '%s: Ошибка при обновлении настройки продукции для Wildberries'
+  restore: '%s: Ошибка при восстановлении настройки продукции для Wildberries'
+form:
+  delete:
+    h4: 'Вы уверены, что желаете удалить настройки продукции для Wildberries?'

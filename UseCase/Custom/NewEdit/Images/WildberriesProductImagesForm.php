@@ -23,37 +23,38 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\Images;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+final class WildberriesProductImagesForm extends AbstractType
 {
-    private string $profile;
-
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->profile = (string) $profile;
+        $builder->add('name', HiddenType::class);
+
+        $builder->add(
+            'file',
+            FileType::class,
+            [
+                'label' => false,
+                'required' => false,
+                'attr' => ['accept' => ".png, .jpg, .jpeg, .webp, .gif"],
+            ],
+        );
+
+        $builder->add('root', RadioType::class, ['required' => false]);
     }
 
-    public function getProfile(): UserProfileUid
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        return new UserProfileUid($this->profile);
-    }
-
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
+        $resolver->setDefaults([
+            'data_class' => WildberriesProductCustomImagesDTO::class,
+        ]);
     }
 }

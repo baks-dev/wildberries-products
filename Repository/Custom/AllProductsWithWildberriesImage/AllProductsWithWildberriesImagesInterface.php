@@ -23,37 +23,23 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Repository\Custom\AllProductsWithWildberriesImage;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
+use BaksDev\Core\Form\Search\SearchDTO;
+use BaksDev\Core\Services\Paginator\PaginatorInterface;
+use BaksDev\Products\Product\Forms\ProductFilter\Admin\ProductFilterDTO;
+use BaksDev\Wildberries\Products\Forms\WildberriesCustomFilter\WildberriesProductsFilterDTO;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+interface AllProductsWithWildberriesImagesInterface
 {
-    private string $profile;
+    public function search(SearchDTO $search): self;
 
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
-    {
-        $this->profile = (string) $profile;
-    }
+    public function filter(ProductFilterDTO $filter): self;
 
-    public function getProfile(): UserProfileUid
-    {
-        return new UserProfileUid($this->profile);
-    }
+    public function filterWildberriesProducts(WildberriesProductsFilterDTO $WildberriesProductsFilter): self;
 
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
-    }
+    /**
+     * Метод позволяет получить список продуктов Wildberries с их изображениями
+     */
+    public function findAll(): PaginatorInterface;
 }

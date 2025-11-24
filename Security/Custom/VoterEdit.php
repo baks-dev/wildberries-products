@@ -23,37 +23,27 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Security\Custom;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
+use BaksDev\Users\Profile\Group\Security\RoleInterface;
+use BaksDev\Users\Profile\Group\Security\VoterInterface;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+#[AutoconfigureTag('baks.security.voter')]
+final class VoterEdit implements VoterInterface
 {
-    private string $profile;
+    /**
+     * Редактировать
+     */
+    public const string VOTER = 'EDIT';
 
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
+    public static function getVoter(): string
     {
-        $this->profile = (string) $profile;
+        return Role::ROLE.'_'.self::VOTER;
     }
 
-    public function getProfile(): UserProfileUid
+    public function equals(RoleInterface $role): bool
     {
-        return new UserProfileUid($this->profile);
-    }
-
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
+        return $role->getRole() === Role::ROLE;
     }
 }

@@ -23,37 +23,20 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Type\Custom\Image;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+use BaksDev\Core\Type\UidType\UidType;
+
+final class WbProductCustomImageType extends UidType
 {
-    private string $profile;
-
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
+    public function getClassType(): string
     {
-        $this->profile = (string) $profile;
+        return WbProductCustomImageUid::class;
     }
 
-    public function getProfile(): UserProfileUid
+    public function getName(): string
     {
-        return new UserProfileUid($this->profile);
-    }
-
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
+        return WbProductCustomImageUid::TYPE;
     }
 }

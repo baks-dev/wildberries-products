@@ -23,37 +23,26 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Forms\WildberriesCustomFilter;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+final class WildberriesProductsFilterDTO
 {
-    private string $profile;
+    /**
+     * Флаг
+     */
+    private null|bool $exists = null;
 
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
+    /**
+     * Exists
+     */
+    public function getExists(): ?bool
     {
-        $this->profile = (string) $profile;
+        return $this->exists;
     }
 
-    public function getProfile(): UserProfileUid
+    public function setExists(?bool $exists): self
     {
-        return new UserProfileUid($this->profile);
-    }
-
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
+        $this->exists = $exists;
+        return $this;
     }
 }

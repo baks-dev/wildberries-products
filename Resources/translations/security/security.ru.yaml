@@ -80,3 +80,20 @@ ROLE_WB_BARCODE_EDIT:
 ROLE_WB_BARCODE_DELETE:
   name: 'Удалить'
   desc: ''
+
+
+
+
+ROLE_WB_PRODUCTS_CUSTOM:
+  name: 'Настройки продукта Wildberries'
+  desc: 'Настройки продукта Wildberries'
+
+# Правила
+
+ROLE_WB_PRODUCTS_CUSTOM_INDEX:
+  name: 'Просмотр'
+  desc: ''
+
+ROLE_WB_PRODUCTS_CUSTOM_EDIT:
+  name: 'Редактировать'
+  desc: ''

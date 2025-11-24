@@ -80,7 +80,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        /** Получаем активные токены авторизации профилей Yandex Market */
+        /** Получаем активные токены авторизации профилей */
         $profiles = $this->AllProfileToken
             ->onlyActiveToken()
             ->findAll();

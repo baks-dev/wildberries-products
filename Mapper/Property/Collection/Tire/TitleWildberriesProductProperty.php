@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Tire;
 
+use BaksDev\Wildberries\Products\Mapper\Params\Collection\SeasonalityWildberriesProductParameters;
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
@@ -99,6 +100,33 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         }
 
         $name = 'Шины ';
+
+        if($data->getProductParams() !== false)
+        {
+            /** Добавляем к названию сезонность */
+            $Season = new SeasonalityWildberriesProductParameters();
+
+            foreach($data->getProductParams() as $product_param)
+            {
+                if($Season->equals($product_param->name))
+                {
+                    $season_value = $Season->getData($data);
+
+                    $season_value = match ($season_value['value'])
+                    {
+                        'лето', 'summer' => 'летние',
+                        'зима', 'winter' => 'зимние',
+                        'всесезонные', 'all' => 'всесезонные',
+                        default => '',
+                    };
+
+                    if(false === empty($season_value))
+                    {
+                        $name .= $season_value.' ';
+                    }
+                }
+            }
+        }
 
 
         /** Приводим к нижнему регистру и первой заглавной букве */

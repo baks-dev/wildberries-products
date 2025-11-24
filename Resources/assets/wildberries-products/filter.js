@@ -1,4 +1,3 @@
-<?php
 /*
  *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
@@ -21,39 +20,24 @@
  *  THE SOFTWARE.
  */
 
-declare(strict_types=1);
-
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
-
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
-
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+executeFunc(function yandexMarketProductsFunction()
 {
-    private string $profile;
-
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
+    if(typeof formDebounce !== "function")
     {
-        $this->profile = (string) $profile;
+        return false;
     }
 
-    public function getProfile(): UserProfileUid
+    const form = document.forms.wildberries_products_filter_form;
+
+    if(typeof form === "undefined")
     {
-        return new UserProfileUid($this->profile);
+        return false;
     }
 
-    public function getNomenclature(): int
+    form.addEventListener("change", formDebounce(() =>
     {
-        return $this->nomenclature;
-    }
+        form.submit();
+    }, 300));
 
-    public function getGroup(): ?int
-    {
-        return $this->group;
-    }
-}
+    return true;
+});

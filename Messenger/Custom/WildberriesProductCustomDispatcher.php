@@ -23,37 +23,13 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Messenger\Custom;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler(priority: 0)]
+final class WildberriesProductCustomDispatcher
 {
-    private string $profile;
-
-    public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
-    )
-    {
-        $this->profile = (string) $profile;
-    }
-
-    public function getProfile(): UserProfileUid
-    {
-        return new UserProfileUid($this->profile);
-    }
-
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
-    }
+    public function __invoke(WildberriesProductCustomMessage $message): void {}
 }

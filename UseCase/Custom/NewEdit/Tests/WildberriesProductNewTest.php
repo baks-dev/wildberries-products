@@ -1,0 +1,163 @@
+<?php
+/*
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+declare(strict_types=1);
+
+namespace BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\Tests;
+
+use BaksDev\Core\BaksDevCoreBundle;
+use BaksDev\Products\Product\Type\Invariable\ProductInvariableUid;
+use BaksDev\Wildberries\Products\Entity\Custom\Images\WildberriesProductCustomImage;
+use BaksDev\Wildberries\Products\Entity\Custom\WildberriesProductCustom;
+use BaksDev\Wildberries\Products\Type\Custom\Image\WbProductCustomImageUid;
+use BaksDev\Wildberries\Products\Type\Id\WildberriesProductUid;
+use BaksDev\Wildberries\Products\Type\Image\WildberriesProductImageUid;
+use BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\Images\WildberriesProductCustomImagesDTO;
+use BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\WildberriesCustomProductDTO;
+use BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\WildberriesCustomProductHandler;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\StringInput;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\Attribute\When;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+
+#[When(env: 'test')]
+#[Group('wildberries-products')]
+final class WildberriesProductNewTest extends KernelTestCase
+{
+    public static function setUpBeforeClass(): void
+    {
+        // Бросаем событие консольной комманды
+        $dispatcher = self::getContainer()->get(EventDispatcherInterface::class);
+        $event = new ConsoleCommandEvent(new Command(), new StringInput(''), new NullOutput());
+        $dispatcher->dispatch($event, 'console.command');
+
+        /** @var EntityManagerInterface $em */
+        $em = self::getContainer()->get(EntityManagerInterface::class);
+
+        $WildberriesProduct = $em
+            ->getRepository(WildberriesProductCustom::class)
+            ->findOneBy(['id' => ProductInvariableUid::TEST]);
+
+        if($WildberriesProduct)
+        {
+            $em->remove($WildberriesProduct);
+        }
+
+        $WildberriesProductImages = $em
+            ->getRepository(WildberriesProductCustomImage::class)
+            ->findBy(['market' => WbProductCustomImageUid::TEST]);
+
+        foreach($WildberriesProductImages as $image)
+        {
+            $em->remove($image);
+
+        }
+
+        $em->flush();
+        $em->clear();
+    }
+
+    public function testNew(): void
+    {
+        /** @var ContainerBagInterface $containerBag */
+        $container = self::getContainer();
+        $containerBag = $container->get(ContainerBagInterface::class);
+        $fileSystem = $container->get(Filesystem::class);
+
+
+        /** Создаем путь к тестовой директории */
+        $testUploadDir = implode(
+            DIRECTORY_SEPARATOR,
+            [$containerBag->get('kernel.project_dir'), 'public', 'upload', 'tests'],
+        );
+
+        /** Проверяем существование директории для тестовых картинок */
+        if(false === is_dir($testUploadDir))
+        {
+            $fileSystem->mkdir($testUploadDir);
+        }
+
+        /**
+         * Создаем тестовое изображение
+         */
+        $fileSystem = $container->get(Filesystem::class);
+
+        $fileSystem->copy(
+            BaksDevCoreBundle::PATH.implode(
+                DIRECTORY_SEPARATOR,
+                ['Resources', 'assets', 'img', 'empty.webp'],
+            ),
+            $testUploadDir.DIRECTORY_SEPARATOR.'photo.webp',
+        );
+
+        $filePhoto = new File($testUploadDir.DIRECTORY_SEPARATOR.'photo.webp', false);
+
+        /**
+         * Тестируем WildberriesProductImagesDTO
+         */
+        $image = new WildberriesProductCustomImagesDTO();
+
+        $image->setFile($filePhoto);
+        self::assertEquals($image->getFile(), $filePhoto);
+
+        $image->setExt('webp');
+        self::assertTrue($image->getExt() === 'webp');
+
+        $image->setId(WbProductCustomImageUid::TEST);
+        self::assertTrue($image->getId()->equals(WbProductCustomImageUid::TEST));
+
+        $image->setName('test');
+        self::assertTrue($image->getName() === 'test');
+
+        $image->setRoot(true);
+        self::assertTrue($image->getRoot() === true);
+
+        $image->setSize(1);
+        self::assertTrue($image->getSize() === 1);
+
+        /**
+         * Тестируем WildberriesProductDTO
+         */
+        $WildberriesProductDTO = new WildberriesCustomProductDTO();
+
+        $WildberriesProductDTO->setInvariable(ProductInvariableUid::TEST);
+        self::assertTrue($WildberriesProductDTO->getInvariable()->equals(ProductInvariableUid::TEST));
+
+        $WildberriesProductDTO->getImages()->add($image);
+
+        $container = self::getContainer();
+
+        /** @var WildberriesCustomProductHandler $handler */
+        $handler = $container->get(WildberriesCustomProductHandler::class);
+        $newWildberriesProduct = $handler->handle($WildberriesProductDTO);
+        self::assertTrue($newWildberriesProduct instanceof WildberriesProductCustom);
+    }
+}

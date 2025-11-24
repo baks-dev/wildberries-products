@@ -30,9 +30,6 @@ use BaksDev\Wildberries\Products\Mapper\Params\Collection\SeasonalityWildberries
 use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\PurposeYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Mapper\Params\Tire\SeasonYaMarketProductParams;
-use BaksDev\Yandex\Market\Products\Type\Settings\Property\YaMarketProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 #[AutoconfigureTag('baks.wb.product.property')]

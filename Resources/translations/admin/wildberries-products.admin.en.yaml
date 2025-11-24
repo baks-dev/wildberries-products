@@ -1,0 +1,26 @@
+page:
+  index: 'Setting up products for Wildberries'
+  new: 'Add products for Wildberries'
+  edit: 'Edit products for Wildberries'
+  delete: 'Delete products for Wildberries'
+
+breadcrumb:
+  index: 'Product settings for Wildberries'
+  new: 'Add products for Wildberries'
+  edit: 'Edit products for Wildberries'
+  delete: 'Delete products for Wildberries'
+
+success:
+  new: 'Product settings for Wildberries have been successfully added'
+  edit: 'Product settings for Wildberries have been successfully updated'
+  delete: 'Product settings for Wildberries have been successfully deleted'
+  restore: 'Product settings for Wildberries have been successfully restored'
+
+danger:
+  new: '%s: Error when adding product settings for Wildberries'
+  edit: '%s: Error when updating product settings for Wildberries'
+  delete: '%s: Error updating product settings for Wildberries'
+  restore: '%s: Error when restoring product settings for Wildberries'
+form:
+  delete:
+    h4: 'Are you sure you want to remove the product settings for Wildberries?'

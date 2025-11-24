@@ -28,7 +28,6 @@ namespace BaksDev\Wildberries\Products\Messenger\Cards\CardCreate;
 use BaksDev\Core\Messenger\MessageDelay;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductCreateCardRequest;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductMediaCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardMedia\WildberriesCardMediaUpdateMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
@@ -62,7 +61,7 @@ final readonly class WildberriesCardCreateDispatcher
         {
             $this->logger->warning(
                 sprintf('Ошибка: Product Uid: %s. Информация о продукте не была найдена',
-                    $message->getProduct())
+                    $message->getProduct()), [self::class.':'.__LINE__],
             );
 
             return;

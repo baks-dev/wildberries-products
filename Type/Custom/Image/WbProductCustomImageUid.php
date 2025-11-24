@@ -23,37 +23,41 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
+namespace BaksDev\Wildberries\Products\Type\Custom\Image;
 
-use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Symfony\Component\Validator\Constraints as Assert;
+use BaksDev\Core\Type\UidType\Uid;
+use JsonException;
+use Symfony\Component\Uid\AbstractUid;
 
-/** @see WildberriesCardGroupMessage */
-final class WildberriesCardGroupMessage
+final class WbProductCustomImageUid extends Uid
 {
-    private string $profile;
+
+    public const string TEST = '42840ba5-8d83-7b2b-9810-e67acc34f55e';
+
+    public const string TYPE = 'wb_product_custom_image';
+
+    private mixed $params;
+
 
     public function __construct(
-        UserProfileUid $profile,
-        private readonly int $nomenclature,
-        private readonly ?int $group
+        AbstractUid|string|null $value = null,
+        mixed $params = null,
     )
     {
-        $this->profile = (string) $profile;
+        parent::__construct($value);
+        $this->params = $params;
     }
 
-    public function getProfile(): UserProfileUid
+    /**
+     * @throws JsonException
+     */
+    public function getParams(): ?array
     {
-        return new UserProfileUid($this->profile);
-    }
+        if(true === empty($this->params) || false === json_validate($this->params))
+        {
+            return null;
+        }
 
-    public function getNomenclature(): int
-    {
-        return $this->nomenclature;
-    }
-
-    public function getGroup(): ?int
-    {
-        return $this->group;
+        return json_decode($this->params, true, 512, JSON_THROW_ON_ERROR);
     }
 }

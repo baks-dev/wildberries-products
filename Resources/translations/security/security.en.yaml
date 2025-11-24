@@ -73,3 +73,19 @@ ROLE_WB_BARCODE_EDIT:
 ROLE_WB_BARCODE_DELETE:
   name: 'Delete'
   desc: ''
+
+
+
+ROLE_WB_PRODUCTS_CUSTOM:
+  name: 'Wildberries Product Settings'
+  desc: 'Wildberries Product Settings'
+
+# Rules
+
+ROLE_WB_PRODUCTS_CUSTOM_INDEX:
+  name: 'Browse'
+  desc: ''
+
+ROLE_WB_PRODUCTS_CUSTOM_EDIT:
+  name: 'Edit'
+  desc: ''
