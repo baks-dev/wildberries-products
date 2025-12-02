@@ -47,6 +47,7 @@ use BaksDev\Products\Product\Entity\Offers\Variation\Quantity\ProductVariationQu
 use BaksDev\Products\Product\Entity\Photo\ProductPhoto;
 use BaksDev\Products\Product\Entity\Price\ProductPrice;
 use BaksDev\Products\Product\Entity\Product;
+use BaksDev\Products\Product\Entity\ProductInvariable;
 use BaksDev\Products\Product\Entity\Property\ProductProperty;
 use BaksDev\Products\Product\Entity\Trans\ProductTrans;
 use BaksDev\Products\Product\Type\Id\ProductUid;
@@ -55,6 +56,8 @@ use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Products\Entity\Custom\Images\WildberriesProductCustomImage;
+use BaksDev\Wildberries\Products\Entity\Custom\WildberriesProductCustom;
 use BaksDev\Wildberries\Products\Entity\Settings\Invariable\WbProductSettingsInvariable;
 use BaksDev\Wildberries\Products\Entity\Settings\Parameters\WbProductSettingsParameters;
 use BaksDev\Wildberries\Products\Entity\Settings\Property\WbProductSettingsProperty;
@@ -575,8 +578,7 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                 '
                     product_modification_params.id = product_modification.id AND
                     product_modification_params.category_modification = settings_params.field
-            ',
-            );
+            ');
 
         $dbal->addSelect(
             "JSON_AGG
@@ -597,10 +599,57 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
 			AS product_params",
         );
 
+        /**
+         * Product Invariable
+         */
+        $dbal->leftJoin(
+            'product_modification',
+            ProductInvariable::class,
+            'product_invariable',
+            '
+                   product_invariable.product = product.id AND
+                   (
+                       (product_offer.const IS NOT NULL AND product_invariable.offer = product_offer.const) OR
+                       (product_offer.const IS NULL AND product_invariable.offer IS NULL)
+                   )
+                   AND
+                   (
+                       (product_variation.const IS NOT NULL AND product_invariable.variation = product_variation.const) OR
+                       (product_variation.const IS NULL AND product_invariable.variation IS NULL)
+                   )
+                  AND
+                  (
+                       (product_modification.const IS NOT NULL AND product_invariable.modification = product_modification.const) OR
+                       (product_modification.const IS NULL AND product_invariable.modification IS NULL)
+                  )
+           ');
+
 
         /**
          * Фото продукции
          */
+
+        /** Кастомные настройки продукта Яндекс Маркет  */
+
+        $dbal
+            ->leftJoin(
+                'product_invariable',
+                WildberriesProductCustom::class,
+                'wb_product_custom',
+                'wb_product_custom.invariable = product_invariable.id',
+            );
+
+
+        /* Кастомные фото Яндекс Маркет */
+        $dbal->leftJoin(
+            'wb_product_custom',
+            WildberriesProductCustomImage::class,
+            'wb_product_custom_images',
+            '
+                wb_product_custom_images.invariable = product_invariable.id
+            ',
+        );
+
 
         /* Фото модификаций */
 

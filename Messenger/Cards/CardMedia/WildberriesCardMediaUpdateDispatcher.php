@@ -30,6 +30,7 @@ use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductMediaCardRequest;
 use BaksDev\Wildberries\Products\Repository\Cards\WildberriesProductImages\WildberriesProductImagesInterface;
+use BaksDev\Wildberries\Products\Repository\Custom\AllImagesByInvariable\AllImagesByInvariableInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\DependencyInjection\Attribute\Target;
@@ -46,6 +47,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
         private WildberriesProductMediaCardRequest $WildberriesProductMediaCardRequest,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private WildberriesProductImagesInterface $WildberriesProductImagesInterface,
+        private AllImagesByInvariableInterface $AllImagesByInvariableRepository,
         #[Autowire(env: 'CDN_HOST')] private string $cdnHost,
         #[Autowire(env: 'HOST')] private string $host,
     ) {}
@@ -89,6 +91,32 @@ final readonly class WildberriesCardMediaUpdateDispatcher
 
         $mages = null;
 
+
+        /** Первыми отправляем кастомные фото */
+
+        $customs = $this->AllImagesByInvariableRepository->findAll($message->getInvariable());
+
+        foreach($customs as $custom)
+        {
+            if($custom['product_image_cdn'])
+            {
+                $mages[] = 'https://'.$this->cdnHost
+                    .$custom['product_image']
+                    .'/large.'
+                    .$custom['product_image_ext'];
+
+                continue;
+            }
+
+            $mages[] = 'https://'.$this->host
+                .$custom['product_image']
+                .'/image.'
+                .$custom['product_image_ext'];
+        }
+
+
+        /** Добавляем в массив изображения продукции из карточки */
+
         foreach($result as $image)
         {
             if($image['product_image_cdn'])
@@ -100,7 +128,6 @@ final readonly class WildberriesCardMediaUpdateDispatcher
 
                 continue;
             }
-
 
             $mages[] = 'https://'.$this->host
                 .$image['product_image']

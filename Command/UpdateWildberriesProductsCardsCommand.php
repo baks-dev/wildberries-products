@@ -229,6 +229,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                     variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                     modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                    invariable: $ProductsIdentifierResult->getProductInvariable(),
                     article: $CurrentWildberriesProductCardResult->getProductArticle(),
                 );
 
