@@ -82,7 +82,7 @@ class NewEditController extends AbstractController
             ->handleRequest($request);
 
 
-        if($form->isSubmitted() && $form->isValid() && $form->has('wildberries_market_product'))
+        if($form->isSubmitted() && $form->isValid() && $form->has('wildberries_product'))
         {
             $this->refreshTokenForm($form);
 

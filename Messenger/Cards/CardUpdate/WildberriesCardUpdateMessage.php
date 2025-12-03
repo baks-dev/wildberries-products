@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate;
 
 use BaksDev\Products\Product\Type\Id\ProductUid;
+use BaksDev\Products\Product\Type\Invariable\ProductInvariableUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
@@ -45,6 +46,8 @@ final readonly class WildberriesCardUpdateMessage
 
     private ?string $modificationConst;
 
+    private string $invariable;
+
 
     public function __construct(
         UserProfileUid $profile,
@@ -52,6 +55,7 @@ final readonly class WildberriesCardUpdateMessage
         ProductOfferConst|false $offerConst,
         ProductVariationConst|false $variationConst,
         ProductModificationConst|false $modificationConst,
+        ProductInvariableUid $invariable,
         private string $article
     )
     {
@@ -60,6 +64,7 @@ final readonly class WildberriesCardUpdateMessage
         $this->offerConst = false === empty($offerConst) ? (string) $offerConst : null;
         $this->variationConst = false === empty($variationConst) ? (string) $variationConst : null;
         $this->modificationConst = false === empty($modificationConst) ? (string) $modificationConst : null;
+        $this->invariable = (string) $invariable;
     }
 
     public function getProfile(): UserProfileUid
@@ -90,5 +95,10 @@ final readonly class WildberriesCardUpdateMessage
     public function getArticle(): string
     {
         return $this->article;
+    }
+
+    public function getInvariable(): ProductInvariableUid
+    {
+        return new ProductInvariableUid($this->invariable);
     }
 }

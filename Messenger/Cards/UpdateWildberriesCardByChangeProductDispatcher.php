@@ -56,8 +56,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private ProductDetailByUidInterface $ProductDetailByUidRepository,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
-    )
-    {}
+    ) {}
 
     public function __invoke(ProductMessage $message): void
     {
@@ -99,7 +98,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                 {
                     $this->logger->warning(
                         sprintf('Ошибка: %s. Информация о продукте не была найдена',
-                            $message->getEvent())
+                            $message->getEvent()),
                     );
 
                     continue;
@@ -118,7 +117,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                     {
                         $this->logger->warning(
                             sprintf('Ошибка: Product Event: %s. Информация о продукте не была найдена',
-                                $message->getEvent())
+                                $message->getEvent()),
                         );
 
                         continue;
@@ -144,6 +143,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                             offerConst: $ProductsIdentifierResult->getProductOfferConst(),
                             variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                             modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                            invariable: $ProductsIdentifierResult->getProductInvariable(),
                             article: $lastProduct->getProductArticle(),
                         );
 

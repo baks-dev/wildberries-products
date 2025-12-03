@@ -109,6 +109,7 @@ final readonly class WildberriesCardCreateDispatcher
             offerConst: $message->getOfferConst(),
             variationConst: $message->getVariationConst(),
             modificationConst: $message->getModificationConst(),
+            invariable: $message->getInvariable(),
             article: $message->getArticle(),
         );
 
