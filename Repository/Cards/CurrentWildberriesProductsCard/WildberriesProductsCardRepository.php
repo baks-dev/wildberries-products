@@ -273,8 +273,8 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         {
             $dbal
                 ->addSelect('NULL AS offer_const')
-                ->addSelect('NULL.value AS product_offer_value')
-                ->addSelect('NULL.postfix AS product_offer_postfix')
+                ->addSelect('NULL AS product_offer_value')
+                ->addSelect('NULL AS product_offer_postfix')
                 ->leftJoin(
                     'product',
                     ProductOffer::class,
