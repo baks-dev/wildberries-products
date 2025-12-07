@@ -55,6 +55,11 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
             return true;
         }
 
+        if(false === $this->isCard())
+        {
+            return true;
+        }
+
         /** Инициируем токен для вызова параметров */
         $TokenHttpClient = $this->content()->TokenHttpClient();
 
@@ -77,20 +82,9 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
 
         if($response->getStatusCode() !== 200)
         {
-            if($response->getStatusCode() === 400 || $response->getStatusCode() === 403)
-            {
-                $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                    $response->getStatusCode(),
-                    $content['errorText'],
-                ), [self::class.':'.__LINE__, $card]);
-
-                return false;
-            }
-
-            $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                $content['status'],
-                $content['statusText'],
-            ), [self::class.':'.__LINE__, $card]);
+            $this->logger->critical(sprintf('wildberries-products: Ошибка %s обновления карточки',
+                $response->getStatusCode(),
+            ), [self::class.':'.__LINE__, $card, var_export($content, true)]);
 
             return false;
         }

@@ -66,6 +66,11 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
             return true;
         }
 
+        if(false === $this->isCard())
+        {
+            return true;
+        }
+
         /** Инициируем токен для вызова параметров */
         $TokenHttpClient = $this->discountsPrices()->TokenHttpClient();
 

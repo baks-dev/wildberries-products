@@ -63,7 +63,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
                 ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
-                ->findResult();
+                ->find();
 
             if(true === empty($WildberriesProductsCardResult))
             {

@@ -25,11 +25,17 @@
 namespace BaksDev\Wildberries\Products\Command;
 
 use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventResult;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
-use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
-use BaksDev\Wildberries\Products\Messenger\Cards\CardNew\WildberriesCardNewMassage;
+use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Yandex\Market\Products\Messenger\Card\YaMarketProductsCardMessage;
+use BaksDev\Yandex\Market\Products\Messenger\YaMarketProductsPriceUpdate\YaMarketProductsPriceMessage;
+use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardInterface;
+use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardResult;
+use BaksDev\Yandex\Market\Repository\AllProfileToken\AllProfileYaMarketTokenInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -39,21 +45,22 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Получаем карточки товаров и добавляем отсутствующие
+ * Обновляет цены Wildberries
  */
 #[AsCommand(
-    name: 'baks:wildberries-products:new',
-    description: 'Получаем карточки товаров и добавляем отсутствующие товары')
-]
-class GetWbProductsNewCommand extends Command
+    name: 'baks:wildberries-products:update:price',
+    description: 'Обновляет цены Wildberries',
+    aliases: ['baks:wildberries-products:update:price', 'baks:wildberries:update:price',]
+)]
+class UpdateWildberriesProductsPriceCommand extends Command
 {
-
     private SymfonyStyle $io;
 
     public function __construct(
-        private readonly MessageDispatchInterface $messageDispatch,
-        private readonly AllProfileWildberriesTokenInterface $allProfileToken,
-        private readonly FindAllWildberriesCardsRequest $WildberriesCardsRequest
+        private readonly AllProfileWildberriesTokenInterface $AllProfileWildberriesToken,
+        private readonly AllProductsIdentifierInterface $allProductsIdentifier,
+        private readonly ProductDetailByEventInterface $ProductDetailByEventRepository,
+        private readonly MessageDispatchInterface $messageDispatch
     )
     {
         parent::__construct();
@@ -64,22 +71,19 @@ class GetWbProductsNewCommand extends Command
         $this->addOption('article', 'a', InputOption::VALUE_OPTIONAL, 'Фильтр по артикулу ((--article=... || -a ...))');
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
         $this->io = new SymfonyStyle($input, $output);
 
-        /**
-         * Получаем активные токены авторизации профилей Wildberries
-         */
-        $profiles = $this->allProfileToken
+        /** Получаем активные токены авторизации профилей Yandex Market */
+        $profiles = $this->AllProfileWildberriesToken
             ->onlyActiveToken()
             ->findAll();
 
         $profiles = iterator_to_array($profiles);
 
         $helper = $this->getHelper('question');
+
 
         /**
          * Интерактивная форма списка профилей
@@ -98,7 +102,7 @@ class GetWbProductsNewCommand extends Command
         $question = new ChoiceQuestion(
             'Профиль пользователя (Ctrl+C чтобы выйти)',
             $questions,
-            '0'
+            '0',
         );
 
         $key = $helper->ask($input, $output, $question);
@@ -150,7 +154,7 @@ class GetWbProductsNewCommand extends Command
         {
             $this->update($UserProfileUid, $input->getOption('article'));
 
-            $this->io->success('Карточки успешно обновлены');
+            $this->io->success('Цены успешно обновлены');
             return Command::SUCCESS;
         }
 
@@ -159,35 +163,70 @@ class GetWbProductsNewCommand extends Command
 
     }
 
-
-    public function update(UserProfileUid $profile, ?string $article = null, bool $async = false): void
+    public function update(UserProfileUid $UserProfileUid, ?string $article = null, bool $async = false): void
     {
-        $this->io->note(sprintf('Обновляем профиль %s', $profile->getAttr()));
+        $this->io->note(sprintf('Обновляем профиль %s', $UserProfileUid->getAttr()));
 
-        $WildberriesCards = $this->WildberriesCardsRequest
-            ->profile($profile)
-            ->findAll();
+        /* Получаем все имеющиеся карточки в системе */
+        $products = $this->allProductsIdentifier->findAll();
 
-        /** @var WildberriesCardDTO $WildberriesCardDTO */
-        foreach($WildberriesCards as $WildberriesCardDTO)
+        if(false === $products || false === $products->valid())
         {
-            /**
-             * Если передан артикул - применяем фильтр по вхождению
-             */
-            if(!empty($article) && stripos($WildberriesCardDTO->getArticle(), $article) === false)
+            $this->io->warning('Карточек для обновления не найдено');
+            return;
+        }
+
+        foreach($products as $ProductsIdentifierResult)
+        {
+            $ProductDetailByEventResult = $this->ProductDetailByEventRepository
+                ->event($ProductsIdentifierResult->getProductEvent())
+                ->offer($ProductsIdentifierResult->getProductOfferId())
+                ->variation($ProductsIdentifierResult->getProductVariationId())
+                ->modification($ProductsIdentifierResult->getProductModificationId())
+                ->findResult();
+
+            if(false === ($ProductDetailByEventResult instanceof ProductDetailByEventResult))
             {
+                $this->io->warning('Карточки не найдено, либо не указаны настройки соотношений свойств');
+
                 continue;
             }
 
-            /** Передаем на обновление найденный артикул */
-            $WildberriesCardNewMassage = new WildberriesCardNewMassage($profile, $WildberriesCardDTO->getArticle());
+            /**
+             * Если передан артикул - применяем фильтр по вхождению
+             * Пропускаем обновление, если соответствие не найдено
+             */
 
-            $this->messageDispatch->dispatch(
-                $WildberriesCardNewMassage,
-                transport: $async === true ? 'wildberries-products-low' : null
+            if(!empty($article) && stripos($ProductDetailByEventResult->getProductArticle(), $article) === false)
+            {
+                $this->io->writeln(sprintf('<fg=gray>... %s</>', $ProductDetailByEventResult->getProductArticle()));
+
+                continue;
+            }
+
+
+            $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
+                $UserProfileUid,
+                $ProductsIdentifierResult->getProductId(),
+                $ProductsIdentifierResult->getProductOfferConst(),
+                $ProductsIdentifierResult->getProductVariationConst(),
+                $ProductsIdentifierResult->getProductModificationConst(),
+                $ProductDetailByEventResult->getProductArticle(),
             );
 
-            $this->io->writeln(sprintf('<fg=green>Добавили карточку с артикулом %s</>', $WildberriesCardDTO->getArticle()));
+
+            /** Консольную комманду выполняем синхронно */
+            $this->messageDispatch->dispatch(
+                message: $UpdateWildberriesCardPriceMessage,
+                transport: $async === true ? $UserProfileUid.'-low' : null,
+            );
+
+            $this->io->text(sprintf('Обновили артикул %s', $ProductDetailByEventResult->getProductArticle()));
+
+            if($ProductDetailByEventResult->getProductArticle() === $article)
+            {
+                break;
+            }
         }
     }
 }

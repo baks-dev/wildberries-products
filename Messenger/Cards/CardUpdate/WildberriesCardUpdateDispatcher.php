@@ -30,7 +30,6 @@ use BaksDev\Core\Messenger\MessageDelay;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
-use BaksDev\Wildberries\Products\Api\Cards\UpdateGroupWildberriesProductCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductUpdateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
@@ -66,7 +65,7 @@ final readonly class WildberriesCardUpdateDispatcher
             ->forOfferConst($message->getOfferConst())
             ->forVariationConst($message->getVariationConst())
             ->forModificationConst($message->getModificationConst())
-            ->findResult();
+            ->find();
 
         if(false === ($CurrentWildberriesProductCardResult instanceof WildberriesProductsCardResult))
         {
@@ -74,6 +73,15 @@ final readonly class WildberriesCardUpdateDispatcher
                 sprintf('%s: Информация о продукте не была найдена',
                     $message->getArticle()),
                 [self::class.':'.__LINE__, var_export($message, true)],
+            );
+
+            return;
+        }
+
+        if(empty($CurrentWildberriesProductCardResult->getProductPrice()->getRoundValue()))
+        {
+            $this->logger->error(
+                sprintf('%s: Не обновляем карточку без цены', $CurrentWildberriesProductCardResult->getSearchArticle()),
             );
 
             return;

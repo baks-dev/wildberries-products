@@ -74,6 +74,11 @@ final class WildberriesProductMediaCardRequest extends Wildberries
             return true;
         }
 
+        if(false === $this->isCard())
+        {
+            return true;
+        }
+
         $response = $this
             ->content()
             ->TokenHttpClient()

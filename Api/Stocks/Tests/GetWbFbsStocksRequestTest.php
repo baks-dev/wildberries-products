@@ -23,46 +23,45 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Api\PricesInfo\Tests;
+namespace BaksDev\Wildberries\Products\Api\Stocks\Tests;
 
-use BaksDev\Core\Doctrine\DBALQueryBuilder;
-use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Api\PricesInfo\FindPricesInfoRequest;
+use BaksDev\Wildberries\Products\Api\Stocks\GetWbFbsStocksRequest;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
-use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
 #[When(env: 'test')]
-class WbPricesInfoTest extends KernelTestCase
+#[Group('wildberries-products')]
+class GetWbFbsStocksRequestTest extends KernelTestCase
 {
-    private static string $tocken;
-    private static int $nomenclature;
+    private static WbAuthorizationToken $Authorization;
 
     public static function setUpBeforeClass(): void
     {
-        self::$tocken = $_SERVER['TEST_WILDBERRIES_TOKEN'];
-        self::$nomenclature = (int) $_SERVER['TEST_WILDBERRIES_NOMENCLATURE'];
+        /** @see .env.test */
+        self::$Authorization = new WbAuthorizationToken(
+            profile: new UserProfileUid($_SERVER['TEST_WILDBERRIES_PROFILE']),
+            token: $_SERVER['TEST_WILDBERRIES_TOKEN'],
+            warehouse: $_SERVER['TEST_WILDBERRIES_WAREHOUSE'] ?? null,
+            percent: $_SERVER['TEST_WILDBERRIES_PERCENT'] ?? "0",
+            card: $_SERVER['TEST_WILDBERRIES_CARD'] === "true" ?? false,
+            stock: $_SERVER['TEST_WILDBERRIES_STOCK'] === "true" ?? false,
+        );
     }
 
     public function testUseCase(): void
     {
-        /** @var FindPricesInfoRequest $PricesInfo */
-        $PricesInfo = self::getContainer()->get(FindPricesInfoRequest::class);
+        /** @var GetWbFbsStocksRequest $GetWbFbsStocksRequest */
+        $GetWbFbsStocksRequest = self::getContainer()->get(GetWbFbsStocksRequest::class);
+        $GetWbFbsStocksRequest->TokenHttpClient(self::$Authorization);
 
-        $PricesInfo->TokenHttpClient(new WbAuthorizationToken(new UserProfileUid(), self::$tocken));
+        $stock = $GetWbFbsStocksRequest
+            ->fromBarcode('BarcodeTest123')
+            ->find();
 
-        $PricesInfo->prices(self::$nomenclature);
-        $Price = $PricesInfo->getPriceByNomenclature(self::$nomenclature);
-
-        self::assertNotNull($Price->getPrice());
-        self::assertInstanceOf(Money::class, $Price->getPrice());
-        self::assertIsFloat($Price->getPrice()->getValue());
-
-        self::assertNotNull($Price->getDiscount());
-        self::assertIsInt($Price->getDiscount());
-
+        self::assertEquals(0, $stock);
     }
 
 }

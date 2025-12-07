@@ -57,6 +57,11 @@ final class WildberriesProductCreateCardRequest extends Wildberries
             return true;
         }
 
+        if(false === $this->isCard())
+        {
+            return true;
+        }
+
         /** Инициируем токен для вызова параметров */
         $TokenHttpClient = $this->content()->TokenHttpClient();
 

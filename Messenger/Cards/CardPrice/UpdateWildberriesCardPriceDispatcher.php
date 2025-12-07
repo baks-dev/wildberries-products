@@ -58,7 +58,7 @@ final class UpdateWildberriesCardPriceDispatcher
             ->forOfferConst($message->getOfferConst())
             ->forVariationConst($message->getVariationConst())
             ->forModificationConst($message->getModificationConst())
-            ->findResult();
+            ->find();
 
         if(false === ($CurrentWildberriesProductCardResult instanceof WildberriesProductsCardResult))
         {

@@ -68,7 +68,7 @@ class WildberriesMapperTest extends KernelTestCase
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
                 ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
-                ->findResult();
+                ->find();
 
             if(empty($WildberriesProductsCard))
             {

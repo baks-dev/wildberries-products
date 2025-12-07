@@ -29,14 +29,15 @@ use BaksDev\Core\Cache\AppCacheInterface;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifierResult;
-use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventResult;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreateMessage;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
-use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
+use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
 use DateInterval;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -60,9 +61,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
     private SymfonyStyle $io;
 
     public function __construct(
-        private readonly AllProfileTokenInterface $AllProfileToken,
+        private readonly AllProfileWildberriesTokenInterface $AllProfileToken,
         private readonly AllProductsIdentifierInterface $AllProductsIdentifier,
-        private readonly ProductDetailByUidInterface $ProductDetailByUidRepository,
+        private readonly ProductDetailByEventInterface $ProductDetailByEventRepository,
         private readonly MessageDispatchInterface $messageDispatch,
         private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private readonly AppCacheInterface $appCache
@@ -188,14 +189,14 @@ final class UpdateWildberriesProductsCardsCommand extends Command
         /** @var ProductsIdentifierResult $ProductsIdentifierResult */
         foreach($products as $ProductsIdentifierResult)
         {
-            $CurrentWildberriesProductCardResult = $this->ProductDetailByUidRepository
+            $ProductDetailByEventResult = $this->ProductDetailByEventRepository
                 ->event($ProductsIdentifierResult->getProductEvent())
                 ->offer($ProductsIdentifierResult->getProductOfferId())
                 ->variation($ProductsIdentifierResult->getProductVariationId())
                 ->modification($ProductsIdentifierResult->getProductModificationId())
                 ->findResult();
 
-            if(true === empty($CurrentWildberriesProductCardResult))
+            if(false === ($ProductDetailByEventResult instanceof ProductDetailByEventResult))
             {
                 $this->io->warning('Карточки не найдено, либо не указаны настройки соотношений свойств');
 
@@ -207,9 +208,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
              * Пропускаем обновление, если соответствие не найдено
              */
 
-            if(!empty($article) && stripos($CurrentWildberriesProductCardResult->getProductArticle(), $article) === false)
+            if(!empty($article) && stripos($ProductDetailByEventResult->getProductArticle(), $article) === false)
             {
-                $this->io->writeln(sprintf('<fg=gray>... %s</>', $CurrentWildberriesProductCardResult->getProductArticle()));
+                $this->io->writeln(sprintf('<fg=gray>... %s</>', $ProductDetailByEventResult->getProductArticle()));
 
                 continue;
             }
@@ -217,7 +218,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             $wbCard = $this->FindAllWildberriesCardsRequest
                 ->profile($UserProfileUid)
                 ->allPhoto()
-                ->findAll($CurrentWildberriesProductCardResult->getProductArticle());
+                ->findAll($ProductDetailByEventResult->getProductArticle());
 
 
             /** Если карточка на WB не существует и ее нужно создать */
@@ -230,7 +231,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                     modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
                     invariable: $ProductsIdentifierResult->getProductInvariable(),
-                    article: $CurrentWildberriesProductCardResult->getProductArticle(),
+                    article: $ProductDetailByEventResult->getProductArticle(),
                 );
 
                 /** Консольную комманду выполняем синхронно */
@@ -239,9 +240,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     transport: $async === true ? $UserProfileUid.'-low' : null,
                 );
 
-                $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $CurrentWildberriesProductCardResult->getProductArticle()));
+                $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $ProductDetailByEventResult->getProductArticle()));
 
-                if($CurrentWildberriesProductCardResult->getProductArticle() === $article)
+                if($ProductDetailByEventResult->getProductArticle() === $article)
                 {
                     break;
                 }
@@ -263,13 +264,13 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             /** Шины группируем по РадиусПрофильШирина */
             if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
             {
-                $key = $CurrentWildberriesProductCardResult->getProductOfferValue()
-                    .$CurrentWildberriesProductCardResult->getProductVariationValue()
-                    .$CurrentWildberriesProductCardResult->getProductModificationValue();
+                $key = $ProductDetailByEventResult->getProductOfferValue()
+                    .$ProductDetailByEventResult->getProductVariationValue()
+                    .$ProductDetailByEventResult->getProductModificationValue();
             }
             else
             {
-                $key = $CurrentWildberriesProductCardResult->getProductCardArticle();
+                $key = $ProductDetailByEventResult->getProductCardArticle();
             }
 
             $cache = $this->appCache->init('wildberries-products');
@@ -290,7 +291,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                 modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
                 invariable: $ProductsIdentifierResult->getProductInvariable(),
-                article: $CurrentWildberriesProductCardResult->getProductArticle(),
+                article: $ProductDetailByEventResult->getProductArticle(),
             );
 
             /** Консольную комманду выполняем синхронно */
@@ -299,9 +300,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 transport: $async === true ? $UserProfileUid.'-low' : null,
             );
 
-            $this->io->text(sprintf('Обновили артикул %s', $CurrentWildberriesProductCardResult->getProductArticle()));
+            $this->io->text(sprintf('Обновили артикул %s', $ProductDetailByEventResult->getProductArticle()));
 
-            if($CurrentWildberriesProductCardResult->getProductArticle() === $article)
+            if($ProductDetailByEventResult->getProductArticle() === $article)
             {
                 break;
             }

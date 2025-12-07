@@ -101,42 +101,13 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
         $name = 'Шины ';
 
-        if($data->getProductParams() !== false)
-        {
-            /** Добавляем к названию сезонность */
-            $Season = new SeasonalityWildberriesProductParameters();
 
-            foreach($data->getProductParams() as $product_param)
-            {
-                if($Season->equals($product_param->name))
-                {
-                    $season_value = $Season->getData($data);
+        //        /** Приводим к нижнему регистру и первой заглавной букве */
+        //        $name = mb_strtolower(trim($name));
+        //        $firstChar = mb_substr($name, 0, 1, 'UTF-8');
+        //        $then = mb_substr($name, 1, null, 'UTF-8');
+        //        $name = mb_strtoupper($firstChar, 'UTF-8').$then.' ';
 
-                    $season_value = match ($season_value['value'])
-                    {
-                        'лето', 'summer' => 'летние',
-                        'зима', 'winter' => 'зимние',
-                        'всесезонные', 'all' => 'всесезонные',
-                        default => '',
-                    };
-
-                    if(false === empty($season_value))
-                    {
-                        $name .= $season_value.' ';
-                    }
-                }
-            }
-        }
-
-
-        /** Приводим к нижнему регистру и первой заглавной букве */
-        $name = mb_strtolower(trim($name));
-        $firstChar = mb_substr($name, 0, 1, 'UTF-8');
-        $then = mb_substr($name, 1, null, 'UTF-8');
-        $name = mb_strtoupper($firstChar, 'UTF-8').$then.' ';
-
-
-        $name .= $data->getProductName().' ';
 
         if(false === empty($data->getProductVariationValue()))
         {
@@ -168,7 +139,35 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
             $name .= $data->getProductModificationPostfix().' ';
         }
 
-        
+        $name .= $data->getModelName().' ';
+
+        if($data->getProductParams() !== false)
+        {
+            /** Добавляем к названию сезонность */
+            $Season = new SeasonalityWildberriesProductParameters();
+
+            foreach($data->getProductParams() as $product_param)
+            {
+                if($Season->equals($product_param->name))
+                {
+                    $season_value = $Season->getData($data);
+
+                    $season_value = match ($season_value['value'])
+                    {
+                        'лето', 'summer' => 'летние',
+                        'зима', 'winter' => 'зимние',
+                        'всесезонные', 'all' => 'всесезонные',
+                        default => '',
+                    };
+
+                    if(false === empty($season_value))
+                    {
+                        $name .= $season_value.' ';
+                    }
+                }
+            }
+        }
+
         return empty($name) ? null : trim($name);
     }
 }

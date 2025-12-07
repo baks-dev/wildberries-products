@@ -44,7 +44,7 @@ final readonly class AllImagesByInvariableRepository implements AllImagesByInvar
 
         $dbal
             ->from(WildberriesProductCustom::class, 'wb_product_custom')
-            ->where('wb_product_custom = :invariable')
+            ->where('wb_product_custom.invariable = :invariable')
             ->setParameter(
                 key: 'invariable',
                 value: $invariable,
@@ -54,7 +54,7 @@ final readonly class AllImagesByInvariableRepository implements AllImagesByInvar
         $dbal
             ->addSelect("CONCAT ('/upload/".$dbal->table(WildberriesProductCustomImage::class)."' , '/', wb_product_custom_images.name) AS product_image")
             /** Расширение файла */
-            ->addSelect("wb_product_custom_images.ext END AS product_image_ext")
+            ->addSelect("wb_product_custom_images.ext AS product_image_ext")
             /** Флаг загрузки файла CDN */
             ->addSelect("wb_product_custom_images.cdn AS product_image_cdn")
             ->leftJoin(

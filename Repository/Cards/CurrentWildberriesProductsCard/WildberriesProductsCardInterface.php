@@ -32,7 +32,6 @@ use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Entity\UserProfile;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use Generator;
 
 interface WildberriesProductsCardInterface
 {
@@ -45,16 +44,9 @@ interface WildberriesProductsCardInterface
     public function forVariationConst(ProductVariationConst|string|null $variationConst): self;
 
     public function forModificationConst(ProductModificationConst|string|null $modificationConst): self;
-
-    /**
-     * @deprecated
-     * Метод получает активную карточку по идентификатору в виде массива
-     */
-    public function find(): array|false;
-
     /**
      * @see WildberriesProductsCardResult
      * Метод получает активную карточку по идентификатору и гидрирует на резалт
      */
-    public function findResult(): ?WildberriesProductsCardResult;
+    public function find(): WildberriesProductsCardResult|false;
 }

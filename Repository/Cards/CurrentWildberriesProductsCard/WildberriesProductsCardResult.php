@@ -29,6 +29,7 @@ use BaksDev\Products\Product\Type\Id\ProductUid;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
+use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 
 final class WildberriesProductsCardResult
@@ -44,7 +45,9 @@ final class WildberriesProductsCardResult
     public function __construct(
         private readonly string $product_uid,
         private readonly string $product_images,
-        private readonly int $product_old_price,
+
+        private readonly int $product_price,
+        private readonly ?int $product_old_price,
         private readonly string $profile,
         private readonly ?string $product_card,
 
@@ -88,9 +91,14 @@ final class WildberriesProductsCardResult
         return $this->product_images;
     }
 
-    public function getProductOldPrice(): int
+    public function getProductPrice(): Money
     {
-        return $this->product_old_price;
+        return $this->product_old_price ? new Money($this->product_price, true) : new Money(0);
+    }
+
+    public function getProductOldPrice(): Money|false
+    {
+        return $this->product_old_price ? new Money($this->product_old_price, true) : false;
     }
 
     public function getProductCard(): ?string
@@ -185,6 +193,20 @@ final class WildberriesProductsCardResult
         return $this->product_modification_postfix;
     }
 
+    public function getModelName(): string|false
+    {
+        $category_name = explode(' ', $this->category_name);
+
+        $model = $this->product_name;
+
+        foreach($category_name as $category)
+        {
+            $model = str_replace($category, '', $model);
+            $model = trim($model);
+        }
+
+        return empty($model) || $model === $this->product_name ? false : $model;
+    }
 
 
     public function getProductSize(): array|false
@@ -308,7 +330,7 @@ final class WildberriesProductsCardResult
     {
         return $this->market_category;
     }
-    
+
     public function getSearchArticle(): ?string
     {
         $articles = $this->getArticle();
@@ -326,7 +348,8 @@ final class WildberriesProductsCardResult
             // Находим позицию последнего дефиса
             $pos = strrpos($article, '-');
 
-            if ($pos !== false) {
+            if($pos !== false)
+            {
                 // Обрезаем строку до последнего дефиса
                 $article = substr($article, 0, $pos);
             }
@@ -338,5 +361,36 @@ final class WildberriesProductsCardResult
     public function getProfile(): string
     {
         return $this->profile;
+    }
+
+    /** Метод проверяет свойства, без которых нельзя получить карточку */
+    public function isCredentials(): bool
+    {
+        if(empty($this->product_price))
+        {
+            return false;
+        }
+
+        if(empty($this->length))
+        {
+            return false;
+        }
+
+        if(empty($this->width))
+        {
+            return false;
+        }
+
+        if(empty($this->height))
+        {
+            return false;
+        }
+
+        if(empty($this->weight))
+        {
+            return false;
+        }
+
+        return true;
     }
 }

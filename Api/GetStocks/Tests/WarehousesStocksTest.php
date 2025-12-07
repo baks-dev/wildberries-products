@@ -45,9 +45,9 @@ final class WarehousesStocksTest extends KernelTestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::$tocken = $_SERVER['TEST_WB_TOCKEN'];
-        self::$warehouse = (int) $_SERVER['TEST_WB_WAREHOUSE'];
-        self::$barcode = $_SERVER['TEST_WB_BARCODE'];
+        self::$tocken = $_SERVER['TEST_WILDBERRIES_TOKEN'];
+        self::$warehouse = (int) $_SERVER['TEST_WILDBERRIES_WAREHOUSE'];
+        self::$barcode = $_SERVER['TEST_WILDBERRIES_BARCODE'];
     }
 
     public function testUseCase(): void

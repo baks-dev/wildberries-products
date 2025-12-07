@@ -27,14 +27,10 @@ use BaksDev\Products\Category\Repository\CategoryChoice\CategoryChoiceInterface;
 use BaksDev\Products\Category\Type\Id\CategoryProductUid;
 use BaksDev\Users\Profile\UserProfile\Repository\UserProfileTokenStorage\UserProfileTokenStorageInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Api\Token\Reference\Object\WbObject;
-use BaksDev\Wildberries\Api\Token\Reference\Object\WbObjectDTO;
 use BaksDev\Wildberries\Products\Api\Settings\Category\FindAllWbCategoryRequest;
 use BaksDev\Wildberries\Products\Api\Settings\Category\WbCategoryDTO;
 use BaksDev\Wildberries\Products\Api\Settings\ParentCategory\FindAllWbParentCategoryRequest;
 use BaksDev\Wildberries\Products\Api\Settings\ParentCategory\WbParentCategoryDTO;
-use BaksDev\Wildberries\Repository\AnyWbTokenActive\AnyWbTokenActiveInterface;
-use DomainException;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -47,33 +43,18 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PreformForm extends AbstractType
 {
-    private CategoryChoiceInterface $categoryChoice;
-
-    private WbObject $objectReference;
-
-    private AnyWbTokenActiveInterface $anyWbTokenActive;
     private UserProfileUid|false $profile;
 
     public function __construct(
-        CategoryChoiceInterface $categoryChoice,
-        WbObject $objectReference,
-        AnyWbTokenActiveInterface $anyWbTokenActive,
-
+        private readonly CategoryChoiceInterface $categoryChoice,
         private readonly FindAllWbParentCategoryRequest $wbParentCategory,
         private readonly FindAllWbCategoryRequest $wbCategoryRequest,
         private readonly UserProfileTokenStorageInterface $userProfileTokenStorage,
-    )
-    {
-        $this->categoryChoice = $categoryChoice;
-        $this->objectReference = $objectReference;
-        $this->anyWbTokenActive = $anyWbTokenActive;
-    }
+    ) {}
 
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-
-
         $builder->add('id', ChoiceType::class, [
             'choices' => $this->categoryChoice->findAll(),
             'choice_value' => function(?CategoryProductUid $category) {
@@ -151,17 +132,11 @@ final class PreformForm extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($formModifier) {
 
             /** @var PreformDTO $PreformDTO */
-
             $PreformDTO = $event->getData();
 
-            return !$PreformDTO->getParent() ?: $formModifier($event->getForm(), $PreformDTO->getParent());
+            false === ($PreformDTO->getParent() instanceof WbParentCategoryDTO) ?:
+                $formModifier($event->getForm(), $PreformDTO->getParent());
 
-            //            if(null === $event->getData()->name)
-            //            {
-            //                return;
-            //            }
-            //
-            //            $formModifier($event->getForm(), $event->getData()->name);
         });
 
         $builder->get('parent')
@@ -169,138 +144,7 @@ final class PreformForm extends AbstractType
                 FormEvents::POST_SUBMIT,
                 function(FormEvent $event) use ($formModifier) {
                     $data = $event->getForm()->getData();
-
                     $formModifier($event->getForm()->getParent(), $data);
-                },
-            );
-
-        /* Сохранить ******************************************************/
-        $builder->add(
-            'preform',
-            SubmitType::class,
-            ['label_html' => true, 'attr' => ['class' => 'btn-primary']],
-        );
-
-
-        return;
-
-        $builder
-            ->add('name', ChoiceType::class, [
-                'choices' => $section,
-                'choice_value' => function(?WbObjectDTO $type) {
-                    return $type?->getCategory();
-                },
-                'choice_label' => function(WbObjectDTO $type) {
-                    return $type->getCategory();
-                },
-                'label' => false,
-                'expanded' => false,
-                'multiple' => false,
-                'required' => true,
-            ]);
-
-
-        if($currentProfile)
-        {
-            try
-            {
-                $section =
-                    iterator_to_array($this->objectReference
-                        ->profile($currentProfile)
-                        ->findObject());
-
-            }
-            catch(DomainException $e)
-            {
-                /** Если токен авторизации не найден */
-                $section = [];
-            }
-        }
-
-        $builder
-            ->add('name', ChoiceType::class, [
-                'choices' => $section,
-                'choice_value' => function(?WbObjectDTO $type) {
-                    return $type?->getCategory();
-                },
-                'choice_label' => function(WbObjectDTO $type) {
-                    return $type->getCategory();
-                },
-                'label' => false,
-                'expanded' => false,
-                'multiple' => false,
-                'required' => true,
-            ]);
-
-
-        $builder->add(
-            'parent',
-            ChoiceType::class,
-            ['disabled' => true, 'placeholder' => 'Выберите раздел для списка категорий'],
-        );
-
-        $formModifier = function(FormInterface $form, ?WbObjectDTO $name = null) use ($section) {
-
-            if($name)
-            {
-                $parent = [];
-
-                //$section->rewind();
-
-                if($section)
-                {
-                    $parent = $section;
-
-                    $parent = array_filter($parent, function($k) use ($name) {
-                        return $k->getCategory() === $name->getCategory();
-                    });
-                }
-
-                if(!empty($parent))
-                {
-
-                    //$parentChoice = array_column($parent, 'objectName', 'objectName');
-
-                    $form
-                        ->add('parent', ChoiceType::class, [
-                            'choices' => $parent,
-                            'choice_value' => function(?WbObjectDTO $type) {
-                                return $type?->getName();
-                            },
-                            'choice_label' => function(WbObjectDTO $type) {
-                                return $type->getName();
-                            },
-                            'label' => false,
-                            'expanded' => false,
-                            'multiple' => false,
-                            'required' => true,
-                            'placeholder' => 'Выберите категорию из списка...',
-                        ]);
-                }
-            }
-        };
-
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($formModifier) {
-
-
-            if(null === $event->getData()->name)
-            {
-                return;
-            }
-
-            $formModifier($event->getForm(), $event->getData()->name);
-        });
-
-        $builder->get('name')
-            ->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function(FormEvent $event) use ($formModifier) {
-                    $data = $event->getForm()
-                        ->getData();
-                    $formModifier(
-                        $event->getForm()->getParent(),
-                        $data,
-                    );
                 },
             );
 

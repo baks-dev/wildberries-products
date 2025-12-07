@@ -48,7 +48,7 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
 
     public const string PARAM = 'sizes';
 
-    public function __construct(private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest) {}
+    public function __construct(private ?FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest = null) {}
 
     public function getIndex(): string
     {
@@ -107,43 +107,45 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
             return false;
         }
 
-        // $size = [];
-
-        $card = $this->FindAllWildberriesCardsRequest
-            ->profile($data->getProfile())
-            ->findAll($data->getSearchArticle());
-
-        /**
-         * При создании новой карточки
-         */
-
-        if(false === $card || false === $card->valid())
+        if($this->FindAllWildberriesCardsRequest instanceof FindAllWildberriesCardsRequest)
         {
-            foreach($sizes as $item)
+            $card = $this->FindAllWildberriesCardsRequest
+                ->profile($data->getProfile())
+                ->findAll($data->getSearchArticle());
+
+            /**
+             * При создании новой карточки
+             */
+
+            if(false === $card || false === $card->valid())
             {
-                $price = new Money($item->price, true);
+                foreach($sizes as $item)
+                {
+                    $price = new Money($item->price, true);
 
-                $size[] = [
-                    //'chrtID' => $card->getChrt($item->value),
-                    //                    'techSize' =>
-                    //                        $data->getProductVariationValue()
-                    //                        .'/'.$data->getProductModificationValue()
-                    //                        .'R'.$data->getProductOfferValue(),
-                    //
-                    //                    'wbSize' => '0',
-                    'price' => $price->getRoundValue(), // Российский размер товара
-                    'skus' => [$item->barcode], // Российский размер товара
-                ];
+                    $size[] = [
+                        //'chrtID' => $card->getChrt($item->value),
+                        //                    'techSize' =>
+                        //                        $data->getProductVariationValue()
+                        //                        .'/'.$data->getProductModificationValue()
+                        //                        .'R'.$data->getProductOfferValue(),
+                        //
+                        //                    'wbSize' => '0',
+                        'price' => $price->getRoundValue(), // Российский размер товара
+                        'skus' => [$item->barcode], // Российский размер товара
+                    ];
 
-                return $size;
+                    return $size;
+                }
             }
         }
+
 
         /**
          * При обновлении существующей карточки
          */
 
-        $card = $card->current();
+        //$card = $card->current();
 
         /** @var WildberriesCardDTO $card */
         foreach($sizes as $item)

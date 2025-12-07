@@ -55,7 +55,7 @@ final readonly class WildberriesCardCreateDispatcher
             ->forOfferConst($message->getOfferConst())
             ->forVariationConst($message->getVariationConst())
             ->forModificationConst($message->getModificationConst())
-            ->findResult();
+            ->find();
 
         if(false === ($CurrentWildberriesProductCardResult instanceof WildberriesProductsCardResult))
         {
@@ -67,13 +67,23 @@ final readonly class WildberriesCardCreateDispatcher
             return;
         }
 
+        if(empty($CurrentWildberriesProductCardResult->getProductPrice()->getRoundValue()))
+        {
+            $this->logger->error(
+                sprintf('%s: Не добавляем карточку без цены', $CurrentWildberriesProductCardResult->getSearchArticle()),
+            );
+
+            return;
+        }
+
+
         $mapped = $this->wildberriesMapper->getData($CurrentWildberriesProductCardResult);
 
         if(false === $mapped)
         {
             $this->logger->warning(
                 sprintf('Ошибка: Product Uid: %s. Ошибка маппера WB',
-                    $message->getProduct())
+                    $message->getProduct()),
             );
 
             return;

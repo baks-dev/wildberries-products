@@ -80,6 +80,7 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
     public function isSetting(): bool
     {
         return true; /// 6109100000
+        /// 4011100009
     }
 
 

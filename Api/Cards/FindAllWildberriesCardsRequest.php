@@ -109,13 +109,14 @@ final class FindAllWildberriesCardsRequest extends Wildberries
                     return false;
                 }
 
-                $item->expiresAfter(DateInterval::createFromDateString('1 hours'));
+                $item->expiresAfter(DateInterval::createFromDateString('1 minutes'));
 
                 return $response->toArray(false);
             });
 
             if(false === $content)
             {
+                $cache->deleteItem($key);
                 return false;
             }
 

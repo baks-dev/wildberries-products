@@ -29,7 +29,7 @@ use BaksDev\Barcode\Writer\BarcodeWrite;
 use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Core\Type\UidType\ParamConverter;
-use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventInterface;
 use BaksDev\Products\Product\Type\Event\ProductEventUid;
 use BaksDev\Products\Product\Type\Offers\Id\ProductOfferUid;
 use BaksDev\Products\Product\Type\Offers\Variation\Id\ProductVariationUid;
@@ -56,7 +56,7 @@ final class PrintController extends AbstractController
         Request $request,
         #[Target('wildberriesProductsLogger')] LoggerInterface $logger,
         WbBarcodeSettingsInterface $WbBarcodeSettings,
-        ProductDetailByUidInterface $ProductDetailByUid,
+        ProductDetailByEventInterface $ProductDetailByUid,
         WbBarcodePropertyByProductEventInterface $wbBarcodeProperty,
         BarcodeWrite $BarcodeWrite,
         #[ParamConverter(ProductEventUid::class, key: 'product')] ProductEventUid $event,

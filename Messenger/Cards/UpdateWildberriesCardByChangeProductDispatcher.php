@@ -29,7 +29,7 @@ use BaksDev\Core\Messenger\MessageDispatchInterface;
 use BaksDev\Products\Product\Messenger\ProductMessage;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\ProductsIdentifierResult;
-use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByUidInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventInterface;
 use BaksDev\Products\Product\Type\Event\ProductEventUid;
 use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
@@ -37,7 +37,7 @@ use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreat
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
-use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileTokenInterface;
+use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -51,10 +51,10 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private AllProductsIdentifierInterface $AllProductsIdentifierRepository,
-        private AllProfileTokenInterface $allProfileToken,
+        private AllProfileWildberriesTokenInterface $allProfileToken,
         private MessageDispatchInterface $messageDispatch,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
-        private ProductDetailByUidInterface $ProductDetailByUidRepository,
+        private ProductDetailByEventInterface $ProductDetailByUidRepository,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
     ) {}
 
@@ -92,7 +92,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                     ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
                     ->forVariationConst($ProductsIdentifierResult->getProductVariationConst())
                     ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
-                    ->findResult();
+                    ->find();
 
                 if(false === ($currentProduct instanceof WildberriesProductsCardResult))
                 {
