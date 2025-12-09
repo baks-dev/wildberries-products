@@ -53,7 +53,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private AllProductsIdentifierInterface $AllProductsIdentifierRepository,
-        private AllProfileWildberriesTokenInterface $allProfileToken,
+        private AllProfileWildberriesTokenInterface $AllProfileWildberriesTokenRepository,
         private MessageDispatchInterface $messageDispatch,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
         private ProductDetailByEventInterface $ProductDetailByUidRepository,
@@ -63,9 +63,9 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
 
     public function __invoke(ProductMessage $message): void
     {
-        /**  Получаем активные токены профилей пользователя */
+        /**  Получаем все профили пользователей имеющие токены */
         $profiles = $this
-            ->allProfileToken
+            ->AllProfileWildberriesTokenRepository
             ->onlyActiveToken()
             ->findAll();
 
