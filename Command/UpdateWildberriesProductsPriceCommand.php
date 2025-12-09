@@ -31,11 +31,6 @@ use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventResult
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
-use BaksDev\Yandex\Market\Products\Messenger\Card\YaMarketProductsCardMessage;
-use BaksDev\Yandex\Market\Products\Messenger\YaMarketProductsPriceUpdate\YaMarketProductsPriceMessage;
-use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardInterface;
-use BaksDev\Yandex\Market\Products\Repository\Card\CurrentYaMarketProductsCard\CurrentYaMarketProductCardResult;
-use BaksDev\Yandex\Market\Repository\AllProfileToken\AllProfileYaMarketTokenInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -75,7 +70,7 @@ class UpdateWildberriesProductsPriceCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        /** Получаем активные токены авторизации профилей Yandex Market */
+        /** Получаем активные токены авторизации профилей Wildberries */
         $profiles = $this->AllProfileWildberriesToken
             ->onlyActiveToken()
             ->findAll();

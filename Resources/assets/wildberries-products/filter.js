@@ -20,7 +20,7 @@
  *  THE SOFTWARE.
  */
 
-executeFunc(function yandexMarketProductsFunction()
+executeFunc(function WildberriesProductsFunction()
 {
     if(typeof formDebounce !== "function")
     {

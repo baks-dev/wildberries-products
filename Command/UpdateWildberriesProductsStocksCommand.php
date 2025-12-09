@@ -70,7 +70,7 @@ class UpdateWildberriesProductsStocksCommand extends Command
     {
         $this->io = new SymfonyStyle($input, $output);
 
-        /** Получаем активные токены авторизации профилей Yandex Market */
+        /** Получаем активные токены авторизации профилей Wildberries */
         $profiles = $this->AllProfileWildberriesToken
             ->onlyActiveToken()
             ->findAll();

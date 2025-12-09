@@ -46,7 +46,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 final readonly class WildberriesProductsStocksDispatcher
 {
     public function __construct(
-        #[Target('yandexMarketProductsLogger')] private LoggerInterface $logger,
+        #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private MessageDispatchInterface $messageDispatch,
         private ProductTotalInOrdersInterface $ProductTotalInOrders,
         private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
@@ -170,7 +170,7 @@ final readonly class WildberriesProductsStocksDispatcher
             /**
              * TRUE - возвращается в случае если продажи остановлены, следовательно, не сверяем остатки, а всегда обнуляем
              *
-             * @see UpdateYaMarketProductStocksRequest:79
+             * @see UpdateWildberriesProductStocksRequest:79
              */
             if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
             {
