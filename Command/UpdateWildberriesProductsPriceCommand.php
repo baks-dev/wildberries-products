@@ -31,6 +31,7 @@ use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventResult
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -55,6 +56,7 @@ class UpdateWildberriesProductsPriceCommand extends Command
         private readonly AllProfileWildberriesTokenInterface $AllProfileWildberriesToken,
         private readonly AllProductsIdentifierInterface $allProductsIdentifier,
         private readonly ProductDetailByEventInterface $ProductDetailByEventRepository,
+        private readonly AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private readonly MessageDispatchInterface $messageDispatch
     )
     {
@@ -171,6 +173,22 @@ class UpdateWildberriesProductsPriceCommand extends Command
             return;
         }
 
+
+        /**
+         * Получаем все токены профиля
+         */
+
+        $tokensByProfile = $this->AllWbTokensByProfileRepository
+            ->forProfile($UserProfileUid)
+            ->findAll();
+
+        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        {
+            return;
+        }
+
+        $tokens = iterator_to_array($tokensByProfile);
+
         foreach($products as $ProductsIdentifierResult)
         {
             $ProductDetailByEventResult = $this->ProductDetailByEventRepository
@@ -200,21 +218,25 @@ class UpdateWildberriesProductsPriceCommand extends Command
             }
 
 
-            $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
-                $UserProfileUid,
-                $ProductsIdentifierResult->getProductId(),
-                $ProductsIdentifierResult->getProductOfferConst(),
-                $ProductsIdentifierResult->getProductVariationConst(),
-                $ProductsIdentifierResult->getProductModificationConst(),
-                $ProductDetailByEventResult->getProductArticle(),
-            );
+            foreach($tokens as $WbTokenUid)
+            {
+                $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
+                    profile: $UserProfileUid,
+                    identifier: $WbTokenUid,
+                    product: $ProductsIdentifierResult->getProductId(),
+                    offerConst: $ProductsIdentifierResult->getProductOfferConst(),
+                    variationConst: $ProductsIdentifierResult->getProductVariationConst(),
+                    modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                    article: $ProductDetailByEventResult->getProductArticle(),
+                );
 
+                /** Консольную комманду выполняем синхронно */
+                $this->messageDispatch->dispatch(
+                    message: $UpdateWildberriesCardPriceMessage,
+                    transport: $async === true ? $UserProfileUid.'-low' : null,
+                );
+            }
 
-            /** Консольную комманду выполняем синхронно */
-            $this->messageDispatch->dispatch(
-                message: $UpdateWildberriesCardPriceMessage,
-                transport: $async === true ? $UserProfileUid.'-low' : null,
-            );
 
             $this->io->text(sprintf('Обновили артикул %s', $ProductDetailByEventResult->getProductArticle()));
 

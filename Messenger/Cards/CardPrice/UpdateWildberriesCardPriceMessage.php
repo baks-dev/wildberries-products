@@ -30,6 +30,7 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class UpdateWildberriesCardPriceMessage
@@ -45,9 +46,11 @@ final class UpdateWildberriesCardPriceMessage
 
     private ?string $modificationConst;
 
+    private ?string $identifier;
 
     public function __construct(
         UserProfileUid $profile,
+        WbTokenUid $identifier,
         ProductUid $product,
         ProductOfferConst|false $offerConst,
         ProductVariationConst|false $variationConst,
@@ -56,15 +59,23 @@ final class UpdateWildberriesCardPriceMessage
     )
     {
         $this->profile = (string) $profile;
+        $this->identifier = (string) $identifier;
+
         $this->product = (string) $product;
         $this->offerConst = false === empty($offerConst) ? (string) $offerConst : null;
         $this->variationConst = false === empty($variationConst) ? (string) $variationConst : null;
         $this->modificationConst = false === empty($modificationConst) ? (string) $modificationConst : null;
+
     }
 
     public function getProfile(): UserProfileUid
     {
         return new UserProfileUid($this->profile);
+    }
+
+    public function getIdentifier(): WbTokenUid
+    {
+        return new WbTokenUid($this->identifier);
     }
 
     public function getProduct(): ProductUid

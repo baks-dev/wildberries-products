@@ -33,7 +33,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /** Метод обновляет группу карточки */
 #[AsMessageHandler(priority: 0)]
-final class WildberriesCardGroupDispatcher
+final readonly class WildberriesCardGroupDispatcher
 {
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
@@ -42,9 +42,8 @@ final class WildberriesCardGroupDispatcher
 
     public function __invoke(WildberriesCardGroupMessage $message): void
     {
-
         $isUpdate = $this->UnionWildberriesProductCardsRequest
-            ->profile($message->getProfile())
+            ->forTokenIdentifier($message->getIdentifier())
             ->nomenclature($message->getNomenclature())
             ->group($message->getGroup())
             ->update();

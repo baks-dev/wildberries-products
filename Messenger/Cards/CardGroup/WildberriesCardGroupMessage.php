@@ -26,25 +26,26 @@ declare(strict_types=1);
 namespace BaksDev\Wildberries\Products\Messenger\Cards\CardGroup;
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** @see WildberriesCardGroupMessage */
 final class WildberriesCardGroupMessage
 {
-    private string $profile;
+    private string $identifier;
 
     public function __construct(
-        UserProfileUid $profile,
+        WbTokenUid $identifier,
         private readonly int $nomenclature,
         private readonly ?int $group
     )
     {
-        $this->profile = (string) $profile;
+        $this->identifier = (string) $identifier;
     }
 
-    public function getProfile(): UserProfileUid
+    public function getIdentifier(): WbTokenUid
     {
-        return new UserProfileUid($this->profile);
+        return new WbTokenUid($this->identifier);
     }
 
     public function getNomenclature(): int

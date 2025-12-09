@@ -104,7 +104,7 @@ final class GetWbFbsStocksRequest extends Wildberries
             return 0;
         }
 
-        $stock = array_filter($content['stocks'], static fn($v) => $v['sku'] === $this->barcode);
+        $stock = array_filter($content['stocks'], fn($v) => $v['sku'] === $this->barcode);
 
         if(empty($stock))
         {

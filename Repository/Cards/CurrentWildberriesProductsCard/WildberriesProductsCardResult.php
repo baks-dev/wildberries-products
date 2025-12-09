@@ -77,7 +77,7 @@ final class WildberriesProductsCardResult
         private readonly ?string $product_property,
         private readonly ?string $product_params,
         private readonly ?string $product_currency,
-        private readonly ?int $product_quantity,
+        private readonly ?string $product_quantity,
         private readonly ?int $market_category,
     ) {}
 
@@ -321,9 +321,29 @@ final class WildberriesProductsCardResult
         return $this->product_currency;
     }
 
-    public function getProductQuantity(): ?int
+    public function getProductQuantity(): int
     {
-        return $this->product_quantity;
+        if(empty($this->product_quantity))
+        {
+            return 0;
+        }
+
+        if(false === json_validate($this->product_quantity))
+        {
+            return 0;
+        }
+
+        $decode = json_decode($this->product_quantity, false, 512, JSON_THROW_ON_ERROR);
+
+        $quantity = 0;
+
+        foreach($decode as $item)
+        {
+            $quantity += $item->total;
+            $quantity -= $item->reserve;
+        }
+
+        return max($quantity, 0);
     }
 
     public function getMarketCategory(): ?int

@@ -32,6 +32,7 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 
 final class WildberriesProductsStocksMessage
 {
@@ -39,6 +40,11 @@ final class WildberriesProductsStocksMessage
      * Идентификатор профиля пользователя
      */
     private string $profile;
+
+    /**
+     * Идентификатор токена профиля
+     */
+    private string $identifier;
 
     /**
      * ID продукта
@@ -62,6 +68,7 @@ final class WildberriesProductsStocksMessage
 
     public function __construct(
         UserProfileUid|string $profile,
+        WbTokenUid $identifier,
         Product|ProductUid|string $product,
 
         ProductOfferConst|string|null|false $offerConst,
@@ -70,6 +77,7 @@ final class WildberriesProductsStocksMessage
     )
     {
         $this->profile = (string) $profile;
+        $this->identifier = (string) $identifier;
         $this->product = (string) $product;
 
         $this->offerConst = $offerConst ? (string) $offerConst : false;
@@ -83,6 +91,11 @@ final class WildberriesProductsStocksMessage
     public function getProfile(): UserProfileUid
     {
         return new UserProfileUid($this->profile);
+    }
+
+    public function getIdentifier(): WbTokenUid
+    {
+        return new WbTokenUid($this->identifier);
     }
 
     /**

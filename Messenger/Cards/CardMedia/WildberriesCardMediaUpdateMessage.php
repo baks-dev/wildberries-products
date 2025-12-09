@@ -32,11 +32,14 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 
 final class WildberriesCardMediaUpdateMessage
 {
 
     private string $profile;
+
+    private string $identifier;
 
     private string $product;
 
@@ -50,7 +53,7 @@ final class WildberriesCardMediaUpdateMessage
 
 
     public function __construct(
-        UserProfileUid $profile,
+        WbTokenUid $identifier,
         ProductUid $product,
         ProductOfferConst|false $offerConst,
         ProductVariationConst|false $variationConst,
@@ -59,7 +62,7 @@ final class WildberriesCardMediaUpdateMessage
         private readonly string $article
     )
     {
-        $this->profile = (string) $profile;
+        $this->identifier = (string) $identifier;
         $this->product = (string) $product;
         $this->offerConst = false === empty($offerConst) ? (string) $offerConst : null;
         $this->variationConst = false === empty($variationConst) ? (string) $variationConst : null;
@@ -68,9 +71,10 @@ final class WildberriesCardMediaUpdateMessage
         $this->invariable = (string) $invariable;
     }
 
-    public function getProfile(): UserProfileUid
+
+    public function getIdentifier(): WbTokenUid
     {
-        return new UserProfileUid($this->profile);
+        return new WbTokenUid($this->identifier);
     }
 
     public function getProduct(): ProductUid

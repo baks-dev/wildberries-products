@@ -36,8 +36,10 @@ use BaksDev\Orders\Order\UseCase\Admin\Edit\EditOrderDTO;
 use BaksDev\Orders\Order\UseCase\Admin\Edit\Products\OrderProductDTO;
 use BaksDev\Products\Product\Repository\CurrentProductIdentifier\CurrentProductIdentifierByEventInterface;
 use BaksDev\Products\Product\Repository\CurrentProductIdentifier\CurrentProductIdentifierResult;
+use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardStocks\WildberriesProductsStocksMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler(priority: 0)]
@@ -45,6 +47,7 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
 {
     public function __construct(
         private AllProfileWildberriesTokenInterface $AllProfileWildberriesTokenRepository,
+        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private CurrentProductIdentifierByEventInterface $currentProductIdentifier,
         private CurrentOrderEventInterface $CurrentOrderEvent,
         private DeduplicatorInterface $deduplicator,
@@ -53,19 +56,6 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
 
     public function __invoke(OrderMessage $message): void
     {
-
-        /**  Получаем активные токены профилей пользователя */
-
-        $profiles = $this->AllProfileWildberriesTokenRepository
-            ->onlyActiveToken()
-            ->findAll();
-
-        if(false === $profiles || false === $profiles->valid())
-        {
-            return;
-        }
-
-
         /** Получаем событие заказа */
         $OrderEvent = $this->CurrentOrderEvent
             ->forOrder($message->getId())
@@ -74,6 +64,25 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
         if(false === ($OrderEvent instanceof OrderEvent))
         {
             return;
+        }
+
+
+        /** Если имеется информация о профиле заказа - обновляем только указанный профиль  */
+        if($OrderEvent->getOrderProfile() instanceof UserProfileUid)
+        {
+            $profiles = [$OrderEvent->getOrderProfile()];
+        }
+        else
+        {
+            /**  Получаем активные все активные профили у которых имеется токен Wildberries */
+            $profiles = $this->AllProfileWildberriesTokenRepository
+                ->onlyActiveToken()
+                ->findAll();
+
+            if(false === $profiles || false === $profiles->valid())
+            {
+                return;
+            }
         }
 
 
@@ -104,39 +113,53 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
 
         foreach($profiles as $UserProfileUid)
         {
-            /** @var OrderProductDTO $product */
-            foreach($EditOrderDTO->getProduct() as $product)
+            /** Получаем все токены авторизации профиля */
+
+            $tokens = $this->AllWbTokensByProfileRepository
+                ->forProfile($UserProfileUid)
+                ->findAll();
+
+            if(false === $tokens || false === $tokens->valid())
             {
-                /** Получаем идентификаторы обновляемой продукции для получения констант  */
-                $CurrentProductIdentifier = $this->currentProductIdentifier
-                    ->forEvent($product->getProduct())
-                    ->forOffer($product->getOffer())
-                    ->forVariation($product->getVariation())
-                    ->forModification($product->getModification())
-                    ->find();
+                continue;
+            }
 
-                if(false === ($CurrentProductIdentifier instanceof CurrentProductIdentifierResult))
+            foreach($tokens as $WbTokenUid)
+            {
+                /** @var OrderProductDTO $product */
+                foreach($EditOrderDTO->getProduct() as $product)
                 {
-                    continue;
+                    /** Получаем идентификаторы обновляемой продукции для получения констант  */
+                    $CurrentProductIdentifier = $this->currentProductIdentifier
+                        ->forEvent($product->getProduct())
+                        ->forOffer($product->getOffer())
+                        ->forVariation($product->getVariation())
+                        ->forModification($product->getModification())
+                        ->find();
+
+                    if(false === ($CurrentProductIdentifier instanceof CurrentProductIdentifierResult))
+                    {
+                        continue;
+                    }
+
+                    $WildberriesProductsStocksMessage = new WildberriesProductsStocksMessage(
+                        profile: $UserProfileUid,
+                        identifier: $WbTokenUid,
+                        product: $CurrentProductIdentifier->getProduct(),
+                        offerConst: $CurrentProductIdentifier->getOfferConst(),
+                        variationConst: $CurrentProductIdentifier->getVariationConst(),
+                        modificationConst: $CurrentProductIdentifier->getModificationConst(),
+                    );
+
+                    /** Добавляем в очередь обновление остатков через транспорт профиля */
+
+                    $this->messageDispatch->dispatch(
+                        message: $WildberriesProductsStocksMessage,
+                        stamps: [new MessageDelay('5 seconds')],
+                        transport: (string) $UserProfileUid,
+                    );
                 }
-
-                $WildberriesProductsStocksMessage = new WildberriesProductsStocksMessage(
-                    $UserProfileUid,
-                    $CurrentProductIdentifier->getProduct(),
-                    $CurrentProductIdentifier->getOfferConst(),
-                    $CurrentProductIdentifier->getVariationConst(),
-                    $CurrentProductIdentifier->getModificationConst(),
-                );
-
-                /** Добавляем в очередь обновление остатков через транспорт профиля */
-
-                $this->messageDispatch->dispatch(
-                    message: $WildberriesProductsStocksMessage,
-                    stamps: [new MessageDelay('5 seconds')],
-                    transport: (string) $UserProfileUid,
-                );
             }
         }
-
     }
 }

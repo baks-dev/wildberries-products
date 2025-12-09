@@ -27,11 +27,16 @@ namespace BaksDev\Wildberries\Products\Messenger\Cards\CardCreate;
 
 use BaksDev\Core\Messenger\MessageDelay;
 use BaksDev\Core\Messenger\MessageDispatchInterface;
+use BaksDev\Products\Product\Repository\CurrentProductIdentifier\CurrentProductIdentifierByConstInterface;
+use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesProductCreateCardRequest;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardMedia\WildberriesCardMediaUpdateMessage;
+use BaksDev\Wildberries\Products\Messenger\Cards\CardPrice\UpdateWildberriesCardPriceMessage;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -43,21 +48,62 @@ final readonly class WildberriesCardCreateDispatcher
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private WildberriesProductCreateCardRequest $WildberriesProductCreateCardRequest,
+        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
+        private CurrentProductIdentifierByConstInterface $CurrentProductIdentifierByConstRepository,
         private WildberriesMapper $wildberriesMapper,
         private MessageDispatchInterface $messageDispatch
     ) {}
 
     public function __invoke(WildberriesCardCreateMessage $message): void
     {
-        $CurrentWildberriesProductCardResult = $this->WildberriesProductsCardRepository
+        /**
+         * Получаем все токены профиля
+         */
+
+        $tokensByProfile = $this->AllWbTokensByProfileRepository
             ->forProfile($message->getProfile())
+            ->findAll();
+
+        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        {
+            return;
+        }
+
+
+        /**
+         * Получаем активные идентификаторы карточки
+         */
+
+        $CurrentProductIdentifierResult = $this->CurrentProductIdentifierByConstRepository
             ->forProduct($message->getProduct())
             ->forOfferConst($message->getOfferConst())
             ->forVariationConst($message->getVariationConst())
             ->forModificationConst($message->getModificationConst())
             ->find();
 
-        if(false === ($CurrentWildberriesProductCardResult instanceof WildberriesProductsCardResult))
+        if(false === ($CurrentProductIdentifierResult->getBarcode() instanceof ProductBarcode))
+        {
+            $this->logger->critical('wildberries-products: Ошибка при получении штрихкода при обновлении остатка', [
+                self::class.':'.__LINE__, var_export($CurrentProductIdentifierResult, true),
+            ]);
+
+            return;
+        }
+
+
+        /**
+         * Получаем карточку товара Wildberries для остатка
+         */
+
+        $WildberriesProductsCardResult = $this->WildberriesProductsCardRepository
+            ->forProduct($message->getProduct())
+            ->forOfferConst($message->getOfferConst())
+            ->forVariationConst($message->getVariationConst())
+            ->forModificationConst($message->getModificationConst())
+            ->forProfile($message->getProfile())
+            ->find();
+
+        if(false === ($WildberriesProductsCardResult instanceof WildberriesProductsCardResult))
         {
             $this->logger->warning(
                 sprintf('Ошибка: Product Uid: %s. Информация о продукте не была найдена',
@@ -67,17 +113,17 @@ final readonly class WildberriesCardCreateDispatcher
             return;
         }
 
-        if(empty($CurrentWildberriesProductCardResult->getProductPrice()->getRoundValue()))
+        if(empty($WildberriesProductsCardResult->getProductPrice()->getRoundValue()))
         {
             $this->logger->error(
-                sprintf('%s: Не добавляем карточку без цены', $CurrentWildberriesProductCardResult->getSearchArticle()),
+                sprintf('%s: Не добавляем карточку без цены', $WildberriesProductsCardResult->getSearchArticle()),
             );
 
             return;
         }
 
 
-        $mapped = $this->wildberriesMapper->getData($CurrentWildberriesProductCardResult);
+        $mapped = $this->wildberriesMapper->getData($WildberriesProductsCardResult);
 
         if(false === $mapped)
         {
@@ -94,43 +140,66 @@ final readonly class WildberriesCardCreateDispatcher
             "variants" => [$mapped],
         ];
 
-        $create = $this->WildberriesProductCreateCardRequest
-            ->profile($message->getProfile())
-            ->create($requestData);
 
-        if(false === $create)
+        foreach($tokensByProfile as $WbTokenUid)
         {
+            $isCreate = $this->WildberriesProductCreateCardRequest
+                ->forTokenIdentifier($WbTokenUid)
+                ->create($requestData);
+
+            if(false === $isCreate)
+            {
+                /**
+                 * Ошибка запишется в лог
+                 *
+                 * @see WildberriesProductCreateCardRequest
+                 */
+                continue;
+            }
+
+
+            $this->logger->info(sprintf('Создали карточку товара %s', $message->getProduct()));
+
             /**
-             * Ошибка запишется в лог
-             *
-             * @see WildberriesProductCreateCardRequest
+             * Обновляем стоимость товара
              */
-            return;
+
+            $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
+                profile: $message->getProfile(),
+                identifier: $WbTokenUid,
+                product: $message->getProduct(),
+                offerConst: $message->getOfferConst(),
+                variationConst: $message->getVariationConst(),
+                modificationConst: $message->getModificationConst(),
+                article: $message->getArticle(),
+            );
+
+            $this->messageDispatch->dispatch(
+                message: $UpdateWildberriesCardPriceMessage,
+                stamps: [new MessageDelay('5 seconds')],
+                transport: $message->getProfile().'-low',
+            );
+
+
+            /**
+             * Обновляем файлы изображений
+             */
+
+            $WildberriesCardMediaUpdateMessage = new WildberriesCardMediaUpdateMessage(
+                identifier: $WbTokenUid,
+                product: $message->getProduct(),
+                offerConst: $message->getOfferConst(),
+                variationConst: $message->getVariationConst(),
+                modificationConst: $message->getModificationConst(),
+                invariable: $message->getInvariable(),
+                article: $message->getArticle(),
+            );
+
+            $this->messageDispatch->dispatch(
+                message: $WildberriesCardMediaUpdateMessage,
+                stamps: [new MessageDelay('10 seconds')],
+                transport: $message->getProfile().'-low',
+            );
         }
-
-
-        /**
-         * Обновляем файлы изображений
-         */
-
-        $WildberriesCardMediaUpdateMessage = new WildberriesCardMediaUpdateMessage(
-            profile: $message->getProfile(),
-            product: $message->getProduct(),
-            offerConst: $message->getOfferConst(),
-            variationConst: $message->getVariationConst(),
-            modificationConst: $message->getModificationConst(),
-            invariable: $message->getInvariable(),
-            article: $message->getArticle(),
-        );
-
-        $this->messageDispatch->dispatch(
-            message: $WildberriesCardMediaUpdateMessage,
-            stamps: [new MessageDelay('10 seconds')],
-            transport: $message->getProfile().'-low',
-        );
-
-
-        /** TODO Сделать добавление цены и остатков */
-        $this->logger->info(sprintf('Создали карточку товара %s', $message->getProduct()));
     }
 }

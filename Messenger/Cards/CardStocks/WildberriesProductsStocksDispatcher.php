@@ -49,7 +49,6 @@ final readonly class WildberriesProductsStocksDispatcher
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private MessageDispatchInterface $messageDispatch,
         private ProductTotalInOrdersInterface $ProductTotalInOrders,
-        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private GetWbFbsStocksRequest $GetWbFbsStocksRequest,
         private CurrentProductIdentifierByConstInterface $CurrentProductIdentifierByConstRepository,
@@ -61,20 +60,6 @@ final readonly class WildberriesProductsStocksDispatcher
      */
     public function __invoke(WildberriesProductsStocksMessage $message): void
     {
-
-        /**
-         * Получаем все токены профиля
-         */
-
-        $tokensByProfile = $this->AllWbTokensByProfileRepository
-            ->forProfile($message->getProfile())
-            ->findAll();
-
-        if(false === $tokensByProfile || false === $tokensByProfile->valid())
-        {
-            return;
-        }
-
         /**
          * Получаем активные идентификаторы карточки
          */
@@ -100,11 +85,11 @@ final readonly class WildberriesProductsStocksDispatcher
          */
 
         $WildberriesProductsCardResult = $this->WildberriesProductsCardRepository
+            ->forProfile($message->getProfile())
             ->forProduct($message->getProduct())
             ->forOfferConst($message->getOfferConst())
             ->forVariationConst($message->getVariationConst())
             ->forModificationConst($message->getModificationConst())
-            ->forProfile($message->getProfile())
             ->find();
 
         if(false === ($WildberriesProductsCardResult instanceof WildberriesProductsCardResult))
@@ -140,63 +125,62 @@ final readonly class WildberriesProductsStocksDispatcher
 
         $ProductQuantity = max($ProductQuantity, 0);
 
-        foreach($tokensByProfile as $WbTokenUid)
+
+        // -----------------------------------------------------------
+
+        /** Возвращает данные об остатках товаров на маркетплейсе */
+        $ProductStocksWildberries = $this->GetWbFbsStocksRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
+            ->find();
+
+        if(false === $ProductStocksWildberries)
         {
-            // -----------------------------------------------------------
+            $this->messageDispatch->dispatch(
+                message: $message,
+                stamps: [new MessageDelay('30 seconds')],
+                transport: $message->getProfile().'-low',
+            );
 
-            /** Возвращает данные об остатках товаров на маркетплейсе */
-            $ProductStocksWildberries = $this->GetWbFbsStocksRequest
-                ->forTokenIdentifier($WbTokenUid)
-                ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
-                ->find();
-
-            if(false === $ProductStocksWildberries)
-            {
-                $this->messageDispatch->dispatch(
-                    message: $message,
-                    stamps: [new MessageDelay('30 seconds')],
-                    transport: $message->getProfile().'-low',
-                );
-
-                $this->logger->critical(sprintf(
-                    'Пробуем обновить остатки штрихкода %s через 30 секунд',
-                    $CurrentProductIdentifierResult->getBarcode(),
-                ));
-
-                continue;
-            }
-
-
-            /**
-             * TRUE - возвращается в случае если продажи остановлены, следовательно, не сверяем остатки, а всегда обнуляем
-             *
-             * @see UpdateWildberriesProductStocksRequest:79
-             */
-            if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
-            {
-                $this->logger->info(sprintf(
-                    'Наличие соответствует %s: %s == %s',
-                    $CurrentProductIdentifierResult->getBarcode(),
-                    $ProductStocksWildberries->getTotal(),
-                    $ProductQuantity,
-                ), [$WbTokenUid]);
-
-                continue;
-            }
-
-            /** Обновляем остатки товара если наличие изменилось */
-            $this->UpdateWbFbsStocksRequest
-                ->forTokenIdentifier($WbTokenUid)
-                ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
-                ->setTotal($ProductQuantity)
-                ->update();
-
-            $this->logger->info(sprintf(
-                'Обновили наличие %s: => %s',
+            $this->logger->critical(sprintf(
+                'Пробуем обновить остатки штрихкода %s через 30 секунд',
                 $CurrentProductIdentifierResult->getBarcode(),
-                $ProductQuantity,
-            ), [$WbTokenUid]);
+            ));
 
+            return;
         }
+
+
+        /**
+         * TRUE - возвращается в случае если продажи остановлены, следовательно, не сверяем остатки, а всегда обнуляем
+         *
+         * @see UpdateWildberriesProductStocksRequest:79
+         */
+        if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
+        {
+            $this->logger->info(sprintf(
+                'Наличие соответствует %s: %s == %s',
+                $CurrentProductIdentifierResult->getBarcode(),
+                $ProductStocksWildberries,
+                $ProductQuantity,
+            ), [$message->getIdentifier()]);
+
+            return;
+        }
+
+        /** Обновляем остатки товара если наличие изменилось */
+        $this->UpdateWbFbsStocksRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
+            ->setTotal($ProductQuantity)
+            ->update();
+
+        $this->logger->info(sprintf(
+            'Обновили наличие %s: => %s',
+            $CurrentProductIdentifierResult->getBarcode(),
+            $ProductQuantity,
+        ), [$message->getIdentifier()]);
+
+
     }
 }

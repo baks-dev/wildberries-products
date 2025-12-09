@@ -70,7 +70,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
         /** Получаем текущее состояние карточки Wildberries */
 
         $wbCard = $this->FindAllWildberriesCardsRequest
-            ->profile($message->getProfile())
+            ->forTokenIdentifier($message->getIdentifier())
             ->findAll($message->getArticle());
 
 
@@ -89,7 +89,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         $WildberriesCardDTO = $wbCard->current();
 
-        $mages = null;
+        $images = null;
 
 
         /** Первыми отправляем кастомные фото */
@@ -100,7 +100,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
         {
             if($custom['product_image_cdn'])
             {
-                $mages[] = 'https://'.$this->cdnHost
+                $images[] = 'https://'.$this->cdnHost
                     .$custom['product_image']
                     .'/large.'
                     .$custom['product_image_ext'];
@@ -108,7 +108,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
                 continue;
             }
 
-            $mages[] = 'https://'.$this->host
+            $images[] = 'https://'.$this->host
                 .$custom['product_image']
                 .'/image.'
                 .$custom['product_image_ext'];
@@ -121,7 +121,7 @@ final readonly class WildberriesCardMediaUpdateDispatcher
         {
             if($image['product_image_cdn'])
             {
-                $mages[] = 'https://'.$this->cdnHost
+                $images[] = 'https://'.$this->cdnHost
                     .$image['product_image']
                     .'/large.'
                     .$image['product_image_ext'];
@@ -129,15 +129,15 @@ final readonly class WildberriesCardMediaUpdateDispatcher
                 continue;
             }
 
-            $mages[] = 'https://'.$this->host
+            $images[] = 'https://'.$this->host
                 .$image['product_image']
                 .'/image.'
                 .$image['product_image_ext'];
         }
 
         $this->WildberriesProductMediaCardRequest
-            ->profile($message->getProfile())
+            ->forTokenIdentifier($message->getIdentifier())
             ->nomenclature($WildberriesCardDTO->getId())
-            ->update($mages);
+            ->update($images);
     }
 }

@@ -31,6 +31,7 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
 
 #[Exclude]
@@ -56,7 +57,7 @@ final readonly class WildberriesCardUpdateMessage
         ProductVariationConst|false $variationConst,
         ProductModificationConst|false $modificationConst,
         ProductInvariableUid $invariable,
-        private string $article
+        private string $article,
     )
     {
         $this->profile = (string) $profile;

@@ -32,6 +32,7 @@ use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
@@ -40,18 +41,33 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * Метод обновляет цены на товар
  */
 #[AsMessageHandler(priority: 0)]
-final class UpdateWildberriesCardPriceDispatcher
+final readonly class UpdateWildberriesCardPriceDispatcher
 {
     public function __construct(
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private UpdateWildberriesProductPriceRequest $UpdateWildberriesProductPriceRequest,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
+        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private WildberriesMapper $wildberriesMapper,
     ) {}
 
     public function __invoke(UpdateWildberriesCardPriceMessage $message): void
     {
+        /**
+         * Получаем все токены профиля
+         */
+
+        $tokensByProfile = $this->AllWbTokensByProfileRepository
+            ->forProfile($message->getProfile())
+            ->findAll();
+
+        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        {
+            return;
+        }
+
+
         $CurrentWildberriesProductCardResult = $this->WildberriesProductsCardRepository
             ->forProfile($message->getProfile())
             ->forProduct($message->getProduct())
@@ -105,10 +121,6 @@ final class UpdateWildberriesCardPriceDispatcher
         /** @var WildberriesCardDTO $WildberriesCardDTO */
         $WildberriesCardDTO = $wbCard->current();
 
-        $this->UpdateWildberriesProductPriceRequest
-            ->profile($message->getProfile())
-            ->nomenclature($WildberriesCardDTO->getId());
-
 
         /**
          * Для товаров, позволяющих указывать цены на размеры - находим идентификатор размера
@@ -132,24 +144,31 @@ final class UpdateWildberriesCardPriceDispatcher
         //            }
         //        }
 
-        foreach($requestData['sizes'] as $size)
+        foreach($tokensByProfile as $WbTokenUid)
         {
-            $isUpdate = $this->UpdateWildberriesProductPriceRequest
-                ->price($size['price'])
-                ->update();
-
-            if(false === $isUpdate)
+            foreach($requestData['sizes'] as $size)
             {
-                $this->logger->warning(
-                    sprintf('%s: Пробуем обновить стоимость товара позже', $message->getArticle()),
+                $isUpdate = $this->UpdateWildberriesProductPriceRequest
+                    ->forTokenIdentifier($WbTokenUid)
+                    ->nomenclature($WildberriesCardDTO->getId())
+                    ->price($size['price'])
+                    ->update();
+
+                if(false === $isUpdate)
+                {
+                    $this->logger->warning(
+                        sprintf('%s: Пробуем обновить стоимость товара позже', $message->getArticle()),
+                    );
+
+                    continue;
+                }
+
+                $this->logger->info(
+                    sprintf('%s: Обновили стоимость артикула', $message->getArticle()),
                 );
-
-                continue;
             }
-
-            $this->logger->info(
-                sprintf('%s: Обновили стоимость артикула', $message->getArticle()),
-            );
         }
+
+
     }
 }
