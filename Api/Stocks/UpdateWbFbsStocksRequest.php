@@ -100,6 +100,19 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         {
             $content = $response->toArray(false);
 
+            if($content['code'] === 'NotFound')
+            {
+                $this->logger->critical(
+                    sprintf('wildberries-manufacture: Ошибка обновления остатков FBS. Карточки товара не найдено'),
+                    [
+                        self::class.':'.__LINE__,
+                        $content,
+                    ]);
+
+                return true;
+            }
+
+
             $this->logger->critical(
                 sprintf('wildberries-manufacture: Ошибка обновления остатков FBS'),
                 [
