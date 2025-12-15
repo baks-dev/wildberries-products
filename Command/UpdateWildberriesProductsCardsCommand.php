@@ -38,6 +38,7 @@ use BaksDev\Wildberries\Products\Messenger\Cards\CardCreate\WildberriesCardCreat
 use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdateMessage;
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
 use DateInterval;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -66,6 +67,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
         private readonly ProductDetailByEventInterface $ProductDetailByEventRepository,
         private readonly MessageDispatchInterface $messageDispatch,
         private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
+        private readonly AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private readonly AppCacheInterface $appCache
     )
     {
@@ -186,6 +188,22 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             return;
         }
 
+        /**
+         * Получаем все токены профиля
+         */
+
+        $tokensByProfile = $this->AllWbTokensByProfileRepository
+            ->forProfile($UserProfileUid)
+            ->findAll();
+
+        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        {
+            return;
+        }
+
+        $tokens = iterator_to_array($tokensByProfile);
+
+
         /** @var ProductsIdentifierResult $ProductsIdentifierResult */
         foreach($products as $ProductsIdentifierResult)
         {
@@ -215,16 +233,79 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 continue;
             }
 
-            $wbCard = $this->FindAllWildberriesCardsRequest
-                ->profile($UserProfileUid)
-                ->allPhoto()
-                ->findAll($ProductDetailByEventResult->getProductArticle());
 
-
-            /** Если карточка на WB не существует и ее нужно создать */
-            if(false === $wbCard || false === $wbCard->valid())
+            foreach($tokens as $WbTokenUid)
             {
-                $wildberriesProductCardCreateMessage = new WildberriesCardCreateMessage(
+                $wbCard = $this->FindAllWildberriesCardsRequest
+                    ->forTokenIdentifier($WbTokenUid)
+                    ->allPhoto()
+                    ->findAll($ProductDetailByEventResult->getProductArticle());
+
+                /** Если карточка на WB не существует и ее нужно создать */
+                if(false === $wbCard || false === $wbCard->valid())
+                {
+                    $wildberriesProductCardCreateMessage = new WildberriesCardCreateMessage(
+                        profile: $UserProfileUid,
+                        product: $ProductsIdentifierResult->getProductId(),
+                        offerConst: $ProductsIdentifierResult->getProductOfferConst(),
+                        variationConst: $ProductsIdentifierResult->getProductVariationConst(),
+                        modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
+                        invariable: $ProductsIdentifierResult->getProductInvariable(),
+                        article: $ProductDetailByEventResult->getProductArticle(),
+                    );
+
+                    /** Консольную комманду выполняем синхронно */
+                    $this->messageDispatch->dispatch(
+                        message: $wildberriesProductCardCreateMessage,
+                        transport: $async === true ? $UserProfileUid.'-low' : null,
+                    );
+
+                    $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $ProductDetailByEventResult->getProductArticle()));
+
+                    if($ProductDetailByEventResult->getProductArticle() === $article)
+                    {
+                        break;
+                    }
+
+                    continue;
+                }
+
+
+                /**
+                 * В случае, если на WB нужная карточка уже существует
+                 *
+                 * @var WildberriesCardDTO $WildberriesCardDTO
+                 */
+                $WildberriesCardDTO = $wbCard->current();
+
+
+                /** Сохраняем идентификатор группировки карточек */
+
+
+                /** Шины группируем по РадиусПрофильШирина */
+                if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
+                {
+                    $key = $ProductDetailByEventResult->getProductOfferValue()
+                        .$ProductDetailByEventResult->getProductVariationValue()
+                        .$ProductDetailByEventResult->getProductModificationValue();
+                }
+                else
+                {
+                    $key = $ProductDetailByEventResult->getProductCardArticle();
+                }
+
+                $cache = $this->appCache->init('wildberries-products');
+
+                $cache->get($key, function(ItemInterface $item) use ($WildberriesCardDTO): int {
+
+                    /** По умолчанию кешируем на 1 сек на случай, если результат вернет FALSE */
+                    $item->expiresAfter(DateInterval::createFromDateString('1 day'));
+
+                    return $WildberriesCardDTO->getNomenclature();
+                });
+
+
+                $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
                     profile: $UserProfileUid,
                     product: $ProductsIdentifierResult->getProductId(),
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),
@@ -236,69 +317,13 @@ final class UpdateWildberriesProductsCardsCommand extends Command
 
                 /** Консольную комманду выполняем синхронно */
                 $this->messageDispatch->dispatch(
-                    message: $wildberriesProductCardCreateMessage,
+                    message: $wildberriesProductCardUpdateMessage,
                     transport: $async === true ? $UserProfileUid.'-low' : null,
                 );
 
-                $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $ProductDetailByEventResult->getProductArticle()));
 
-                if($ProductDetailByEventResult->getProductArticle() === $article)
-                {
-                    break;
-                }
-
-                continue;
             }
 
-            /**
-             * В случае, если на WB нужная карточка уже существует
-             *
-             * @var WildberriesCardDTO $WildberriesCardDTO
-             */
-            $WildberriesCardDTO = $wbCard->current();
-
-
-            /** Сохраняем идентификатор группировки карточек */
-
-
-            /** Шины группируем по РадиусПрофильШирина */
-            if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
-            {
-                $key = $ProductDetailByEventResult->getProductOfferValue()
-                    .$ProductDetailByEventResult->getProductVariationValue()
-                    .$ProductDetailByEventResult->getProductModificationValue();
-            }
-            else
-            {
-                $key = $ProductDetailByEventResult->getProductCardArticle();
-            }
-
-            $cache = $this->appCache->init('wildberries-products');
-
-            $cache->get($key, function(ItemInterface $item) use ($WildberriesCardDTO): int {
-
-                /** По умолчанию кешируем на 1 сек на случай, если результат вернет FALSE */
-                $item->expiresAfter(DateInterval::createFromDateString('1 day'));
-
-                return $WildberriesCardDTO->getNomenclature();
-            });
-
-
-            $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
-                profile: $UserProfileUid,
-                product: $ProductsIdentifierResult->getProductId(),
-                offerConst: $ProductsIdentifierResult->getProductOfferConst(),
-                variationConst: $ProductsIdentifierResult->getProductVariationConst(),
-                modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
-                invariable: $ProductsIdentifierResult->getProductInvariable(),
-                article: $ProductDetailByEventResult->getProductArticle(),
-            );
-
-            /** Консольную комманду выполняем синхронно */
-            $this->messageDispatch->dispatch(
-                message: $wildberriesProductCardUpdateMessage,
-                transport: $async === true ? $UserProfileUid.'-low' : null,
-            );
 
             $this->io->text(sprintf('Обновили артикул %s', $ProductDetailByEventResult->getProductArticle()));
 
