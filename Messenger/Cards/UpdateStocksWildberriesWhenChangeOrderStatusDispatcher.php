@@ -158,6 +158,15 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
                         stamps: [new MessageDelay('5 seconds')],
                         transport: (string) $UserProfileUid,
                     );
+
+
+                    /** Дополнительно пробуем обновить (на случай если остатки еще не успели пересчитаться) */
+
+                    $this->messageDispatch->dispatch(
+                        message: $WildberriesProductsStocksMessage,
+                        stamps: [new MessageDelay('15 seconds')],
+                        transport: (string) $UserProfileUid,
+                    );
                 }
             }
         }

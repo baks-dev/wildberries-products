@@ -97,8 +97,15 @@ final class CountryWildberriesProductParameters implements WildberriesProductPar
 
                     if($translator instanceof TranslatorInterface)
                     {
+                        /** Пробуем перевести по домену wildberries-products.parameters */
                         $value = $translator->trans(
-                            id: $product_param->value,
+                            id: $value,
+                            domain: 'wildberries-products.parameters',
+                        );
+
+                        /** Пробуем перевести по домену field-country */
+                        $value = $translator->trans(
+                            id: $value,
                             domain: 'field-country',
                         );
                     }

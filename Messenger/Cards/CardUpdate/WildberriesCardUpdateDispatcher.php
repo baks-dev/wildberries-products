@@ -238,7 +238,7 @@ final readonly class WildberriesCardUpdateDispatcher
             $this->messageDispatch->dispatch(
                 message: $WildberriesCardMediaUpdateMessage,
                 stamps: [new MessageDelay('10 seconds')],
-                transport: $message->getProfile().'-low',
+                transport: (string) $message->getProfile(),
             );
 
             /**
@@ -276,7 +276,7 @@ final readonly class WildberriesCardUpdateDispatcher
             $this->messageDispatch->dispatch(
                 message: $WildberriesProductsStocksMessage,
                 stamps: [new MessageDelay('20 seconds')],
-                transport: $message->getProfile().'-low',
+                transport: (string) $message->getProfile(),
             );
 
         }

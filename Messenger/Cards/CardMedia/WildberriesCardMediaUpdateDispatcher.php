@@ -135,9 +135,21 @@ final readonly class WildberriesCardMediaUpdateDispatcher
                 .$image['product_image_ext'];
         }
 
-        $this->WildberriesProductMediaCardRequest
+        $isUpdate = $this->WildberriesProductMediaCardRequest
             ->forTokenIdentifier($message->getIdentifier())
             ->nomenclature($WildberriesCardDTO->getId())
             ->update($images);
+
+        if($isUpdate)
+        {
+            $this->logger->info(sprintf('%s: Обновили файлы изображений', $message->getArticle()));
+            return;
+        }
+
+        $this->logger->critical(
+            'wildberries-products: Ошибка при обновлении файлов изображений',
+            [self::class.':'.__LINE__, var_export($message, true)],
+        );
+
     }
 }
