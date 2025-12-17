@@ -169,18 +169,20 @@ final readonly class WildberriesProductsStocksDispatcher
         }
 
         /** Обновляем остатки товара если наличие изменилось */
-        $this->UpdateWbFbsStocksRequest
+        $isUpdate = $this->UpdateWbFbsStocksRequest
             ->forTokenIdentifier($message->getIdentifier())
             ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
+            ->setArticle($WildberriesProductsCardResult->getSearchArticle())
             ->setTotal($ProductQuantity)
             ->update();
 
-        $this->logger->info(sprintf(
-            'Обновили наличие %s: => %s',
-            $CurrentProductIdentifierResult->getBarcode(),
-            $ProductQuantity,
-        ), [$message->getIdentifier()]);
-
-
+        if(true === $isUpdate)
+        {
+            $this->logger->info(sprintf(
+                'Обновили наличие %s: => %s',
+                $CurrentProductIdentifierResult->getBarcode(),
+                $ProductQuantity,
+            ), [$message->getIdentifier()]);
+        }
     }
 }

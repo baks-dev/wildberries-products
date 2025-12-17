@@ -31,6 +31,8 @@ use InvalidArgumentException;
 
 final class UpdateWbFbsStocksRequest extends Wildberries
 {
+    private string $article;
+
     private string $barcode;
 
     private int $total = 0;
@@ -51,6 +53,13 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         }
 
         $this->barcode = $barcode;
+
+        return $this;
+    }
+
+    public function setArticle(string $article): self
+    {
+        $this->article = $article;
 
         return $this;
     }
@@ -83,7 +92,7 @@ final class UpdateWbFbsStocksRequest extends Wildberries
             ->TokenHttpClient()
             ->request(
                 method: 'PUT',
-                url: '/api/v3/stocks/'.$this->getWarehouse(),
+                url: sprintf('/api/v3/stocks/%s', $this->getWarehouse()),
                 options: [
                     "json" => [
                         'stocks' => [
@@ -100,27 +109,19 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         {
             $content = $response->toArray(false);
 
-            if($content['code'] === 'NotFound')
-            {
-                $this->logger->critical(
-                    sprintf(
-                        'wildberries-manufacture: Ошибка обновления остатков FBS. Карточки товара %s не найдено',
-                        $this->barcode),
-                    [
-                        self::class.':'.__LINE__,
-                        $content,
-                    ]);
-
-                return true;
-            }
-
-
             $this->logger->critical(
-                sprintf('wildberries-manufacture: Ошибка обновления остатков FBS'),
+                sprintf(
+                    'wildberries-products: Ошибка «%s» обновления остатков FBS карточки товара %s (%s)',
+                    $content['code'], $this->article, $this->barcode),
                 [
                     self::class.':'.__LINE__,
                     $content,
                 ]);
+
+            if($content['code'] === 'NotFound')
+            {
+                return true;
+            }
 
             return false;
         }
