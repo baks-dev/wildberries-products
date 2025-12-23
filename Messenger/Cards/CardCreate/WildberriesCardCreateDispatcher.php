@@ -197,7 +197,7 @@ final readonly class WildberriesCardCreateDispatcher
 
             $this->messageDispatch->dispatch(
                 message: $WildberriesCardMediaUpdateMessage,
-                stamps: [new MessageDelay('10 seconds')],
+                stamps: [new MessageDelay('30 seconds')],
                 transport: $message->getProfile().'-low',
             );
         }
