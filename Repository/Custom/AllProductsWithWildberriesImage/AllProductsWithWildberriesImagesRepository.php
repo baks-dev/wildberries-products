@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -370,12 +370,12 @@ final class AllProductsWithWildberriesImagesRepository implements AllProductsWit
          */
 
         //        $dbal
-        //            ->addSelect('ya_market_product.id as ya_market_product_id')
+        //            ->addSelect('wb_product.id as wb_product_id')
         //            ->leftJoin(
         //                'product_invariable',
         //                WildberriesProductCustom::class,
-        //                'ya_market_product',
-        //                'ya_market_product.invariable = product_invariable.id AND ya_market_product.profile = :profile',
+        //                'wb_product',
+        //                'wb_product.invariable = product_invariable.id AND wb_product.profile = :profile',
         //            )
         //        ;
 
@@ -395,7 +395,7 @@ final class AllProductsWithWildberriesImagesRepository implements AllProductsWit
                 WHEN wb_product_custom_images.name IS NOT NULL THEN
                     CONCAT ( '/upload/".$dbal->table(WildberriesProductCustomImage::class)."' , '/', wb_product_custom_images.name)
                 ELSE NULL 
-            END as ya_market_product_image
+            END as wb_product_image
             ",
         );
 
@@ -405,7 +405,7 @@ final class AllProductsWithWildberriesImagesRepository implements AllProductsWit
 			   WHEN wb_product_custom_images.name IS NOT NULL THEN
 					wb_product_custom_images.ext
 			   ELSE NULL
-			END AS ya_market_product_image_ext
+			END AS wb_product_image_ext
 		');
 
         /** Флаг загрузки файла CDN */
@@ -414,7 +414,7 @@ final class AllProductsWithWildberriesImagesRepository implements AllProductsWit
 			   WHEN wb_product_custom_images.name IS NOT NULL THEN
 					wb_product_custom_images.cdn
 			   ELSE NULL
-			END AS ya_market_product_image_cdn
+			END AS wb_product_image_cdn
 		');
 
         /**

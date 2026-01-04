@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ final class WildberriesProductsNewEditControllerTest extends WebTestCase
 {
     private const string URL = '/admin/wb/custom/edit/'.ProductInvariableUid::TEST;
 
-    private const string ROLE = 'ROLE_WB_CUSTOM_EDIT';
+    private const string ROLE = 'ROLE_WB_PRODUCTS_CUSTOM_EDIT';
 
     /** Доступ по роли ROLE_PRODUCT */
     public function testRoleSuccessful(): void

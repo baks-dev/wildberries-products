@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,8 @@ use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst
 use BaksDev\Products\Product\Type\Offers\Variation\Id\ProductVariationUid;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\ConstId\ProductModificationConst;
 use BaksDev\Products\Product\Type\Offers\Variation\Modification\Id\ProductModificationUid;
+use BaksDev\Wildberries\Products\Forms\WildberriesCustomFilter\WildberriesProductsFilterDTO;
+use BaksDev\Wildberries\Products\Repository\Custom\AllProductsWithWildberriesImage\AllProductsWithWildberriesImagesInterface;
 use BaksDev\Wildberries\Products\Repository\Custom\AllProductsWithWildberriesImage\AllProductsWithWildberriesImagesResult;
 use PHPUnit\Framework\Attributes\Group;
 use ReflectionClass;
@@ -47,6 +49,8 @@ final class AllProductsWithWildberriesImagesTest extends KernelTestCase
 {
     public function testFindAll(): void
     {
+        self::assertTrue(true);
+
         /** @var AllProductsWithWildberriesImagesInterface $allProductsWithWildberriesImages */
         $allProductsWithWildberriesImages = self::getContainer()
             ->get(AllProductsWithWildberriesImagesInterface::class);
@@ -57,7 +61,14 @@ final class AllProductsWithWildberriesImagesTest extends KernelTestCase
             ->findAll()
             ->getData();
 
-        /** @var AllProductsWithWildberriesImagesResult $item */
+
+        if(empty($result))
+        {
+            return;
+        }
+
+
+        /** @var AllProductsWithWildberriesImagesResult $AllProductsWithWildberriesImagesResult */
         foreach($result as $AllProductsWithWildberriesImagesResult)
         {
             // Вызываем все геттеры
@@ -74,10 +85,6 @@ final class AllProductsWithWildberriesImagesTest extends KernelTestCase
                     // dump($data);
                 }
             }
-
-            break;
         }
-
-        self::assertTrue(true);
     }
 }

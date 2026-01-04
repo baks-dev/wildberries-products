@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,10 @@ use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentif
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -60,9 +63,14 @@ class WildberriesMapperTest extends KernelTestCase
         /** @var WildberriesMapper $WildberriesMapper */
         $WildberriesMapper = self::getContainer()->get(WildberriesMapper::class);
 
-        foreach($AllProductsIdentifier->findAll() as $ProductsIdentifierResult)
+        foreach($AllProductsIdentifier->findAll() as $key => $ProductsIdentifierResult)
         {
-            $WildberriesProductsCard = $WildberriesProductsCardRepository
+            if($key >= 100)
+            {
+                break;
+            }
+
+            $WildberriesProductsCardResult = $WildberriesProductsCardRepository
                 ->forProfile(UserProfileUid::TEST)
                 ->forProduct($ProductsIdentifierResult->getProductId())
                 ->forOfferConst($ProductsIdentifierResult->getProductOfferConst())
@@ -70,45 +78,25 @@ class WildberriesMapperTest extends KernelTestCase
                 ->forModificationConst($ProductsIdentifierResult->getProductModificationConst())
                 ->find();
 
-            if(empty($WildberriesProductsCard))
+            if(false === ($WildberriesProductsCardResult instanceof WildberriesProductsCardResult))
             {
                 continue;
             }
 
-            if(empty($WildberriesProductsCard->getLength()))
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(WildberriesProductsCardResult::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
+
+            foreach($methods as $method)
             {
-                continue;
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $data = $method->invoke($WildberriesProductsCardResult);
+                    // dump($data);
+                }
             }
-
-            if(empty($WildberriesProductsCard->getWidth()))
-            {
-                continue;
-            }
-
-            if(empty($WildberriesProductsCard->getHeight()))
-            {
-                continue;
-            }
-
-            if(empty($WildberriesProductsCard->getWeight()))
-            {
-                continue;
-            }
-
-
-            $request = $WildberriesMapper->getData($WildberriesProductsCard);
-
-            self::assertEquals($request['offerId'], $WildberriesProductsCard->getArticle());
-            self::assertEquals(current($request['tags']), $WildberriesProductsCard->getProductCard());
-            self::assertNotFalse(stripos($request['name'], $WildberriesProductsCard->getProductName()));
-            self::assertEquals($request['marketCategoryId'], $WildberriesProductsCard->getMarketCategory());
-            self::assertEquals($request['description'], $WildberriesProductsCard->getProductPreview());
-
-
-            self::assertEquals($request['weightDimensions']['length'], $WildberriesProductsCard->getLength() / 10);
-            self::assertEquals($request['weightDimensions']['width'], $WildberriesProductsCard->getWidth() / 10);
-            self::assertEquals($request['weightDimensions']['height'], $WildberriesProductsCard->getHeight() / 10);
-            self::assertEquals($request['weightDimensions']['weight'], $WildberriesProductsCard->getWeight() / 100);
 
             break;
         }

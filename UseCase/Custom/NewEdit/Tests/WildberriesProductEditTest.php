@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,8 @@ namespace BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\Tests;
 
 use BaksDev\Core\BaksDevCoreBundle;
 use BaksDev\Products\Product\Type\Invariable\ProductInvariableUid;
+use BaksDev\Wildberries\Products\Entity\Custom\Images\WildberriesProductCustomImage;
 use BaksDev\Wildberries\Products\Entity\Custom\WildberriesProductCustom;
-use BaksDev\Wildberries\Products\Type\Custom\Image\WbProductCustomImageUid;
 use BaksDev\Wildberries\Products\Type\Id\WildberriesProductUid;
 use BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\Images\WildberriesProductCustomImagesDTO;
 use BaksDev\Wildberries\Products\UseCase\Custom\NewEdit\WildberriesCustomProductDTO;
@@ -75,7 +75,7 @@ final class WildberriesProductEditTest extends KernelTestCase
         /** @var WildberriesProductCustom $product */
         $product = $em
             ->getRepository(WildberriesProductCustom::class)
-            ->find(WbProductCustomImageUid::TEST);
+            ->find(ProductInvariableUid::TEST);
 
         self::assertNotNull($product);
 
@@ -94,7 +94,11 @@ final class WildberriesProductEditTest extends KernelTestCase
         /** @var WildberriesCustomProductHandler $handler */
         $handler = $container->get(WildberriesCustomProductHandler::class);
         $editWildberriesProduct = $handler->handle($editDTO);
-        self::assertTrue($editWildberriesProduct instanceof WildberriesProductCustom);
-        self::assertTrue($editWildberriesProduct->getImages()->current()->getName() === 'photo1');
+        self::assertInstanceOf(WildberriesProductCustom::class, $editWildberriesProduct);
+
+
+        /** @var WildberriesProductCustomImage $WildberriesProductCustomImage */
+        $WildberriesProductCustomImage = $editWildberriesProduct->getImages()->current();
+        self::assertSame('cda661faf5e60e281e5f56067e7909db', $WildberriesProductCustomImage->getName());
     }
 }

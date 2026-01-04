@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -65,10 +65,10 @@ final readonly class AllProductsWithWildberriesImagesResult
         private ?string $product_image,
         private ?string $product_image_ext,
         private ?bool $product_image_cdn,
-        //private ?string $ya_market_product_id,
-        private ?string $ya_market_product_image,
-        private ?string $ya_market_product_image_ext,
-        private ?bool $ya_market_product_image_cdn,
+        //private ?string $wb_product_id,
+        private ?string $wb_product_image,
+        private ?string $wb_product_image_ext,
+        private ?bool $wb_product_image_cdn,
     ) {}
 
     public function getId(): ProductUid
@@ -186,24 +186,24 @@ final readonly class AllProductsWithWildberriesImagesResult
         return $this->product_image_cdn;
     }
 
-    public function getYaMarketProductId(): ?string
-    {
-        return $this->ya_market_product_id;
-    }
+    //    public function getYaMarketProductId(): ?string
+    //    {
+    //        return $this->wb_product_id;
+    //    }
 
     public function getWildberriesProductImage(): ?string
     {
-        return $this->ya_market_product_image;
+        return $this->wb_product_image;
     }
 
     public function getWildberriesProductImageExt(): ?string
     {
-        return $this->ya_market_product_image_ext;
+        return $this->wb_product_image_ext;
     }
 
     public function getWildberriesProductImageCdn(): ?bool
     {
-        return $this->ya_market_product_image_cdn;
+        return $this->wb_product_image_cdn;
     }
 
     public function getCategoryActive(): bool
