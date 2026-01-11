@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
      * @see https://dev.wildberries.ru/openapi/work-with-products/#tag/Kartochki-tovarov/paths/~1content~1v2~1get~1cards~1list/post
      * @return Generator<WildberriesCardDTO>|false
      */
-    public function findAll(string|null|false $search = null): Generator|false
+    public function findAll(int|string|null|false $search = null): Generator|false
     {
         while(true)
         {

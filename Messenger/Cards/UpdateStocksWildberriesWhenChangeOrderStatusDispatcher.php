@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -40,9 +40,13 @@ use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardStocks\WildberriesProductsStocksMessage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
 use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-#[AsMessageHandler(priority: 0)]
+/**
+ * Обновляем остатки Wildberries при изменении статусов заказов
+ */
+#[AsMessageHandler(priority: 60)]
 final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
 {
     public function __construct(
@@ -52,10 +56,21 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
         private CurrentOrderEventInterface $CurrentOrderEvent,
         private DeduplicatorInterface $deduplicator,
         private MessageDispatchInterface $messageDispatch,
+        #[Autowire(env: 'PROJECT_PROFILE')] private ?string $PROJECT_PROFILE = null,
     ) {}
 
     public function __invoke(OrderMessage $message): void
     {
+        /**  Получаем активные все активные профили у которых имеется токен Wildberries */
+        $profiles = $this->AllProfileWildberriesTokenRepository
+            ->onlyActiveToken()
+            ->findAll();
+
+        if(false === $profiles || false === $profiles->valid())
+        {
+            return;
+        }
+
         /** Получаем событие заказа */
         $OrderEvent = $this->CurrentOrderEvent
             ->forOrder($message->getId())
@@ -64,25 +79,6 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
         if(false === ($OrderEvent instanceof OrderEvent))
         {
             return;
-        }
-
-
-        /** Если имеется информация о профиле заказа - обновляем только указанный профиль  */
-        if($OrderEvent->getOrderProfile() instanceof UserProfileUid)
-        {
-            $profiles = [$OrderEvent->getOrderProfile()];
-        }
-        else
-        {
-            /**  Получаем активные все активные профили у которых имеется токен Wildberries */
-            $profiles = $this->AllProfileWildberriesTokenRepository
-                ->onlyActiveToken()
-                ->findAll();
-
-            if(false === $profiles || false === $profiles->valid())
-            {
-                return;
-            }
         }
 
 
@@ -113,6 +109,13 @@ final readonly class UpdateStocksWildberriesWhenChangeOrderStatusDispatcher
 
         foreach($profiles as $UserProfileUid)
         {
+            /** Если указан профиль проекта - пропускаем остальные профили */
+            if(false === empty($this->PROJECT_PROFILE) && false === $UserProfileUid->equals($this->PROJECT_PROFILE))
+            {
+                continue;
+            }
+
+
             /** Получаем все токены авторизации профиля */
 
             $tokens = $this->AllWbTokensByProfileRepository

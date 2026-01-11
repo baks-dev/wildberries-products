@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,8 @@ use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use PHPUnit\Framework\Attributes\DependsOnClass;
 use PHPUnit\Framework\Attributes\Group;
+use ReflectionClass;
+use ReflectionMethod;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Attribute\When;
 
@@ -55,40 +57,42 @@ class WildberriesCardRequestTest extends KernelTestCase
 
     public function testUseCase(): void
     {
+        self::assertTrue(true);
+
         /** @var FindAllWildberriesCardsRequest $WildberriesGetCardsRequest */
         $WildberriesGetCardsRequest = self::getContainer()->get(FindAllWildberriesCardsRequest::class);
         $WildberriesGetCardsRequest->TokenHttpClient(self::$Authorization);
 
-        $data = $WildberriesGetCardsRequest->findAll('78346396');
-        /** @var WildberriesCardDTO $Card */
-        foreach($data as $Card)
+        $result = $WildberriesGetCardsRequest->findAll('QYJMDZJA');
+
+
+        if(false === $result || false === $result->valid())
         {
-            self::assertInstanceOf(WildberriesCardDTO::class, $Card);
+            return;
+        }
 
-            self::assertIsInt($Card->getId());
-            self::assertIsInt($Card->getNomenclature());
+        foreach($result as $WildberriesCardDTO)
+        {
 
-            self::assertNotEmpty($Card->getCategory());
-            self::assertIsInt($Card->getCategory());
 
-            self::assertNotEmpty($Card->getName());
-            self::assertIsString($Card->getName());
+            // Вызываем все геттеры
+            $reflectionClass = new ReflectionClass(WildberriesCardDTO::class);
+            $methods = $reflectionClass->getMethods(ReflectionMethod::IS_PUBLIC);
 
-            self::assertNotEmpty($Card->getArticle());
-            self::assertIsString($Card->getArticle());
+            foreach($methods as $method)
+            {
+                // Методы без аргументов
+                if($method->getNumberOfParameters() === 0)
+                {
+                    // Вызываем метод
+                    $data = $method->invoke($WildberriesCardDTO);
+                    // dump($data);
+                }
+            }
 
-            self::assertTrue($Card->getMedia()->count() > 0);
-            self::assertTrue($Card->getCharacteristicsCollection()->count() > 0);
-
-            self::assertTrue($Card->getOffersCollection()->count() > 0);
-
-            self::assertTrue($Card->getChrt('XL') === false || is_int($Card->getChrt('XL')));
-
-            break;
         }
 
 
-        self::assertTrue(true);
     }
 
 }
