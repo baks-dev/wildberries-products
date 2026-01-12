@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -32,8 +32,8 @@ use BaksDev\Reference\Money\Type\Money;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
 use BaksDev\Users\Profile\UserProfile\UseCase\User\NewEdit\Tests\UserNewUserProfileHandleTest;
 use BaksDev\Wildberries\Orders\Api\FindAllWildberriesOrdersNewFbsRequest;
-use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderDTO;
-use BaksDev\Wildberries\Orders\UseCase\New\WildberriesOrderHandler;
+use BaksDev\Wildberries\Orders\UseCase\New\WildberriesNewOrderDTO;
+use BaksDev\Wildberries\Orders\UseCase\New\WildberriesNewOrderHandler;
 use BaksDev\Wildberries\Type\Authorization\WbAuthorizationToken;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Group;
