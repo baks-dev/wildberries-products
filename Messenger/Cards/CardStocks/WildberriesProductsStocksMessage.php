@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -54,17 +54,17 @@ final class WildberriesProductsStocksMessage
     /**
      * Постоянный уникальный идентификатор ТП
      */
-    private string|null $offerConst;
+    private string|false $offerConst;
 
     /**
      * Постоянный уникальный идентификатор варианта
      */
-    private string|null $variationConst;
+    private string|false $variationConst;
 
     /**
      * Постоянный уникальный идентификатор модификации
      */
-    private string|null $modificationConst;
+    private string|false $modificationConst;
 
     public function __construct(
         UserProfileUid|string $profile,

@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -84,6 +84,11 @@ final class UpdateWbFbsStocksRequest extends Wildberries
 
         if(false === $this->isStock())
         {
+            return false;
+        }
+
+        if(false === $this->isSales())
+        {
             $this->total = 0;
         }
 
@@ -112,13 +117,13 @@ final class UpdateWbFbsStocksRequest extends Wildberries
             $this->logger->critical(
                 sprintf(
                     'wildberries-products: Ошибка «%s» обновления остатков FBS карточки товара %s (%s)',
-                    $content['code'], $this->article, $this->barcode),
+                    $response->getStatusCode(), $this->article, $this->barcode),
                 [
                     self::class.':'.__LINE__,
                     $content,
                 ]);
 
-            if($content['code'] === 'NotFound')
+            if(current($content)['code'] === 'NotFound')
             {
                 return true;
             }
