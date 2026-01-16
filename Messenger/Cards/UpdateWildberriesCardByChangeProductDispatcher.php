@@ -92,6 +92,20 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
         {
             foreach($profiles as $UserProfileUid)
             {
+
+                /**
+                 * Получаем все токены профиля пользователя
+                 */
+
+                $tokensByProfile = $this->AllWbTokensByProfileRepository
+                    ->forProfile($UserProfileUid)
+                    ->findAll();
+
+                if(false === $tokensByProfile || false === $tokensByProfile->valid())
+                {
+                    return;
+                }
+
                 $currentProduct = $this->WildberriesProductsCardRepository
                     ->forProfile($UserProfileUid)
                     ->forProduct($ProductsIdentifierResult->getProductId())
@@ -110,54 +124,22 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                     continue;
                 }
 
+                /** В случае изменения - получаем предыдущее событие на случай изменения артикула */
+                $ProductDetailByEvent = ($message->getLast() instanceof ProductEventUid) ? $message->getLast() : $message->getEvent();
 
-                /** Если имеется предыдущее событие - карточка не новая, пробуем обновить */
-                if(true === ($message->getLast() instanceof ProductEventUid))
-                {
-                    $lastProduct = $this->ProductDetailByUidRepository
-                        ->event($message->getLast())
-                        ->offer($ProductsIdentifierResult->getProductOfferId())
-                        ->variation($ProductsIdentifierResult->getProductVariationId())
-                        ->modification($ProductsIdentifierResult->getProductModificationId())
-                        ->findResult();
-
-                    if(false === ($lastProduct instanceof ProductDetailByEventResult))
-                    {
-                        $this->logger->warning(
-                            sprintf('Ошибка: Product Event: %s. Информация о продукте не была найдена',
-                                $message->getEvent()),
-                        );
-
-                        continue;
-                    }
-
-                    $filter = $lastProduct->getProductArticle();
-
-                    if($filter === null)
-                    {
-                        continue;
-                    }
-                }
-
-                /**
-                 * Получаем все токены профиля пользователя
-                 */
-
-                $tokensByProfile = $this->AllWbTokensByProfileRepository
-                    ->forProfile($UserProfileUid)
-                    ->findAll();
-
-                if(false === $tokensByProfile || false === $tokensByProfile->valid())
-                {
-                    return;
-                }
-
+                $ProductDetailByEventResult = $this->ProductDetailByUidRepository
+                    ->event($ProductDetailByEvent)
+                    ->offer($ProductsIdentifierResult->getProductOfferId())
+                    ->variation($ProductsIdentifierResult->getProductVariationId())
+                    ->modification($ProductsIdentifierResult->getProductModificationId())
+                    ->findResult();
 
                 foreach($tokensByProfile as $WbTokenUid)
                 {
+                    /** Пробуем найти карточку по артикулу */
                     $WildberriesCardDTO = $this->FindAllWildberriesCardsRequest
                         ->forTokenIdentifier($WbTokenUid)
-                        ->findAll($lastProduct->getProductArticle());
+                        ->findAll($ProductDetailByEventResult->getProductArticle());
 
                     /**
                      * Создаем новую карточку товара
@@ -171,7 +153,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                             variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                             modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
                             invariable: $ProductsIdentifierResult->getProductInvariable(),
-                            article: $lastProduct->getProductArticle(),
+                            article: $ProductDetailByEventResult->getProductArticle(),
                         );
 
                         /** Транспорт LOW чтобы не мешать общей очереди */
@@ -195,7 +177,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                         variationConst: $ProductsIdentifierResult->getProductVariationConst(),
                         modificationConst: $ProductsIdentifierResult->getProductModificationConst(),
                         invariable: $ProductsIdentifierResult->getProductInvariable(),
-                        article: $lastProduct->getProductArticle(),
+                        article: $ProductDetailByEventResult->getProductArticle(),
                     );
 
                     /** Транспорт LOW чтобы не мешать общей очереди */
