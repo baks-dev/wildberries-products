@@ -452,8 +452,8 @@ final class AllProductsWithWildberriesImagesRepository implements AllProductsWit
                 'category_info',
                 '
                     category.event = category_info.event AND
-                    category_info.active IS TRUE',
-            );
+                    category_info.active IS TRUE
+                ');
 
         $dbal
             ->addSelect('category_trans.name AS category_name')
