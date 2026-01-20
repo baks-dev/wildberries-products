@@ -63,7 +63,9 @@ class WildberriesMapperTest extends KernelTestCase
         /** @var WildberriesMapper $WildberriesMapper */
         $WildberriesMapper = self::getContainer()->get(WildberriesMapper::class);
 
-        foreach($AllProductsIdentifier->findAll() as $key => $ProductsIdentifierResult)
+        $products = $AllProductsIdentifier->findAll();
+
+        foreach($products as $key => $ProductsIdentifierResult)
         {
             if($key >= 100)
             {

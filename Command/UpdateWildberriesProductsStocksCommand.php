@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -187,9 +187,15 @@ class UpdateWildberriesProductsStocksCommand extends Command
 
         $tokens = iterator_to_array($tokensByProfile);
 
-
         foreach($products as $ProductsIdentifierResult)
         {
+            if(!empty($article) && stripos($ProductsIdentifierResult->getArticle(), $article) === false)
+            {
+                $this->io->writeln(sprintf('<fg=gray>... %s</>', $ProductsIdentifierResult->getArticle()));
+
+                continue;
+            }
+
             $ProductDetailByEventResult = $this->ProductDetailByEventRepository
                 ->event($ProductsIdentifierResult->getProductEvent())
                 ->offer($ProductsIdentifierResult->getProductOfferId())
@@ -211,8 +217,6 @@ class UpdateWildberriesProductsStocksCommand extends Command
 
             if(!empty($article) && stripos($ProductDetailByEventResult->getProductArticle(), $article) === false)
             {
-                $this->io->writeln(sprintf('<fg=gray>... %s</>', $ProductDetailByEventResult->getProductArticle()));
-
                 continue;
             }
 
