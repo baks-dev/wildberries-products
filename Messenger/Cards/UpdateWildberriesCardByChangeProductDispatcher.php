@@ -134,6 +134,11 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                     ->modification($ProductsIdentifierResult->getProductModificationId())
                     ->findResult();
 
+                if(false === ($ProductDetailByEventResult instanceof ProductDetailByEventResult))
+                {
+                    continue;
+                }
+
                 foreach($tokensByProfile as $WbTokenUid)
                 {
                     /** Пробуем найти карточку по артикулу */
