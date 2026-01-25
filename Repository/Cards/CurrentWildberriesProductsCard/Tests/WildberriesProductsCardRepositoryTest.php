@@ -50,7 +50,9 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
         /** @var AllProductsIdentifierInterface $AllProductsIdentifier */
         $AllProductsIdentifier = self::getContainer()->get(AllProductsIdentifierInterface::class);
 
-        $products = $AllProductsIdentifier->findAll();
+        $products = $AllProductsIdentifier
+            ->forProfile(new UserProfileUid(UserProfileUid::TEST))
+            ->findAll();
 
         foreach($products as $key => $ProductsIdentifierResult)
         {

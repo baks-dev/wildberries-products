@@ -39,6 +39,7 @@ use BaksDev\Wildberries\Products\Messenger\Cards\CardUpdate\WildberriesCardUpdat
 use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
 use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use DateInterval;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -180,7 +181,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
          * Получаем все имеющиеся карточки в системе.
          * Для тестирования используем вызов метода ->forProduct('0197a6d6-c8e6-7df0-b979-a44f2800eca8') перед findALl
          * */
-        $products = $this->AllProductsIdentifier->findAll();
+        $products = $this->AllProductsIdentifier
+            ->forProfile($UserProfileUid)
+            ->findAll();
 
         if(false === $products || false === $products->valid())
         {
@@ -237,6 +240,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             }
 
 
+            /** @var WbTokenUid $WbTokenUid */
             foreach($tokens as $WbTokenUid)
             {
                 $wbCard = $this->FindAllWildberriesCardsRequest

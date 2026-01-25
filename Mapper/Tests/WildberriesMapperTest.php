@@ -27,7 +27,6 @@ namespace BaksDev\Wildberries\Products\Mapper\Tests;
 
 use BaksDev\Products\Product\Repository\AllProductsIdentifier\AllProductsIdentifierInterface;
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
-use BaksDev\Wildberries\Products\Mapper\WildberriesMapper;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
 use PHPUnit\Framework\Attributes\Group;
@@ -60,10 +59,12 @@ class WildberriesMapperTest extends KernelTestCase
         /** @var WildberriesProductsCardInterface $WildberriesProductsCardRepository */
         $WildberriesProductsCardRepository = self::getContainer()->get(WildberriesProductsCardInterface::class);
 
-        /** @var WildberriesMapper $WildberriesMapper */
-        $WildberriesMapper = self::getContainer()->get(WildberriesMapper::class);
+        // /** @var WildberriesMapper $WildberriesMapper */
+        // $WildberriesMapper = self::getContainer()->get(WildberriesMapper::class);
 
-        $products = $AllProductsIdentifier->findAll();
+        $products = $AllProductsIdentifier
+            ->forProfile(new UserProfileUid(UserProfileUid::TEST))
+            ->findAll();
 
         foreach($products as $key => $ProductsIdentifierResult)
         {
