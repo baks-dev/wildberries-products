@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -60,6 +60,19 @@ final readonly class WildberriesProductsStocksDispatcher
      */
     public function __invoke(WildberriesProductsStocksMessage $message): void
     {
+        /**
+         * Не обновляем остатки если отключены
+         */
+
+        $isStock = $this->GetWbFbsStocksRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->isStock();
+
+        if(false === $isStock)
+        {
+            return;
+        }
+
         /**
          * Получаем активные идентификаторы карточки
          */
