@@ -141,6 +141,16 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
 
                 foreach($tokensByProfile as $WbTokenUid)
                 {
+
+                    $isCardUpdate = $this->FindAllWildberriesCardsRequest
+                        ->forTokenIdentifier($WbTokenUid)
+                        ->isCard();
+
+                    if(false === $isCardUpdate)
+                    {
+                        continue;
+                    }
+
                     /** Пробуем найти карточку по артикулу */
                     $WildberriesCardDTO = $this->FindAllWildberriesCardsRequest
                         ->forTokenIdentifier($WbTokenUid)
