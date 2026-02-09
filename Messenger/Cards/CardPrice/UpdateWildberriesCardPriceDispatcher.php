@@ -48,14 +48,16 @@ final readonly class UpdateWildberriesCardPriceDispatcher
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private UpdateWildberriesProductPriceRequest $UpdateWildberriesProductPriceRequest,
         private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
-        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private WildberriesMapper $wildberriesMapper,
     ) {}
 
     public function __invoke(UpdateWildberriesCardPriceMessage $message): void
     {
+        $isCardUpdate = $this->FindAllWildberriesCardsRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->isCard();
 
-        if(false === $this->FindAllWildberriesCardsRequest->forTokenIdentifier($message->getIdentifier())->isCard())
+        if(false === $isCardUpdate)
         {
             return;
         }

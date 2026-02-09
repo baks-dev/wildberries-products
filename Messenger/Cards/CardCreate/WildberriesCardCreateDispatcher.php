@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,6 @@ final readonly class WildberriesCardCreateDispatcher
         #[Target('wildberriesProductsLogger')] private LoggerInterface $logger,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private WildberriesProductCreateCardRequest $WildberriesProductCreateCardRequest,
-        private AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
         private CurrentProductIdentifierByConstInterface $CurrentProductIdentifierByConstRepository,
         private WildberriesMapper $wildberriesMapper,
         private MessageDispatchInterface $messageDispatch
@@ -56,19 +55,14 @@ final readonly class WildberriesCardCreateDispatcher
 
     public function __invoke(WildberriesCardCreateMessage $message): void
     {
-        /**
-         * Получаем все токены профиля
-         */
+        $isCardCreate = $this->WildberriesProductCreateCardRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->isCard();
 
-        $tokensByProfile = $this->AllWbTokensByProfileRepository
-            ->forProfile($message->getProfile())
-            ->findAll();
-
-        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        if(false === $isCardCreate)
         {
             return;
         }
-
 
         /**
          * Получаем активные идентификаторы карточки
@@ -141,65 +135,63 @@ final readonly class WildberriesCardCreateDispatcher
         ];
 
 
-        foreach($tokensByProfile as $WbTokenUid)
+        $isCreate = $this->WildberriesProductCreateCardRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->create($requestData);
+
+        if(false === $isCreate)
         {
-            $isCreate = $this->WildberriesProductCreateCardRequest
-                ->forTokenIdentifier($WbTokenUid)
-                ->create($requestData);
-
-            if(false === $isCreate)
-            {
-                /**
-                 * Ошибка запишется в лог
-                 *
-                 * @see WildberriesProductCreateCardRequest
-                 */
-                continue;
-            }
-
-
-            $this->logger->info(sprintf('Создали карточку товара %s', $message->getProduct()));
-
             /**
-             * Обновляем стоимость товара
+             * Ошибка запишется в лог
+             *
+             * @see WildberriesProductCreateCardRequest
              */
-
-            $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
-                profile: $message->getProfile(),
-                identifier: $WbTokenUid,
-                product: $message->getProduct(),
-                offerConst: $message->getOfferConst(),
-                variationConst: $message->getVariationConst(),
-                modificationConst: $message->getModificationConst(),
-                article: $message->getArticle(),
-            );
-
-            $this->messageDispatch->dispatch(
-                message: $UpdateWildberriesCardPriceMessage,
-                stamps: [new MessageDelay('5 seconds')],
-                transport: $message->getProfile().'-low',
-            );
-
-
-            /**
-             * Обновляем файлы изображений
-             */
-
-            $WildberriesCardMediaUpdateMessage = new WildberriesCardMediaUpdateMessage(
-                identifier: $WbTokenUid,
-                product: $message->getProduct(),
-                offerConst: $message->getOfferConst(),
-                variationConst: $message->getVariationConst(),
-                modificationConst: $message->getModificationConst(),
-                invariable: $message->getInvariable(),
-                article: $message->getArticle(),
-            );
-
-            $this->messageDispatch->dispatch(
-                message: $WildberriesCardMediaUpdateMessage,
-                stamps: [new MessageDelay('30 seconds')],
-                transport: $message->getProfile().'-low',
-            );
+            return;
         }
+
+
+        $this->logger->info(sprintf('Создали карточку товара %s', $message->getProduct()));
+
+        /**
+         * Обновляем стоимость товара
+         */
+
+        $UpdateWildberriesCardPriceMessage = new UpdateWildberriesCardPriceMessage(
+            profile: $message->getProfile(),
+            identifier: $message->getIdentifier(),
+            product: $message->getProduct(),
+            offerConst: $message->getOfferConst(),
+            variationConst: $message->getVariationConst(),
+            modificationConst: $message->getModificationConst(),
+            article: $message->getArticle(),
+        );
+
+        $this->messageDispatch->dispatch(
+            message: $UpdateWildberriesCardPriceMessage,
+            stamps: [new MessageDelay('5 seconds')],
+            transport: $message->getProfile().'-low',
+        );
+
+
+        /**
+         * Обновляем файлы изображений
+         */
+
+        $WildberriesCardMediaUpdateMessage = new WildberriesCardMediaUpdateMessage(
+            identifier: $message->getIdentifier(),
+            product: $message->getProduct(),
+            offerConst: $message->getOfferConst(),
+            variationConst: $message->getVariationConst(),
+            modificationConst: $message->getModificationConst(),
+            invariable: $message->getInvariable(),
+            article: $message->getArticle(),
+        );
+
+        $this->messageDispatch->dispatch(
+            message: $WildberriesCardMediaUpdateMessage,
+            stamps: [new MessageDelay('30 seconds')],
+            transport: $message->getProfile().'-low',
+        );
+
     }
 }

@@ -243,6 +243,15 @@ final class UpdateWildberriesProductsCardsCommand extends Command
             /** @var WbTokenUid $WbTokenUid */
             foreach($tokens as $WbTokenUid)
             {
+                $isCardUpdate = $this->FindAllWildberriesCardsRequest
+                    ->forTokenIdentifier($WbTokenUid)
+                    ->isCard();
+
+                if(false === $isCardUpdate)
+                {
+                    continue;
+                }
+
                 $wbCard = $this->FindAllWildberriesCardsRequest
                     ->forTokenIdentifier($WbTokenUid)
                     ->allPhoto()
@@ -252,6 +261,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 if(false === $wbCard || false === $wbCard->valid())
                 {
                     $wildberriesProductCardCreateMessage = new WildberriesCardCreateMessage(
+                        identifier: $WbTokenUid,
                         profile: $UserProfileUid,
                         product: $ProductsIdentifierResult->getProductId(),
                         offerConst: $ProductsIdentifierResult->getProductOfferConst(),
@@ -313,6 +323,7 @@ final class UpdateWildberriesProductsCardsCommand extends Command
 
 
                 $wildberriesProductCardUpdateMessage = new WildberriesCardUpdateMessage(
+                    identifier: $WbTokenUid,
                     profile: $UserProfileUid,
                     product: $ProductsIdentifierResult->getProductId(),
                     offerConst: $ProductsIdentifierResult->getProductOfferConst(),

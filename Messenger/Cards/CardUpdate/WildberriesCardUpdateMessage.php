@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -49,8 +49,10 @@ final readonly class WildberriesCardUpdateMessage
 
     private string $invariable;
 
+    private string $identifier;
 
     public function __construct(
+        WbTokenUid $identifier,
         UserProfileUid $profile,
         ProductUid $product,
         ProductOfferConst|false $offerConst,
@@ -66,6 +68,7 @@ final readonly class WildberriesCardUpdateMessage
         $this->variationConst = false === empty($variationConst) ? (string) $variationConst : null;
         $this->modificationConst = false === empty($modificationConst) ? (string) $modificationConst : null;
         $this->invariable = (string) $invariable;
+        $this->identifier = (string) $identifier;
     }
 
     public function getProfile(): UserProfileUid
@@ -101,5 +104,10 @@ final readonly class WildberriesCardUpdateMessage
     public function getInvariable(): ProductInvariableUid
     {
         return new ProductInvariableUid($this->invariable);
+    }
+
+    public function getIdentifier(): WbTokenUid
+    {
+        return new WbTokenUid($this->identifier);
     }
 }

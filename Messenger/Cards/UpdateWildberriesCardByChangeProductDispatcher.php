@@ -152,6 +152,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
                     if(false === ($WildberriesCardDTO instanceof WildberriesCardDTO))
                     {
                         $wbCreateMessage = new WildberriesCardCreateMessage(
+                            identifier: $WbTokenUid,
                             profile: $UserProfileUid,
                             product: $ProductsIdentifierResult->getProductId(),
                             offerConst: $ProductsIdentifierResult->getProductOfferConst(),
@@ -176,6 +177,7 @@ final readonly class UpdateWildberriesCardByChangeProductDispatcher
 
                     /** @var WildberriesCardDTO $wbCard */
                     $wbUpdateMessage = new WildberriesCardUpdateMessage(
+                        identifier: $WbTokenUid,
                         profile: $UserProfileUid,
                         product: $ProductsIdentifierResult->getProductId(),
                         offerConst: $ProductsIdentifierResult->getProductOfferConst(),
