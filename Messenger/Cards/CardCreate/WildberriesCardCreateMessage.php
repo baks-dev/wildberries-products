@@ -108,6 +108,6 @@ final readonly class WildberriesCardCreateMessage
 
     public function getIdentifier(): WbTokenUid
     {
-        return $this->identifier;
+        return new WbTokenUid($this->identifier);
     }
 }
