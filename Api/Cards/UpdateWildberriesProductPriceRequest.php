@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -102,10 +102,9 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
                 return true;
             }
 
-            $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                $response->getStatusCode(),
-                $content['statusText'],
-            ), [self::class.':'.__LINE__]);
+            $this->logger->critical(sprintf('wildberries-products: Ошибка %s при обновлении стоимости номенклатуры %s',
+                $response->getStatusCode(), $this->nomenclature,
+            ), [self::class.':'.__LINE__, $content]);
 
             return false;
         }

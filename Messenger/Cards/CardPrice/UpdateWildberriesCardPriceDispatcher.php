@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -54,19 +54,11 @@ final readonly class UpdateWildberriesCardPriceDispatcher
 
     public function __invoke(UpdateWildberriesCardPriceMessage $message): void
     {
-        /**
-         * Получаем все токены профиля
-         */
 
-        $tokensByProfile = $this->AllWbTokensByProfileRepository
-            ->forProfile($message->getProfile())
-            ->findAll();
-
-        if(false === $tokensByProfile || false === $tokensByProfile->valid())
+        if(false === $this->FindAllWildberriesCardsRequest->forTokenIdentifier($message->getIdentifier())->isCard())
         {
             return;
         }
-
 
         $CurrentWildberriesProductCardResult = $this->WildberriesProductsCardRepository
             ->forProfile($message->getProfile())
@@ -90,9 +82,8 @@ final readonly class UpdateWildberriesCardPriceDispatcher
         /** Получаем текущее состояние карточки Wildberries */
 
         $wbCard = $this->FindAllWildberriesCardsRequest
-            ->profile($message->getProfile())
+            ->forTokenIdentifier($message->getIdentifier())
             ->findAll($message->getArticle());
-
 
         if(false === $wbCard || false === $wbCard->valid())
         {
@@ -144,31 +135,32 @@ final readonly class UpdateWildberriesCardPriceDispatcher
         //            }
         //        }
 
-        foreach($tokensByProfile as $WbTokenUid)
+
+        foreach($requestData['sizes'] as $size)
         {
-            foreach($requestData['sizes'] as $size)
+            if(empty($size['price']))
             {
-                $isUpdate = $this->UpdateWildberriesProductPriceRequest
-                    ->forTokenIdentifier($WbTokenUid)
-                    ->nomenclature($WildberriesCardDTO->getId())
-                    ->price($size['price'])
-                    ->update();
-
-                if(false === $isUpdate)
-                {
-                    $this->logger->warning(
-                        sprintf('%s: Пробуем обновить стоимость товара позже', $message->getArticle()),
-                    );
-
-                    continue;
-                }
-
-                $this->logger->info(
-                    sprintf('%s: Обновили стоимость артикула', $message->getArticle()),
-                );
+                continue;
             }
+
+            $isUpdate = $this->UpdateWildberriesProductPriceRequest
+                ->forTokenIdentifier($message->getIdentifier())
+                ->nomenclature($WildberriesCardDTO->getId())
+                ->price($size['price'])
+                ->update();
+
+            if(false === $isUpdate)
+            {
+                $this->logger->warning(
+                    sprintf('%s: Пробуем обновить стоимость товара позже', $message->getArticle()),
+                );
+
+                continue;
+            }
+
+            $this->logger->info(
+                sprintf('%s: Обновили стоимость артикула', $message->getArticle()),
+            );
         }
-
-
     }
 }
