@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -90,7 +90,7 @@ final class GetWbFbsStocksRequest extends Wildberries
         if($response->getStatusCode() !== 200)
         {
             $this->logger->critical(
-                sprintf('wildberries-manufacture: Ошибка при получении остатков FBS'),
+                sprintf('wildberries-products: Ошибка при получении остатков FBS'),
                 [
                     self::class.':'.__LINE__,
                     $content,

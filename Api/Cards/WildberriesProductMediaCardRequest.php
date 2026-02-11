@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -95,20 +95,8 @@ final class WildberriesProductMediaCardRequest extends Wildberries
 
         if($response->getStatusCode() !== 200)
         {
-            if($response->getStatusCode() === 400 || $response->getStatusCode() === 403)
-            {
-                $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                    $response->getStatusCode(),
-                    $content['errorText'],
-                ), [self::class.':'.__LINE__]);
-
-                return false;
-            }
-
-            $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                $content['status'],
-                $content['statusText'],
-            ), [self::class.':'.__LINE__]);
+            $this->logger->critical(sprintf('wildberries-products: %s', $response->getStatusCode(),
+            ), [self::class.':'.__LINE__, $content]);
 
             return false;
         }
