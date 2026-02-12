@@ -31,17 +31,12 @@ use InvalidArgumentException;
 
 final class GetWbFbsStocksRequest extends Wildberries
 {
-    private string|false $barcode = false;
+    /** ID размера товара */
+    private int|false $chrt = false;
 
-    /** Баркод */
-    public function fromBarcode(ProductBarcode|string $barcode): self
+    public function fromChrtId(int|string $chrt): self
     {
-        if($barcode instanceof ProductBarcode)
-        {
-            $barcode = $barcode->getValue();
-        }
-
-        $this->barcode = $barcode;
+        $this->chrt = (int) $chrt;
 
         return $this;
     }
@@ -59,9 +54,9 @@ final class GetWbFbsStocksRequest extends Wildberries
             return true;
         }
 
-        if(empty($this->barcode))
+        if(empty($this->chrt))
         {
-            throw new InvalidArgumentException('Invalid Argument barcode');
+            throw new InvalidArgumentException('Invalid Argument Chrt');
         }
 
         if(empty($this->getWarehouse()))
@@ -77,8 +72,8 @@ final class GetWbFbsStocksRequest extends Wildberries
                 url: '/api/v3/stocks/'.$this->getWarehouse(),
                 options: [
                     "json" => [
-                        'skus' => [
-                            $this->barcode,
+                        'chrtIds' => [
+                            $this->chrt,
                         ],
                     ],
                 ],

@@ -44,6 +44,17 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         return $this;
     }
 
+
+    /** ID размера товара */
+    private int|false $chrt = false;
+
+    public function fromChrtId(int|string $chrt): self
+    {
+        $this->chrt = (int) $chrt;
+
+        return $this;
+    }
+
     /** Баркод */
     public function fromBarcode(ProductBarcode|string $barcode): self
     {
@@ -56,6 +67,7 @@ final class UpdateWbFbsStocksRequest extends Wildberries
 
         return $this;
     }
+
 
     public function setArticle(string $article): self
     {
@@ -82,6 +94,11 @@ final class UpdateWbFbsStocksRequest extends Wildberries
             throw new InvalidArgumentException('Invalid Argument warehouse');
         }
 
+        if(empty($this->chrt))
+        {
+            throw new InvalidArgumentException('Invalid Argument Chrt');
+        }
+
         if(false === $this->isStock())
         {
             return false;
@@ -91,6 +108,7 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         {
             $this->total = 0;
         }
+
 
         $response = $this
             ->marketplace()
@@ -102,7 +120,7 @@ final class UpdateWbFbsStocksRequest extends Wildberries
                     "json" => [
                         'stocks' => [
                             [
-                                'sku' => $this->barcode,
+                                'chrtId' => $this->chrt,
                                 'amount' => $this->total,
                             ],
                         ],

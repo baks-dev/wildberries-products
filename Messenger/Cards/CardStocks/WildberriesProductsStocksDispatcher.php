@@ -32,6 +32,8 @@ use BaksDev\Orders\Order\Repository\ProductTotalInOrders\ProductTotalInOrdersInt
 use BaksDev\Products\Product\Repository\CurrentProductIdentifier\CurrentProductIdentifierByConstInterface;
 use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
 use BaksDev\Products\Stocks\BaksDevProductsStocksBundle;
+use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
+use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Api\Stocks\GetWbFbsStocksRequest;
 use BaksDev\Wildberries\Products\Api\Stocks\UpdateWbFbsStocksRequest;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardInterface;
@@ -51,8 +53,8 @@ final readonly class WildberriesProductsStocksDispatcher
         private ProductTotalInOrdersInterface $ProductTotalInOrders,
         private WildberriesProductsCardInterface $WildberriesProductsCardRepository,
         private GetWbFbsStocksRequest $GetWbFbsStocksRequest,
-        private CurrentProductIdentifierByConstInterface $CurrentProductIdentifierByConstRepository,
         private UpdateWbFbsStocksRequest $UpdateWbFbsStocksRequest,
+        private FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest,
     ) {}
 
     /**
@@ -70,26 +72,6 @@ final readonly class WildberriesProductsStocksDispatcher
 
         if(false === $isStock)
         {
-            return;
-        }
-
-        /**
-         * Получаем активные идентификаторы карточки
-         */
-
-        $CurrentProductIdentifierResult = $this->CurrentProductIdentifierByConstRepository
-            ->forProduct($message->getProduct())
-            ->forOfferConst($message->getOfferConst())
-            ->forVariationConst($message->getVariationConst())
-            ->forModificationConst($message->getModificationConst())
-            ->find();
-
-        if(false === ($CurrentProductIdentifierResult->getBarcode() instanceof ProductBarcode))
-        {
-            $this->logger->critical('wildberries-products: Ошибка при получении штрихкода при обновлении остатка', [
-                self::class.':'.__LINE__, var_export($CurrentProductIdentifierResult, true),
-            ]);
-
             return;
         }
 
@@ -141,10 +123,29 @@ final readonly class WildberriesProductsStocksDispatcher
 
         // -----------------------------------------------------------
 
+        $result = $this->FindAllWildberriesCardsRequest
+            ->forTokenIdentifier($message->getIdentifier())
+            ->findAll($WildberriesProductsCardResult->getSearchArticle());
+
+        if(false === $result || false === $result->valid())
+        {
+            $this->logger->critical(sprintf(
+                'wildberries-products: Карточка товара Wildberries по артикулу %s не найдена',
+                $WildberriesProductsCardResult->getSearchArticle(),
+            ));
+
+            return;
+        }
+
+        /** @var WildberriesCardDTO $WildberriesCardDTO */
+        $WildberriesCardDTO = $result->current();
+        $chrt = $WildberriesCardDTO->getChrt('0');
+
+
         /** Возвращает данные об остатках товаров на маркетплейсе */
         $ProductStocksWildberries = $this->GetWbFbsStocksRequest
             ->forTokenIdentifier($message->getIdentifier())
-            ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
+            ->fromChrtId($chrt)
             ->find();
 
         if(false === $ProductStocksWildberries)
@@ -157,7 +158,7 @@ final readonly class WildberriesProductsStocksDispatcher
 
             $this->logger->critical(sprintf(
                 'Пробуем обновить остатки штрихкода %s через 30 секунд',
-                $CurrentProductIdentifierResult->getBarcode(),
+                $WildberriesProductsCardResult->getSearchArticle(),
             ));
 
             return;
@@ -171,9 +172,9 @@ final readonly class WildberriesProductsStocksDispatcher
          */
         if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
         {
-            $this->logger->info(sprintf(
-                'Наличие соответствует %s: %s == %s',
-                $CurrentProductIdentifierResult->getBarcode(),
+            $this->logger->warning(sprintf(
+                '%s: Наличие соответствует  %s == %s',
+                $WildberriesProductsCardResult->getSearchArticle(),
                 $ProductStocksWildberries,
                 $ProductQuantity,
             ), [$message->getIdentifier()]);
@@ -184,7 +185,7 @@ final readonly class WildberriesProductsStocksDispatcher
         /** Обновляем остатки товара если наличие изменилось */
         $isUpdate = $this->UpdateWbFbsStocksRequest
             ->forTokenIdentifier($message->getIdentifier())
-            ->fromBarcode($CurrentProductIdentifierResult->getBarcode())
+            ->fromChrtId($chrt)
             ->setArticle($WildberriesProductsCardResult->getSearchArticle())
             ->setTotal($ProductQuantity)
             ->update();
@@ -192,8 +193,8 @@ final readonly class WildberriesProductsStocksDispatcher
         if(true === $isUpdate)
         {
             $this->logger->info(sprintf(
-                'Обновили наличие %s: => %s',
-                $CurrentProductIdentifierResult->getBarcode(),
+                '%s: Обновили наличие  => %s',
+                $WildberriesProductsCardResult->getSearchArticle(),
                 $ProductQuantity,
             ), [$message->getIdentifier()]);
         }
