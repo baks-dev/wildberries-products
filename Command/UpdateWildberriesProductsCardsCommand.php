@@ -277,12 +277,12 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                         transport: $async === true ? $UserProfileUid.'-low' : null,
                     );
 
-                    $this->io->text(sprintf('Создали новую карточку WB для артикула %s', $ProductDetailByEventResult->getProductArticle()));
-
-                    if($ProductDetailByEventResult->getProductArticle() === $article)
-                    {
-                        break;
-                    }
+                    $this->io->text(
+                        sprintf(
+                            'Создали новую карточку WB для артикула %s',
+                            $ProductDetailByEventResult->getProductArticle(),
+                        ),
+                    );
 
                     continue;
                 }
@@ -338,7 +338,6 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                     message: $wildberriesProductCardUpdateMessage,
                     transport: $async === true ? $UserProfileUid.'-low' : null,
                 );
-
 
             }
 
