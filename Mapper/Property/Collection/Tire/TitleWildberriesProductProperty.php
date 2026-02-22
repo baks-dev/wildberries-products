@@ -109,34 +109,6 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         //        $name = mb_strtoupper($firstChar, 'UTF-8').$then.' ';
 
 
-        if($data->getProductParams() !== false)
-        {
-            /** Добавляем к названию сезонность */
-            $Season = new SeasonalityWildberriesProductParameters();
-
-            foreach($data->getProductParams() as $product_param)
-            {
-                if($Season->equals($product_param->name))
-                {
-                    $season_value = $Season->getData($data);
-
-                    $season_value = match ($season_value['value'])
-                    {
-                        'лето', 'summer' => 'летние',
-                        'зима', 'winter' => 'зимние',
-                        'всесезонные', 'all' => 'всесезонные',
-                        default => '',
-                    };
-
-                    if(false === empty($season_value))
-                    {
-                        $name .= mb_strlen($name.$season_value) > 60 ? '' : $season_value.' ';
-                    }
-                }
-            }
-        }
-
-
         if(false === empty($data->getProductVariationValue()))
         {
             $name .= $data->getProductVariationValue();
@@ -165,6 +137,33 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
         if($data->getProductModificationPostfix())
         {
             $name .= $data->getProductModificationPostfix().' ';
+        }
+
+        if($data->getProductParams() !== false)
+        {
+            /** Добавляем к названию сезонность */
+            $Season = new SeasonalityWildberriesProductParameters();
+
+            foreach($data->getProductParams() as $product_param)
+            {
+                if($Season->equals($product_param->name))
+                {
+                    $season_value = $Season->getData($data);
+
+                    $season_value = match ($season_value['value'])
+                    {
+                        'лето', 'summer' => 'летние',
+                        'зима', 'winter' => 'зимние',
+                        'всесезонные', 'all' => 'всесезонные',
+                        default => '',
+                    };
+
+                    if(false === empty($season_value))
+                    {
+                        $name .= mb_strlen($name.$season_value) > 60 ? '' : $season_value.' ';
+                    }
+                }
+            }
         }
 
         $name .= $data->getModelName().' ';
