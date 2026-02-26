@@ -302,7 +302,9 @@ final class UpdateWildberriesProductsCardsCommand extends Command
                 /** Шины группируем по РадиусПрофильШирина */
                 if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
                 {
-                    $key = $ProductDetailByEventResult->getProductOfferValue()
+                    $key =
+                        $WbTokenUid
+                        .$ProductDetailByEventResult->getProductOfferValue()
                         .$ProductDetailByEventResult->getProductVariationValue()
                         .$ProductDetailByEventResult->getProductModificationValue();
                 }

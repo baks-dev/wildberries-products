@@ -141,7 +141,9 @@ final readonly class WildberriesCardUpdateDispatcher
         /** Шины группируем по РадиусПрофильШирина */
         if($WildberriesCardDTO->getCategory() === WildberriesProductProperty::CATEGORY_TIRE)
         {
-            $key = $CurrentWildberriesProductCardResult->getProductOfferValue()
+            $key =
+                $message->getIdentifier()
+                .$CurrentWildberriesProductCardResult->getProductOfferValue()
                 .$CurrentWildberriesProductCardResult->getProductVariationValue()
                 .$CurrentWildberriesProductCardResult->getProductModificationValue();
         }
