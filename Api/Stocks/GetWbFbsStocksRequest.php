@@ -28,7 +28,9 @@ namespace BaksDev\Wildberries\Products\Api\Stocks;
 use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
 use BaksDev\Wildberries\Api\Wildberries;
 use InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+#[Autoconfigure(public: true)]
 final class GetWbFbsStocksRequest extends Wildberries
 {
     /** ID размера товара */
