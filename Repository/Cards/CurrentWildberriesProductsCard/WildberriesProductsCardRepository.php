@@ -19,6 +19,7 @@
  *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
+ *
  */
 
 declare(strict_types=1);
@@ -372,9 +373,9 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
                             product_offer.value
                         ),
                         'barcode', COALESCE(
-                            product_modification.barcode,
-                            product_variation.barcode,
-                            product_offer.barcode,
+                            product_modification.barcode_old,
+                            product_variation.barcode_old,
+                            product_offer.barcode_old,
                             product_info.barcode
                         ),
 
