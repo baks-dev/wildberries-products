@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -82,9 +82,13 @@ final class WildberriesProductUpdateCardRequest extends Wildberries
 
         if($response->getStatusCode() !== 200)
         {
-            $this->logger->critical(sprintf('wildberries-products: Ошибка %s обновления карточки',
-                $response->getStatusCode(),
-            ), [self::class.':'.__LINE__, $card, var_export($content, true)]);
+            $this->logger->critical(
+                sprintf(
+                    'wildberries-products: Ошибка %s обновления карточки (%s)',
+                    $response->getStatusCode(), $this->getTokenIdentifier(),
+                ),
+                [self::class.':'.__LINE__, var_export($content, true), $card],
+            );
 
             return false;
         }

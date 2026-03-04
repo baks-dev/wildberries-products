@@ -89,18 +89,24 @@ final class WildberriesProductCreateCardRequest extends Wildberries
         {
             if($response->getStatusCode() === 400)
             {
-                $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                    $response->getStatusCode(),
-                    $content['errorText'],
-                ), [self::class.':'.__LINE__, $content, $card]);
+                $this->logger->critical(
+                    sprintf(
+                        'wildberries-products: Ошибка при создании карточки %s (%s)',
+                        $response->getStatusCode(), $this->getTokenIdentifier(),
+                    ),
+                    [self::class.':'.__LINE__, $content, $card],
+                );
 
                 return false;
             }
 
-            $this->logger->critical(sprintf('wildberries-products: %s (%s)',
-                $content['status'],
-                $content['statusText'],
-            ), [self::class.':'.__LINE__, $content, $card]);
+            $this->logger->critical(
+                sprintf(
+                    'wildberries-products: Ошибка при создании карточки %s (%s)',
+                    $response->getStatusCode(), $this->getTokenIdentifier(),
+                ),
+                [self::class.':'.__LINE__, $content, $card],
+            );
 
             return false;
         }

@@ -71,7 +71,7 @@ final class FindAllWildberriesCardsRequest extends Wildberries
         while(true)
         {
             $cache = $this->getCacheInit('wildberries-products');
-            $key = md5(self::class.$this->getProfile().$this->nomenclature.$search);
+            $key = md5(self::class.$this->getTokenIdentifier().$this->nomenclature.$search);
 
             $content = $cache->get($key, function(ItemInterface $item) use ($search): array|false {
 
