@@ -47,8 +47,10 @@ use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Category\CategoryCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Description\ProductDescriptionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Barcode\ProductOfferBarcodeDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Image\ProductOfferImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\ProductOffersCollectionDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Barcode\ProductVariationBarcodeDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Image\ProductVariationImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\Image\ProductModificationImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\Modification\ProductModificationCollectionDTO;
@@ -96,7 +98,7 @@ final readonly class WildberriesCardNewDispatcher
         private ProductSettingsCategoryPropertyInterface $ProductSettingsCategoryProperty,
         private ProductSettingsCategoryParametersInterface $ProductSettingsCategoryParameters,
         private ProductEventByArticleInterface $ProductEventByArticle,
-     ) {}
+    ) {}
 
     public function __invoke(WildberriesCardNewMassage $message): void
     {
@@ -128,7 +130,7 @@ final readonly class WildberriesCardNewDispatcher
             if($WildberriesCardDTO->countMedia() === 0)
             {
                 $this->logger->warning(
-                    sprintf('Торговое предложение с артикулом %s без фото', $WildberriesCardDTO->getArticle())
+                    sprintf('Торговое предложение с артикулом %s без фото', $WildberriesCardDTO->getArticle()),
                 );
 
                 continue;
@@ -238,6 +240,7 @@ final readonly class WildberriesCardNewDispatcher
 
             /**
              * Присваиваем неизменную информацию о продукте
+             *
              * @see InfoDTO
              */
             $ProductInfo = $ProductDTO->getInfo();
@@ -285,7 +288,7 @@ final readonly class WildberriesCardNewDispatcher
             //            }
 
 
-            if(false !== $SettingsByCategory['offer_id'])
+            if(false === empty($SettingsByCategory['offer_id']))
             {
                 $OffersDTO = new ProductOffersCollectionDTO();
                 $ProductDTO->addOffer($OffersDTO);
@@ -297,7 +300,6 @@ final readonly class WildberriesCardNewDispatcher
                     $package[$barcode]['offer'] = null;
                     $package[$barcode]['variation'] = null;
                     $package[$barcode]['modification'] = null;
-
 
                     // поиск цвета по идентификатору (временно для футболок)
                     $CharValue = $WildberriesCardDTO->getCharacteristic(ColorWildberriesProductParameters::ID);
@@ -328,8 +330,12 @@ final readonly class WildberriesCardNewDispatcher
                     // Если торговое предложение является артикульным - присваиваем артикул и баркод
                     if($SettingsByCategory['offer_article'])
                     {
-                        $OffersDTO->setArticle($WildberriesCardDTO->getArticle().'-'.$size);
-                        $OffersDTO->setBarcode(new ProductBarcode((string) $barcode));
+                        $ProductOfferBarcodeDTO = new ProductOfferBarcodeDTO()
+                            ->setValue(new ProductBarcode((string) $barcode));
+
+                        $OffersDTO
+                            ->setArticle($WildberriesCardDTO->getArticle().'-'.$size)
+                            ->addBarcode($ProductOfferBarcodeDTO);
                     }
 
                     $OffersDTO->setValue((string) $CharValue);
@@ -388,6 +394,7 @@ final readonly class WildberriesCardNewDispatcher
                         return $element->getValue() === (string) $CharValueVariation;
                     });
 
+                    /** @var ProductVariationCollectionDTO $VariationDTO */
                     $VariationDTO = $filterVariation->current();
 
                     if(false === $VariationDTO)
@@ -400,8 +407,13 @@ final readonly class WildberriesCardNewDispatcher
                     // Если множественный вариант является артикульным - присваиваем артикул и баркод
                     if($SettingsByCategory['variation_article'])
                     {
-                        $VariationDTO->setArticle($WildberriesCardDTO->getArticle().'-'.$size);
-                        $VariationDTO->setBarcode(new ProductBarcode((string) $barcode));
+
+                        $ProductVariationBarcodeDTO = new ProductVariationBarcodeDTO()
+                            ->setValue(new ProductBarcode((string) $barcode));
+
+                        $VariationDTO
+                            ->setArticle($WildberriesCardDTO->getArticle().'-'.$size)
+                            ->addBarcode($ProductVariationBarcodeDTO);
                     }
 
                     $VariationDTO->setValue((string) $CharValueVariation);
@@ -420,6 +432,7 @@ final readonly class WildberriesCardNewDispatcher
                 }
 
             }
+
             /**
              * Характеристики карточки
              */
@@ -489,6 +502,7 @@ final readonly class WildberriesCardNewDispatcher
 
             /**
              * Название продукта
+             *
              * @var ProductTransDTO $ProductTransDTO
              */
             foreach($ProductDTO->getTranslate() as $ProductTransDTO)
@@ -504,6 +518,7 @@ final readonly class WildberriesCardNewDispatcher
 
             /**
              * Описание файла
+             *
              * @var ProductDescriptionDTO $ProductDescriptionDTO
              */
             foreach($ProductDTO->getDescription() as $ProductDescriptionDTO)
@@ -518,7 +533,7 @@ final readonly class WildberriesCardNewDispatcher
             {
                 $this->logger->critical(
                     sprintf('wildberries-products: Ошибка при сохранении карточки %s', $WildberriesCardDTO->getArticle()),
-                    [$Product, self::class.':'.__LINE__]
+                    [$Product, self::class.':'.__LINE__],
                 );
 
                 continue;
@@ -547,7 +562,7 @@ final readonly class WildberriesCardNewDispatcher
                     {
                         $this->logger->critical(
                             sprintf('wildberries-products: Ошибка при сохранении параметров упаковки артикула %s', $WildberriesCardDTO->getArticle()),
-                            [$DeliveryPackageProductParameter, $pack, self::class.':'.__LINE__]
+                            [$DeliveryPackageProductParameter, $pack, self::class.':'.__LINE__],
 
                         );
                     }
@@ -613,7 +628,7 @@ final readonly class WildberriesCardNewDispatcher
         $this->WildberriesCardImage->get(
             $mediaFile,
             $ImageCollectionDTO,
-            $table
+            $table,
         );
 
         if($parent->getImage()->isEmpty() === true)
