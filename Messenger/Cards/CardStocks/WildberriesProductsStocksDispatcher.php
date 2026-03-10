@@ -142,45 +142,45 @@ final readonly class WildberriesProductsStocksDispatcher
         $chrt = $WildberriesCardDTO->getChrt('0');
 
 
-        /** Возвращает данные об остатках товаров на маркетплейсе */
-        $ProductStocksWildberries = $this->GetWbFbsStocksRequest
-            ->forTokenIdentifier($message->getIdentifier())
-            ->fromChrtId($chrt)
-            ->find();
-
-        if(false === $ProductStocksWildberries)
-        {
-            $this->messageDispatch->dispatch(
-                message: $message,
-                stamps: [new MessageDelay('30 seconds')],
-                transport: $message->getProfile().'-low',
-            );
-
-            $this->logger->critical(sprintf(
-                'Пробуем обновить остатки штрихкода %s через 30 секунд',
-                $WildberriesProductsCardResult->getSearchArticle(),
-            ));
-
-            return;
-        }
-
-
-        /**
-         * TRUE - возвращается в случае если продажи остановлены, следовательно, не сверяем остатки, а всегда обнуляем
-         *
-         * @see UpdateWildberriesProductStocksRequest:79
-         */
-        if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
-        {
-            $this->logger->warning(sprintf(
-                '%s: Наличие соответствует  %s == %s',
-                $WildberriesProductsCardResult->getSearchArticle(),
-                $ProductStocksWildberries,
-                $ProductQuantity,
-            ), [$message->getIdentifier()]);
-
-            return;
-        }
+        //        /** Возвращает данные об остатках товаров на маркетплейсе */
+        //        $ProductStocksWildberries = $this->GetWbFbsStocksRequest
+        //            ->forTokenIdentifier($message->getIdentifier())
+        //            ->fromChrtId($chrt)
+        //            ->find();
+        //
+        //        if(false === $ProductStocksWildberries)
+        //        {
+        //            $this->messageDispatch->dispatch(
+        //                message: $message,
+        //                stamps: [new MessageDelay('30 seconds')],
+        //                transport: $message->getProfile().'-low',
+        //            );
+        //
+        //            $this->logger->critical(sprintf(
+        //                'Пробуем обновить остатки штрихкода %s через 30 секунд',
+        //                $WildberriesProductsCardResult->getSearchArticle(),
+        //            ));
+        //
+        //            return;
+        //        }
+        //
+        //
+        //        /**
+        //         * TRUE - возвращается в случае если продажи остановлены, следовательно, не сверяем остатки, а всегда обнуляем
+        //         *
+        //         * @see UpdateWildberriesProductStocksRequest:79
+        //         */
+        //        if($ProductStocksWildberries !== true && $ProductStocksWildberries === $ProductQuantity)
+        //        {
+        //            $this->logger->warning(sprintf(
+        //                '%s: Наличие соответствует  %s == %s',
+        //                $WildberriesProductsCardResult->getSearchArticle(),
+        //                $ProductStocksWildberries,
+        //                $ProductQuantity,
+        //            ), [$message->getIdentifier()]);
+        //
+        //            return;
+        //        }
 
         /** Обновляем остатки товара если наличие изменилось */
         $isUpdate = $this->UpdateWbFbsStocksRequest
