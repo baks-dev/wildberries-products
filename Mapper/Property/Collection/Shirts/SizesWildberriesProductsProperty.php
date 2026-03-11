@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2025.  Baks.dev <admin@baks.dev>
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,7 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
 
     public const string PARAM = 'sizes';
 
-    public function __construct(private readonly FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest) {}
+    public function __construct(private ?FindAllWildberriesCardsRequest $FindAllWildberriesCardsRequest = null) {}
 
     public function getIndex(): string
     {
@@ -107,9 +107,14 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
 
         $sizes = $data->getProductSize();
 
-        if(false !== $data->getProductSize())
+        if(false === empty($data->getProductSize()))
         {
             if(empty($sizes))
+            {
+                return false;
+            }
+
+            if(false === ($this->FindAllWildberriesCardsRequest instanceof FindAllWildberriesCardsRequest))
             {
                 return false;
             }
