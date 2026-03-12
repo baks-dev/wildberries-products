@@ -32,7 +32,7 @@ use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\ItemInterface;
 
-// #[Autoconfigure(public: true)]
+#[Autoconfigure(public: true)]
 final class FindAllWbCharacteristicRequest extends Wildberries
 {
     private int|false $category = false;
