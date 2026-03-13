@@ -33,8 +33,6 @@ final class UpdateWbFbsStocksRequest extends Wildberries
 {
     private string $article;
 
-    private string $barcode;
-
     private int $total = 0;
 
     /** Остаток */
@@ -43,7 +41,6 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         $this->total = $total;
         return $this;
     }
-
 
     /** ID размера товара */
     private int|false $chrt = false;
@@ -54,20 +51,6 @@ final class UpdateWbFbsStocksRequest extends Wildberries
 
         return $this;
     }
-
-    /** Баркод */
-    public function fromBarcode(ProductBarcode|string $barcode): self
-    {
-        if(true === ($barcode instanceof ProductBarcode))
-        {
-            $barcode = $barcode->getValue();
-        }
-
-        $this->barcode = $barcode;
-
-        return $this;
-    }
-
 
     public function setArticle(string $article): self
     {
@@ -134,8 +117,8 @@ final class UpdateWbFbsStocksRequest extends Wildberries
 
             $this->logger->critical(
                 sprintf(
-                    'wildberries-products: Ошибка «%s» обновления остатков FBS карточки товара %s (%s)',
-                    $response->getStatusCode(), $this->article, $this->barcode),
+                    'wildberries-products: Ошибка «%s» обновления остатков FBS карточки товара %s',
+                    $response->getStatusCode(), $this->article),
                 [
                     self::class.':'.__LINE__,
                     $content,
