@@ -86,15 +86,18 @@ final class FindAllWildberriesCardsRequest extends Wildberries
 
                         ],
                         "filter" => [
-                            "textSearch" => $search ?: '',
+                            "textSearch" => $search ? (string) $search : '',
                             "withPhoto" => $this->photo,
                         ],
                     ],
                 ];
 
                 $response = $this->content()->TokenHttpClient()
-                    ->request('POST', '/content/v2/get/cards/list',
-                        ['json' => $json]);
+                    ->request(
+                        'POST',
+                        '/content/v2/get/cards/list',
+                        ['json' => $json],
+                    );
 
                 $content = $response->toArray(false);
 
