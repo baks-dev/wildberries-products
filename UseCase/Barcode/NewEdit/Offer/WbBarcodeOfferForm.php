@@ -48,8 +48,8 @@ final class WbBarcodeOfferForm extends AbstractType
                 },
                 function($value) {
                     return $value === true;
-                }
-            )
+                },
+            ),
         );
     }
 

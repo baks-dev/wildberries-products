@@ -98,7 +98,7 @@ class GetWbProductsNewCommand extends Command
         $question = new ChoiceQuestion(
             'Профиль пользователя (Ctrl+C чтобы выйти)',
             $questions,
-            '0'
+            '0',
         );
 
         $key = $helper->ask($input, $output, $question);
@@ -184,7 +184,7 @@ class GetWbProductsNewCommand extends Command
 
             $this->messageDispatch->dispatch(
                 $WildberriesCardNewMassage,
-                transport: $async === true ? 'wildberries-products-low' : null
+                transport: $async === true ? 'wildberries-products-low' : null,
             );
 
             $this->io->writeln(sprintf('<fg=green>Добавили карточку с артикулом %s</>', $WildberriesCardDTO->getArticle()));

@@ -45,6 +45,22 @@ final class CharacteristicsWildberriesProductProperty implements WildberriesProd
         private readonly ?TranslatorInterface $translator = null,
     ) {}
 
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
+    {
+        return 200;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public static function equals(string $param): bool
+    {
+        return self::PARAM === $param;
+    }
+
     public function getIndex(): string
     {
         return self::PARAM;
@@ -64,22 +80,6 @@ final class CharacteristicsWildberriesProductProperty implements WildberriesProd
     public function choices(): ?array
     {
         return null;
-    }
-
-    /**
-     * Сортировка (чем меньше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int
-    {
-        return 200;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public static function equals(string $param): bool
-    {
-        return self::PARAM === $param;
     }
 
     public function isSetting(): bool

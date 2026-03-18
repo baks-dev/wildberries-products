@@ -118,7 +118,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
                 'product',
                 WbProductCard::class,
                 'card',
-                'card.product = product.id'
+                'card.product = product.id',
             );
 
 
@@ -128,7 +128,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product',
             ProductTrans::class,
             'product_trans',
-            'product_trans.event = product.event AND product_trans.local = :local'
+            'product_trans.event = product.event AND product_trans.local = :local',
         );
 
         if($this->profile)
@@ -145,7 +145,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product',
             ProductInfo::class,
             'product_info',
-            'product_info.product = product.id'
+            'product_info.product = product.id',
         );
 
 
@@ -155,7 +155,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_info',
             UserProfile::class,
             'users_profile',
-            'users_profile.id = product_info.profile'
+            'users_profile.id = product_info.profile',
         );
 
         $dbal->addSelect('users_profile_personal.username AS users_profile_username');
@@ -163,7 +163,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'users_profile',
             UserProfilePersonal::class,
             'users_profile_personal',
-            'users_profile_personal.event = users_profile.event'
+            'users_profile_personal.event = users_profile.event',
         );
 
 
@@ -177,7 +177,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product',
             ProductOffer::class,
             'product_offer',
-            'product_offer.event = product.event'
+            'product_offer.event = product.event',
         );
 
 
@@ -186,7 +186,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'card',
             WbProductCardOffer::class,
             'card_offer',
-            'card_offer.card = card.id AND card_offer.offer = product_offer.const'
+            'card_offer.card = card.id AND card_offer.offer = product_offer.const',
         );
 
 
@@ -203,7 +203,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_offer',
             CategoryProductOffers::class,
             'category_offer',
-            'category_offer.id = product_offer.category_offer'
+            'category_offer.id = product_offer.category_offer',
         );
 
 
@@ -217,7 +217,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_offer',
             ProductVariation::class,
             'product_variation',
-            'product_variation.offer = product_offer.id'
+            'product_variation.offer = product_offer.id',
         );
 
 
@@ -234,7 +234,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_variation',
             CategoryProductVariation::class,
             'category_offer_variation',
-            'category_offer_variation.id = product_variation.category_variation'
+            'category_offer_variation.id = product_variation.category_variation',
         );
 
 
@@ -243,7 +243,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_variation',
             WbProductCardVariation::class,
             'card_variation',
-            'card_variation.card = card.id AND card_variation.variation = product_variation.const'
+            'card_variation.card = card.id AND card_variation.variation = product_variation.const',
         );
 
 
@@ -256,7 +256,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
 					   WHEN product_info.article IS NOT NULL THEN product_info.article
 					   ELSE NULL
 					END AS product_article
-				"
+				",
         );
 
 
@@ -266,21 +266,21 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product',
             ProductPhoto::class,
             'product_photo',
-            'product_photo.event = product.event AND product_photo.root = true'
+            'product_photo.event = product.event AND product_photo.root = true',
         );
 
         $dbal->leftJoin(
             'product_offer',
             ProductVariationImage::class,
             'product_variation_image',
-            'product_variation_image.variation = product_variation.id AND product_variation_image.root = true'
+            'product_variation_image.variation = product_variation.id AND product_variation_image.root = true',
         );
 
         $dbal->leftJoin(
             'product_offer',
             ProductOfferImage::class,
             'product_offer_images',
-            'product_offer_images.offer = product_offer.id AND product_offer_images.root = true'
+            'product_offer_images.offer = product_offer.id AND product_offer_images.root = true',
         );
 
         $dbal->addSelect("
@@ -293,7 +293,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
 					CONCAT ( '/upload/".$dbal->table(ProductPhoto::class)."' , '/', product_photo.name)
 			   ELSE NULL
 			END AS product_image
-		"
+		",
         );
 
         /** Флаг загрузки файла CDN */
@@ -328,7 +328,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product',
             ProductCategory::class,
             'product_event_category',
-            'product_event_category.event = product.event AND product_event_category.root = true'
+            'product_event_category.event = product.event AND product_event_category.root = true',
         );
 
         if($this->filter->getCategory())
@@ -341,7 +341,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'product_event_category',
             CategoryProduct::class,
             'category',
-            'category.id = product_event_category.category'
+            'category.id = product_event_category.category',
         );
 
         $dbal->addSelect('category_trans.name AS category_name');
@@ -350,7 +350,7 @@ final class AllWbProductCardRepository implements AllWbProductCardInterface
             'category',
             CategoryProductTrans::class,
             'category_trans',
-            'category_trans.event = category.event AND category_trans.local = :local'
+            'category_trans.event = category.event AND category_trans.local = :local',
         );
 
 

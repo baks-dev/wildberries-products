@@ -39,7 +39,7 @@ final class DeleteWbProductSettingsForm extends AbstractType
         $builder->add(
             'delete_product_settings',
             SubmitType::class,
-            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+            ['label' => 'Delete', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
         );
     }
 

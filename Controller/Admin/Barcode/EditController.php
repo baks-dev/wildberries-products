@@ -71,7 +71,7 @@ final class EditController extends AbstractController
                 'admin.page.edit',
                 $handle instanceof WbBarcode ? 'admin.success.edit' : 'admin.danger.edit',
                 'admin.wb.products.barcode',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('wildberries-products:admin.barcode.index');

@@ -42,7 +42,7 @@ class WildberriesProductImageIdentifierByNameRepositoryTest extends KernelTestCa
 
         $result = $WildberriesImageIdentifierByNameRepository->find('88f9fbfeb61b28a041aff4c9c8add3ee');
 
-//        dump($result);
+        //        dump($result);
 
         self::assertTrue(true);
 

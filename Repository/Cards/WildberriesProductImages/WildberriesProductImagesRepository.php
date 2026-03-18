@@ -63,6 +63,8 @@ final class WildberriesProductImagesRepository implements WildberriesProductImag
      */
     private ProductModificationConst|false $modificationConst = false;
 
+    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
+
     public function forProduct(Product|ProductUid|string $product): self
     {
         if(empty($product))
@@ -140,9 +142,6 @@ final class WildberriesProductImagesRepository implements WildberriesProductImag
 
         return $this;
     }
-
-    public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
-
 
     public function findAll(): array|bool
     {

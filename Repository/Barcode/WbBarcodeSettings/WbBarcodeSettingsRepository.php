@@ -123,14 +123,14 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             'product',
             ProductCategory::class,
             'product_category',
-            'product_category.event = product.event AND product_category.root = true'
+            'product_category.event = product.event AND product_category.root = true',
         );
 
         $dbal->leftJoin(
             'product',
             ProductInfo::class,
             'product_info',
-            'product_info.product = product.id'
+            'product_info.product = product.id',
         );
 
         $dbal
@@ -145,7 +145,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             ->setParameter(
                 key: 'profile',
                 value: $this->profile ?: $this->UserProfileTokenStorage->getProfile(),
-                type: UserProfileUid::TYPE
+                type: UserProfileUid::TYPE,
             );
 
         $dbal
@@ -154,7 +154,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
                 'barcode',
                 WbBarcodeCounter::class,
                 'barcode_counter',
-                'barcode_counter.event = barcode.event'
+                'barcode_counter.event = barcode.event',
             );
 
         $dbal
@@ -163,7 +163,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
                 'barcode',
                 WbBarcodeName::class,
                 'barcode_name',
-                'barcode_name.event = barcode.event'
+                'barcode_name.event = barcode.event',
             );
 
         $dbal
@@ -172,7 +172,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
                 'barcode',
                 WbBarcodeOffer::class,
                 'barcode_offer',
-                'barcode_offer.event = barcode.event'
+                'barcode_offer.event = barcode.event',
             );
 
         $dbal
@@ -181,7 +181,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
                 'barcode',
                 WbBarcodeVariation::class,
                 'barcode_variation',
-                'barcode_variation.event = barcode.event'
+                'barcode_variation.event = barcode.event',
             );
 
         $dbal
@@ -190,7 +190,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
                 'barcode',
                 WbBarcodeVariation::class,
                 'barcode_modification',
-                'barcode_modification.event = barcode.event'
+                'barcode_modification.event = barcode.event',
             );
 
 
@@ -200,7 +200,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             'barcode',
             WbBarcodeProperty::class,
             'property',
-            'property.event = barcode.event'
+            'property.event = barcode.event',
         );
 
         $dbal->leftJoin(
@@ -231,7 +231,7 @@ final class WbBarcodeSettingsRepository implements WbBarcodeSettingsInterface
             'barcode',
             WbBarcodeCustom::class,
             'custom',
-            'custom.event = barcode.event'
+            'custom.event = barcode.event',
         );
 
 

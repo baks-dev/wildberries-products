@@ -78,7 +78,7 @@ final class FindAllWbCharacteristicRequest extends Wildberries
             if($response->getStatusCode() !== 200)
             {
                 $this->logger->critical('wildberries-products: Ошибка характеристик', [
-                    $content, self::class.':'.__LINE__
+                    $content, self::class.':'.__LINE__,
                 ]);
 
                 return false;

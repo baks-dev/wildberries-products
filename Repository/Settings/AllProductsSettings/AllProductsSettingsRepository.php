@@ -71,7 +71,7 @@ final readonly class AllProductsSettingsRepository implements AllProductsSetting
                 'settings',
                 CategoryProduct::class,
                 'category',
-                'category.id = settings.id'
+                'category.id = settings.id',
             );
 
         /** События категории */

@@ -40,8 +40,6 @@ final class WbProductSettingsPropertyForm extends AbstractType
         //$builder->add('type', HiddenType::class);
 
 
-
-
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $event) use ($options) {
 
             /** @var WbProductSettingsPropertyDTO $data */
@@ -80,8 +78,8 @@ final class WbProductSettingsPropertyForm extends AbstractType
                     TextType::class,
                     [
                         //                //'data' => $data->getDef() ?: $YaMarketProperty->default(),
-                        'required' => $data->isRequired()
-                    ]
+                        'required' => $data->isRequired(),
+                    ],
                 );
 
             }
@@ -94,7 +92,7 @@ final class WbProductSettingsPropertyForm extends AbstractType
             [
                 'data_class' => WbProductSettingsPropertyDTO::class,
                 'property_fields' => null,
-            ]
+            ],
         );
     }
 

@@ -571,6 +571,17 @@ final readonly class WildberriesCardNewDispatcher
         }
     }
 
+    public function filterTitle(array $haystack, string $title): string
+    {
+        $haystack = array_map("mb_strtolower", $haystack);
+
+        $title = mb_strtolower($title);
+        $title = (string) str_ireplace($haystack, '', $title);
+        $title = preg_replace('/\s/', ' ', $title);
+        $title = trim($title);
+
+        return mb_ucfirst($title);
+    }
 
     public function createMediaFile(
         ProductOffersCollectionDTO|ProductVariationCollectionDTO|ProductModificationCollectionDTO|ProductDTO $parent,
@@ -637,18 +648,5 @@ final readonly class WildberriesCardNewDispatcher
         }
 
         $parent->addImage($ImageCollectionDTO);
-    }
-
-
-    public function filterTitle(array $haystack, string $title): string
-    {
-        $haystack = array_map("mb_strtolower", $haystack);
-
-        $title = mb_strtolower($title);
-        $title = (string) str_ireplace($haystack, '', $title);
-        $title = preg_replace('/\s/', ' ', $title);
-        $title = trim($title);
-
-        return mb_ucfirst($title);
     }
 }

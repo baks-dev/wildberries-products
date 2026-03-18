@@ -21,15 +21,15 @@
  */
 
 
-let object_name = document.getElementById('preform_form_name');
+let object_name = document.getElementById("preform_form_name");
 
 
-object_name.addEventListener('change', function()
+object_name.addEventListener("change", function()
 {
-    let replaceId = 'preform_form_parent';
+    let replaceId = "preform_form_parent";
 
-    let replaceElement = document.getElementById(replaceId + '_select2');
-    replaceElement.classList.add('disabled');
+    let replaceElement = document.getElementById(replaceId + "_select2");
+    replaceElement.classList.add("disabled");
 
     /* Создаём объект класса XMLHttpRequest */
     const requestModalName = new XMLHttpRequest();
@@ -37,12 +37,12 @@ object_name.addEventListener('change', function()
 
     let preformForm = document.forms.preform_form;
     let formData = new FormData();
-    formData.append(this.getAttribute('name'), this.value);
+    formData.append(this.getAttribute("name"), this.value);
 
-    requestModalName.open(preformForm.getAttribute('method'), preformForm.getAttribute('action'), true);
+    requestModalName.open(preformForm.getAttribute("method"), preformForm.getAttribute("action"), true);
 
     /* Указываем заголовки для сервера */
-    requestModalName.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    requestModalName.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
     /* Получаем ответ от сервера на запрос*/
     requestModalName.addEventListener("readystatechange", function()
@@ -54,7 +54,7 @@ object_name.addEventListener('change', function()
             let result = requestModalName.response.getElementById(replaceId);
 
             /* Удаляем предыдущий Select2 */
-            let select2 = document.getElementById(replaceId + '_select2');
+            let select2 = document.getElementById(replaceId + "_select2");
             if(select2)
             {
                 select2.remove();
@@ -62,7 +62,7 @@ object_name.addEventListener('change', function()
 
             document.getElementById(replaceId).replaceWith(result);
 
-            new NiceSelect(document.getElementById(replaceId), {searchable: true, id: 'select2-' + replaceId});
+            new NiceSelect(document.getElementById(replaceId), {searchable : true, id : "select2-" + replaceId});
         }
 
         return false;

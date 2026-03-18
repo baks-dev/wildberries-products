@@ -73,7 +73,7 @@ final class ProductSettingsCategoryPropertyRepository implements ProductSettings
                 'invariable',
                 WbProductSettings::class,
                 'settings',
-                'settings.id = invariable.main'
+                'settings.id = invariable.main',
             );
 
         $dbal
@@ -81,12 +81,12 @@ final class ProductSettingsCategoryPropertyRepository implements ProductSettings
                 'invariable',
                 WbProductSettingsProperty::class,
                 'property',
-                'property.event = settings.event AND property.type = :type'
+                'property.event = settings.event AND property.type = :type',
             )
             ->setParameter(
                 'type',
                 $type,
-                WildberriesProductProperty::TYPE
+                WildberriesProductProperty::TYPE,
             );
 
         /** Определяем тип свойства, не является ли оно справочником */
@@ -96,7 +96,7 @@ final class ProductSettingsCategoryPropertyRepository implements ProductSettings
                 'invariable',
                 CategoryProduct::class,
                 'category',
-                'category.id = invariable.main'
+                'category.id = invariable.main',
             );
 
         $dbal
@@ -104,7 +104,7 @@ final class ProductSettingsCategoryPropertyRepository implements ProductSettings
                 'category',
                 CategoryProductSection::class,
                 'section',
-                'section.event = category.event'
+                'section.event = category.event',
             );
 
 
@@ -113,7 +113,7 @@ final class ProductSettingsCategoryPropertyRepository implements ProductSettings
                 'section',
                 CategoryProductSectionField::class,
                 'field',
-                'field.section = section.id AND field.const = property.field'
+                'field.section = section.id AND field.const = property.field',
             );
 
 

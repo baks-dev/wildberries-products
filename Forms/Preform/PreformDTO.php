@@ -33,14 +33,11 @@ final class PreformDTO
     #[Assert\Uuid]
     #[Assert\NotBlank]
     public ?CategoryProductUid $id = null;
-
+    #[Assert\NotBlank]
+    public ?WbCategoryDTO $category = null;
     /** Идентификаторы Wildberries */
 
     private ?WbParentCategoryDTO $parent = null;
-
-
-    #[Assert\NotBlank]
-    public ?WbCategoryDTO $category = null;
 
     /**
      * Id

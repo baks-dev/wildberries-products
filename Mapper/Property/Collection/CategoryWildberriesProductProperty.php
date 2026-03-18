@@ -38,6 +38,19 @@ final class CategoryWildberriesProductProperty implements WildberriesProductProp
 
     public const string PARAM = 'subjectID';
 
+    public static function priority(): int
+    {
+        return 999;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public static function equals(string $param): bool
+    {
+        return self::PARAM === $param;
+    }
+
     public function getIndex(): string
     {
         return self::PARAM;
@@ -59,23 +72,9 @@ final class CategoryWildberriesProductProperty implements WildberriesProductProp
         return false;
     }
 
-
     public function required(): bool
     {
         return true;
-    }
-
-    public static function priority(): int
-    {
-        return 999;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public static function equals(string $param): bool
-    {
-        return self::PARAM === $param;
     }
 
     public function choices(): ?array

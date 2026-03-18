@@ -45,7 +45,6 @@ final class WbProductSettingsPropertyDTO implements WbProductSettingsPropertyInt
     private ?WildberriesProductProperty $type = null;
 
 
-
     /**
      * Связь на свойство продукта в категории
      */
@@ -128,10 +127,6 @@ final class WbProductSettingsPropertyDTO implements WbProductSettingsPropertyInt
         $this->def = $def;
         return $this;
     }
-
-
-
-
 
 
     /**

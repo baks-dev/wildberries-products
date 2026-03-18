@@ -111,30 +111,6 @@ final class WildberriesProductsCardResult
         return $this->card_article;
     }
 
-    public function getArticle(): array|false
-    {
-        if(false === is_string($this->article) || false === json_validate($this->article))
-        {
-            return false;
-        }
-
-        if(is_null($this->product_article_decoded))
-        {
-            $product_article_decoded = json_decode($this->article, false, 512, JSON_THROW_ON_ERROR);
-
-            if(true === empty($product_article_decoded))
-            {
-                $this->product_article_decoded = false;
-
-                return false;
-            }
-
-            $this->product_article_decoded = $product_article_decoded;
-        }
-
-        return $this->product_article_decoded;
-    }
-
     /**
      * ProductOffer
      */
@@ -173,7 +149,6 @@ final class WildberriesProductsCardResult
         return $this->product_variation_postfix;
     }
 
-
     /**
      * ProductModification
      */
@@ -207,7 +182,6 @@ final class WildberriesProductsCardResult
 
         return empty($model) || $model === $this->product_name ? false : $model;
     }
-
 
     public function getProductSize(): array|false
     {
@@ -376,6 +350,30 @@ final class WildberriesProductsCardResult
         }
 
         return $article ?? null;
+    }
+
+    public function getArticle(): array|false
+    {
+        if(false === is_string($this->article) || false === json_validate($this->article))
+        {
+            return false;
+        }
+
+        if(is_null($this->product_article_decoded))
+        {
+            $product_article_decoded = json_decode($this->article, false, 512, JSON_THROW_ON_ERROR);
+
+            if(true === empty($product_article_decoded))
+            {
+                $this->product_article_decoded = false;
+
+                return false;
+            }
+
+            $this->product_article_decoded = $product_article_decoded;
+        }
+
+        return $this->product_article_decoded;
     }
 
     public function getProfile(): string

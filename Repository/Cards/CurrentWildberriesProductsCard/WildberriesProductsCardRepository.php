@@ -71,6 +71,23 @@ use InvalidArgumentException;
 final class WildberriesProductsCardRepository implements WildberriesProductsCardInterface
 {
     private int $limit = 100000;
+    private UserProfileUid|false $profile = false;
+    /**
+     * ID продукта
+     */
+    private ProductUid|false $product = false;
+    /**
+     * Постоянный уникальный идентификатор ТП
+     */
+    private ProductOfferConst|false $offerConst = false;
+    /**
+     * Постоянный уникальный идентификатор варианта
+     */
+    private ProductVariationConst|false $variationConst = false;
+    /**
+     * Постоянный уникальный идентификатор модификации
+     */
+    private ProductModificationConst|false $modificationConst = false;
 
     public function __construct(private readonly DBALQueryBuilder $DBALQueryBuilder) {}
 
@@ -79,28 +96,6 @@ final class WildberriesProductsCardRepository implements WildberriesProductsCard
         $this->limit = $limit;
         return $this;
     }
-
-    private UserProfileUid|false $profile = false;
-
-    /**
-     * ID продукта
-     */
-    private ProductUid|false $product = false;
-
-    /**
-     * Постоянный уникальный идентификатор ТП
-     */
-    private ProductOfferConst|false $offerConst = false;
-
-    /**
-     * Постоянный уникальный идентификатор варианта
-     */
-    private ProductVariationConst|false $variationConst = false;
-
-    /**
-     * Постоянный уникальный идентификатор модификации
-     */
-    private ProductModificationConst|false $modificationConst = false;
 
     public function forProfile(UserProfile|UserProfileUid|string $profile): self
     {

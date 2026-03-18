@@ -78,8 +78,8 @@ final class WbProductSettingsParametersForm extends AbstractType
                     TextType::class,
                     [
                         //                //'data' => $data->getDef() ?: $YaMarketProperty->default(),
-                        'required' => $data->isRequired()
-                    ]
+                        'required' => $data->isRequired(),
+                    ],
                 );
 
             }
@@ -92,7 +92,7 @@ final class WbProductSettingsParametersForm extends AbstractType
             [
                 'data_class' => WbProductSettingsParametersDTO::class,
                 'property_fields' => null,
-            ]
+            ],
         );
     }
 

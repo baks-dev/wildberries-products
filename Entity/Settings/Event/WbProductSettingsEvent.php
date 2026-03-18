@@ -109,16 +109,15 @@ class WbProductSettingsEvent extends EntityEvent
         return $this->id;
     }
 
-    public function setMain(WbProductSettings $settings): self
-    {
-        return $this;
-    }
-
     public function getMain(): CategoryProductUid
     {
         return $this->main;
     }
 
+    public function setMain(WbProductSettings $settings): self
+    {
+        return $this;
+    }
 
     public function getDto($dto): mixed
     {
@@ -142,8 +141,6 @@ class WbProductSettingsEvent extends EntityEvent
 
         throw new InvalidArgumentException(sprintf('Class %s interface error', $dto::class));
     }
-
-
 
 
 }

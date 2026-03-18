@@ -32,11 +32,9 @@ use Symfony\Component\HttpFoundation\File\File;
 /** @see WildberriesProductCustomImage */
 final class WildberriesProductCustomImagesDTO implements WildberriesProductCustomInterface
 {
-    private ?WbProductCustomImageUid $id = null;
-
     /** Обложка категории */
     public ?File $file = null;
-
+    private ?WbProductCustomImageUid $id = null;
     /** Название файла */
     private ?string $name = null;
 

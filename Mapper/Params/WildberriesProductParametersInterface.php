@@ -31,6 +31,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 interface WildberriesProductParametersInterface
 {
     /**
+     * Сортировка (чем выше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int;
+
+    /**
      * Возвращает состояние
      */
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): mixed;
@@ -48,11 +53,6 @@ interface WildberriesProductParametersInterface
 
     /** Массив допустимых значений */
     public function choices(): ?array;
-
-    /**
-     * Сортировка (чем выше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int;
 
     /** Проверяет, относится ли значение к данному объекту */
     public function equals(int|string $param): bool;

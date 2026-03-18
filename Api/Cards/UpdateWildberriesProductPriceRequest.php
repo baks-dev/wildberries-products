@@ -97,7 +97,7 @@ final class UpdateWildberriesProductPriceRequest extends Wildberries
         if($response->getStatusCode() !== 200)
         {
             // Указанные цены и скидки уже установлены
-            if($content['errorText'] === 'The specified prices and discounts are already set')
+            if($content['errorText'] === 'Specified prices and discounts are already set')
             {
                 return true;
             }

@@ -87,7 +87,7 @@ final class WbBarcodeForm extends AbstractType
             'by_reference' => false,
             'allow_delete' => true,
             'allow_add' => true,
-            'prototype_name' => '__property__'
+            'prototype_name' => '__property__',
         ]);
 
         $builder->add('custom', CollectionType::class, [
@@ -97,7 +97,7 @@ final class WbBarcodeForm extends AbstractType
             'by_reference' => false,
             'allow_delete' => true,
             'allow_add' => true,
-            'prototype_name' => '__custom__'
+            'prototype_name' => '__custom__',
         ]);
 
         /* Прототип списка свойств */
@@ -153,7 +153,7 @@ final class WbBarcodeForm extends AbstractType
                     'by_reference' => false,
                     'allow_delete' => true,
                     'allow_add' => true,
-                    'prototype_name' => '__property__'
+                    'prototype_name' => '__property__',
                 ]);
 
 
@@ -166,7 +166,7 @@ final class WbBarcodeForm extends AbstractType
                         'label' => 'Add',
                         'label_html' => true,
                         'attr' => ['class' => 'btn-sm btn-outline-primary border-0'],
-                        'disabled' => empty($choice)
+                        'disabled' => empty($choice),
                     ]);
             }
 
@@ -195,7 +195,7 @@ final class WbBarcodeForm extends AbstractType
                             return (is_int($category->getAttr()) ? str_repeat(' - ', $category->getAttr() - 1) : '').$category->getOptions();
                         },
                         'disabled' => true,
-                        'label' => $category ? $category->getOptions() : false
+                        'label' => $category ? $category->getOptions() : false,
                     ]);
 
                     /*$builder->add('main', HiddenType::class, [
@@ -204,7 +204,7 @@ final class WbBarcodeForm extends AbstractType
                 }
 
                 $formModifier($builder, $data->getMain());
-            }
+            },
         );
 
         $builder->get('main')->addEventListener(
@@ -216,7 +216,7 @@ final class WbBarcodeForm extends AbstractType
                 {
                     $formModifier($event->getForm()->getParent(), $category);
                 }
-            }
+            },
         );
 
         //        $builder->get('category')->addModelTransformer(

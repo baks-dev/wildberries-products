@@ -45,9 +45,12 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 23796;
 
-    public function getName(): string
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
     {
-        return 'Назначение';
+        return 100;
     }
 
     public function required(): bool
@@ -66,32 +69,10 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
         return null;
     }
 
-    /**
-     * Сортировка (чем меньше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int
-    {
-        return 100;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public function equals(int|string $param): bool
-    {
-        $param = mb_strtolower((string) $param);
-
-        return in_array($param, [
-            (string) self::ID,
-            mb_strtolower($this->getName())
-        ], true);
-    }
-
     public function isSetting(): bool
     {
         return true;
     }
-
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
@@ -106,12 +87,30 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value,
                     ];
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public function equals(int|string $param): bool
+    {
+        $param = mb_strtolower((string) $param);
+
+        return in_array($param, [
+            (string) self::ID,
+            mb_strtolower($this->getName()),
+        ], true);
+    }
+
+    public function getName(): string
+    {
+        return 'Назначение';
     }
 }

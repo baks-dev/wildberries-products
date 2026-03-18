@@ -29,48 +29,21 @@ use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInter
 final class WildberriesProductProperty
 {
     public const string TYPE = 'wb_product_property';
-
-    private ?WildberriesProductPropertyInterface $property = null;
-
-    public const int CATEGORY_TIRE = 5283; // Шины автомобильные
-    public const int CATEGORY_SHIRTS = 192; // Футболки
-    public const int CATEGORY_HOODIE = 1724; // Худи
-    public const int CATEGORY_JEANS = 180; // Джинсы
-    public const int CATEGORY_SVITSHOT = 159; // Свитшоты
-    public const int CATEGORY_TOP = 185; // Топы
-    public const int CATEGORY_KITCHEN_APRONS = 402; // Фартуки кухонные
-    public const int CATEGORY_WORKERS_APRONS = 3188; // Фартуки рабочие;
-    public const int CATEGORY_SLIPPERS = 106; // Тапки;
-    public const int CATEGORY_STRAPS = 107; // Шлепанцы;
-    public const int CATEGORY_SABO = 98; // Cабо;
-    public const int CATEGORY_SHIRTS_SPORT = 5217; // Футболка спортивная;
-    public const int CATEGORY_CZECH = 1586; // Чешки;
-    public const int CATEGORY_LONGSLEEVE = 217; // Лонгслив;
-
-
-
-
-
-    /** @see WbCharacteristicRequestTest */
-    public static function caseCategory(): array
-    {
-        return [
-            self::CATEGORY_TIRE => ['Шины', 'Шина', 'Шины автомобильные'],
-            self::CATEGORY_SHIRTS => ['Футболки', 'Футболка'],
-            self::CATEGORY_HOODIE => ['Худи'],
-            self::CATEGORY_JEANS => ['Джинсы', 'Джинс'],
-            self::CATEGORY_SVITSHOT => ['Свитшоты', 'Свитшот'],
-            self::CATEGORY_TOP => ['Топы', 'Топ'],
-            self::CATEGORY_KITCHEN_APRONS => ['Фартуки', 'Кухонные', 'Фартук', 'Кухонный'],
-            self::CATEGORY_WORKERS_APRONS => ['Фартуки', 'Рабочие', 'Фартук', 'Рабочий'],
-            self::CATEGORY_SLIPPERS => ['Тапки', 'Тапочки', 'Домашние'],
-            self::CATEGORY_STRAPS => ['Шлепанцы'],
-            self::CATEGORY_SABO => ['Cабо'],
-            self::CATEGORY_SHIRTS_SPORT => ['Футболки', 'Футболка спортивная'],
-            self::CATEGORY_CZECH => ['Чешки'],
-            self::CATEGORY_LONGSLEEVE => ['Лонгслив', 'Лонгсливы'],
-        ];
-    }
+    public const int CATEGORY_TIRE = 5283;
+    public const int CATEGORY_SHIRTS = 192; // Шины автомобильные
+    public const int CATEGORY_HOODIE = 1724; // Футболки
+    public const int CATEGORY_JEANS = 180; // Худи
+    public const int CATEGORY_SVITSHOT = 159; // Джинсы
+    public const int CATEGORY_TOP = 185; // Свитшоты
+    public const int CATEGORY_KITCHEN_APRONS = 402; // Топы
+    public const int CATEGORY_WORKERS_APRONS = 3188; // Фартуки кухонные
+    public const int CATEGORY_SLIPPERS = 106; // Фартуки рабочие;
+    public const int CATEGORY_STRAPS = 107; // Тапки;
+    public const int CATEGORY_SABO = 98; // Шлепанцы;
+    public const int CATEGORY_SHIRTS_SPORT = 5217; // Cабо;
+    public const int CATEGORY_CZECH = 1586; // Футболка спортивная;
+    public const int CATEGORY_LONGSLEEVE = 217; // Чешки;
+    private ?WildberriesProductPropertyInterface $property = null; // Лонгслив;
 
     public function __construct(WildberriesProductPropertyInterface|self|string $property)
     {
@@ -108,15 +81,26 @@ final class WildberriesProductProperty
         }
     }
 
-
-    public function __toString(): string
-    {
-        return $this->property ? $this->property->getIndex() : '';
-    }
-
     public function getWildberriesProductProperty(): ?WildberriesProductPropertyInterface
     {
         return $this->property;
+    }
+
+    public static function getDeclared(): array
+    {
+        return array_filter(
+            get_declared_classes(),
+            static function($className) {
+                return in_array(WildberriesProductPropertyInterface::class, class_implements($className), true);
+            },
+        );
+    }
+
+    public function equals(mixed $property): bool
+    {
+        $property = new self($property);
+
+        return $this->getWildberriesProductPropertyValue() === $property->getWildberriesProductPropertyValue();
     }
 
     public function getWildberriesProductPropertyValue(): ?string
@@ -124,6 +108,26 @@ final class WildberriesProductProperty
         return $this->property?->getIndex();
     }
 
+    /** @see WbCharacteristicRequestTest */
+    public static function caseCategory(): array
+    {
+        return [
+            self::CATEGORY_TIRE => ['Шины', 'Шина', 'Шины автомобильные'],
+            self::CATEGORY_SHIRTS => ['Футболки', 'Футболка'],
+            self::CATEGORY_HOODIE => ['Худи'],
+            self::CATEGORY_JEANS => ['Джинсы', 'Джинс'],
+            self::CATEGORY_SVITSHOT => ['Свитшоты', 'Свитшот'],
+            self::CATEGORY_TOP => ['Топы', 'Топ'],
+            self::CATEGORY_KITCHEN_APRONS => ['Фартуки', 'Кухонные', 'Фартук', 'Кухонный'],
+            self::CATEGORY_WORKERS_APRONS => ['Фартуки', 'Рабочие', 'Фартук', 'Рабочий'],
+            self::CATEGORY_SLIPPERS => ['Тапки', 'Тапочки', 'Домашние'],
+            self::CATEGORY_STRAPS => ['Шлепанцы'],
+            self::CATEGORY_SABO => ['Cабо'],
+            self::CATEGORY_SHIRTS_SPORT => ['Футболки', 'Футболка спортивная'],
+            self::CATEGORY_CZECH => ['Чешки'],
+            self::CATEGORY_LONGSLEEVE => ['Лонгслив', 'Лонгсливы'],
+        ];
+    }
 
     public static function cases(): array
     {
@@ -139,21 +143,9 @@ final class WildberriesProductProperty
         return $case;
     }
 
-    public static function getDeclared(): array
+    public function __toString(): string
     {
-        return array_filter(
-            get_declared_classes(),
-            static function($className) {
-                return in_array(WildberriesProductPropertyInterface::class, class_implements($className), true);
-            }
-        );
-    }
-
-    public function equals(mixed $property): bool
-    {
-        $property = new self($property);
-
-        return $this->getWildberriesProductPropertyValue() === $property->getWildberriesProductPropertyValue();
+        return $this->property ? $this->property->getIndex() : '';
     }
 
 

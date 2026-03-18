@@ -32,6 +32,7 @@ final class WbBarcodeVariationDTO implements WbBarcodeVariationInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbBarcodeVariation
      */
     private bool $value = false;

@@ -37,6 +37,17 @@ final readonly class GetWildberriesCardImage
         private Filesystem $filesystem,
     ) {}
 
+    public static function removeDir($dir): bool
+    {
+        $files = array_diff(scandir($dir), ['.', '..']);
+        foreach($files as $file)
+        {
+            (is_dir($dir.'/'.$file)) ? self::removeDir($dir.'/'.$file) : unlink($dir.'/'.$file);
+        }
+
+        return rmdir($dir);
+    }
+
     /**
      * @param string $url - url фото загрузки
      * @param mixed $Image - DTO для присвоения значений
@@ -55,7 +66,7 @@ final readonly class GetWildberriesCardImage
             'public',
             'upload',
             $nameDir,
-            $dir
+            $dir,
         ];
 
         /** Полный путь к директории загрузки */
@@ -110,18 +121,6 @@ final readonly class GetWildberriesCardImage
         $Image->setSize($fileSize);
 
         return $Image;
-    }
-
-
-    public static function removeDir($dir): bool
-    {
-        $files = array_diff(scandir($dir), ['.', '..']);
-        foreach($files as $file)
-        {
-            (is_dir($dir.'/'.$file)) ? self::removeDir($dir.'/'.$file) : unlink($dir.'/'.$file);
-        }
-
-        return rmdir($dir);
     }
 
 

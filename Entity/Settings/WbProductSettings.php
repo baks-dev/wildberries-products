@@ -53,12 +53,6 @@ class WbProductSettings
         return (string) $this->id;
     }
 
-    public function getId(): CategoryProductUid
-    {
-        return $this->id;
-    }
-
-
     public function getEvent(): WbProductSettingsEventUid
     {
         return $this->event;
@@ -68,6 +62,11 @@ class WbProductSettings
     {
         $this->event = $event->getId();
         $this->id = $event->getMain();
+    }
+
+    public function getId(): CategoryProductUid
+    {
+        return $this->id;
     }
 
 }

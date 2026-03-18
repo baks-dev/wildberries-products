@@ -48,7 +48,7 @@ final class PreFormController extends AbstractController
             ->createForm(
                 type: PreformForm::class,
                 data: $PreformDTO,
-                options: ['action' => $this->generateUrl('wildberries-products:admin.settings.preform'),]
+                options: ['action' => $this->generateUrl('wildberries-products:admin.settings.preform'),],
             )
             ->handleRequest($request);
 
@@ -58,7 +58,7 @@ final class PreFormController extends AbstractController
 
             return $this->redirectToRoute(
                 'wildberries-products:admin.settings.newedit.new',
-                ['id' => (string) $PreformDTO->getId(), 'parent' => $PreformDTO->getCategory()?->getId()]
+                ['id' => (string) $PreformDTO->getId(), 'parent' => $PreformDTO->getCategory()?->getId()],
             );
         }
 

@@ -50,7 +50,7 @@ final class WbProductsSettingsHandler extends AbstractHandler
         /* Отправляем сообщение в шину */
         $this->messageDispatch->dispatch(
             message: new WbProductSettingsMessage($this->main->getId(), $this->main->getEvent(), $command->getEvent()),
-            transport: 'wildberries-products'
+            transport: 'wildberries-products',
         );
 
         return $this->main;

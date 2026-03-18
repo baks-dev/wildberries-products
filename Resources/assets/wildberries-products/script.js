@@ -25,17 +25,17 @@ executeFunc(function initnPreform()
 {
     const forms = document.forms.preform_form;
 
-    let preform_form_parent = document.getElementById('preform_form_parent');
+    let preform_form_parent = document.getElementById("preform_form_parent");
 
     if(preform_form_parent === null)
     {
         return false;
     }
 
-    preform_form_parent.addEventListener('change', function(event)
+    preform_form_parent.addEventListener("change", function(event)
     {
         /* Удаляем предыдущий Select2 */
-        let select2 = document.getElementById(forms.name + '_category' + '_select2');
+        let select2 = document.getElementById(forms.name + "_category" + "_select2");
 
         if(select2)
         {
@@ -53,74 +53,70 @@ async function changeParent(forms)
     const data = new FormData(forms);
 
     // Удаляем токен из формы
-    data.delete(forms.name + '[_token]');
+    data.delete(forms.name + "[_token]");
 
     await fetch(forms.action, {
-        method: forms.method,
-        cache: 'no-cache',
-        credentials: 'same-origin',
-        headers: {'X-Requested-With': 'XMLHttpRequest'},
-        redirect: 'follow',
-        referrerPolicy: 'no-referrer',
-        body: data
-    })
-
-        .then((response) =>
+        method : forms.method,
+        cache : "no-cache",
+        credentials : "same-origin",
+        headers : {"X-Requested-With" : "XMLHttpRequest"},
+        redirect : "follow",
+        referrerPolicy : "no-referrer",
+        body : data,
+    }).then((response) =>
+    {
+        if(response.status !== 200)
         {
-            if(response.status !== 200)
+            return false;
+        }
+
+        return response.text();
+
+    }).then((data) =>
+    {
+        if(data)
+        {
+            let replace_id = forms.name + "_category";
+            const parser = new DOMParser();
+            const result = parser.parseFromString(data, "text/html");
+
+            let element = result.getElementById(replace_id);
+
+            /** Удаляем предыдущий Select2 */
+            let select2 = document.getElementById(replace_id + "_select2");
+
+            if(select2)
             {
-                return false;
+                select2.remove();
             }
 
-            return response.text();
+            /** Подставляем новый элемент */
+            document.getElementById(replace_id)?.replaceWith(element);
 
-        })
+            /** Применяем к элементу select-2 */
+            new NiceSelect(document.querySelector("#preform_form_category"), {searchable : true});
 
-        .then((data) =>
-        {
-            if(data)
-            {
-                let replace_id = forms.name + '_category';
-                const parser = new DOMParser();
-                const result = parser.parseFromString(data, 'text/html');
+        }
 
-                let element = result.getElementById(replace_id);
-
-                /** Удаляем предыдущий Select2 */
-                let select2 = document.getElementById(replace_id + '_select2');
-
-                if(select2)
-                {
-                    select2.remove();
-                }
-
-                /** Подставляем новый элемент */
-                document.getElementById(replace_id)?.replaceWith(element);
-
-                /** Применяем к элементу select-2 */
-                new NiceSelect(document.querySelector('#preform_form_category'), {searchable: true});
-
-            }
-
-            return true;
-        });
+        return true;
+    });
 
     return true;
 }
 
 
-object_name = document.getElementById('preform_form_name');
+object_name = document.getElementById("preform_form_name");
 
 if(object_name)
 {
 
 
-    object_name.addEventListener('change', function()
+    object_name.addEventListener("change", function()
     {
-        let replaceId = 'preform_form_parent';
+        let replaceId = "preform_form_parent";
 
-        let replaceElement = document.getElementById(replaceId + '_select2');
-        replaceElement.classList.add('disabled');
+        let replaceElement = document.getElementById(replaceId + "_select2");
+        replaceElement.classList.add("disabled");
 
         /* Создаём объект класса XMLHttpRequest */
         const requestModalName = new XMLHttpRequest();
@@ -128,12 +124,12 @@ if(object_name)
 
         let preformForm = document.forms.preform_form;
         let formData = new FormData();
-        formData.append(this.getAttribute('name'), this.value);
+        formData.append(this.getAttribute("name"), this.value);
 
-        requestModalName.open(preformForm.getAttribute('method'), preformForm.getAttribute('action'), true);
+        requestModalName.open(preformForm.getAttribute("method"), preformForm.getAttribute("action"), true);
 
         /* Указываем заголовки для сервера */
-        requestModalName.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        requestModalName.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
         /* Получаем ответ от сервера на запрос*/
         requestModalName.addEventListener("readystatechange", function()
@@ -145,7 +141,7 @@ if(object_name)
                 let result = requestModalName.response.getElementById(replaceId);
 
                 /* Удаляем предыдущий Select2 */
-                let select2 = document.getElementById(replaceId + '_select2');
+                let select2 = document.getElementById(replaceId + "_select2");
                 if(select2)
                 {
                     select2.remove();
@@ -153,7 +149,7 @@ if(object_name)
 
                 document.getElementById(replaceId).replaceWith(result);
 
-                new NiceSelect(document.getElementById(replaceId), {searchable: true, id: 'select2-' + replaceId});
+                new NiceSelect(document.getElementById(replaceId), {searchable : true, id : "select2-" + replaceId});
             }
 
             return false;

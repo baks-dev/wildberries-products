@@ -83,7 +83,7 @@ final class DeleteController extends AbstractController
         }
 
         return $this->render([
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ],);
     }
 

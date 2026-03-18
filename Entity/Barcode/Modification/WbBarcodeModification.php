@@ -35,6 +35,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * WbBarcodeModification
+ *
  * @see WbBarcodeModificationEvent
  */
 #[ORM\Entity]

@@ -38,6 +38,19 @@ final class VendorCodeWildberriesProductsProperty implements WildberriesProductP
 
     public const string PARAM = 'vendorCode';
 
+    public static function priority(): int
+    {
+        return 500;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public static function equals(string $param): bool
+    {
+        return self::PARAM === $param;
+    }
+
     public function getIndex(): string
     {
         return self::PARAM;
@@ -59,23 +72,9 @@ final class VendorCodeWildberriesProductsProperty implements WildberriesProductP
         return false;
     }
 
-
     public function required(): bool
     {
         return true;
-    }
-
-    public static function priority(): int
-    {
-        return 500;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public static function equals(string $param): bool
-    {
-        return self::PARAM === $param;
     }
 
     public function choices(): ?array

@@ -52,9 +52,12 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
 
     public const int ID = 14177456;
 
-    public function getName(): string
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
     {
-        return 'Рос. размер';
+        return 100;
     }
 
     public function required(): bool
@@ -73,32 +76,10 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
         return null;
     }
 
-    /**
-     * Сортировка (чем меньше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int
-    {
-        return 100;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public function equals(int|string $param): bool
-    {
-        $param = mb_strtolower((string) $param);
-
-        return in_array($param, [
-            (string) self::ID,
-            mb_strtolower($this->getName())
-        ], true);
-    }
-
     public function isSetting(): bool
     {
         return false;
     }
-
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
@@ -113,12 +94,30 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value
+                        'value' => $product_param->value,
                     ];
                 }
             }
         }
 
         return null;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public function equals(int|string $param): bool
+    {
+        $param = mb_strtolower((string) $param);
+
+        return in_array($param, [
+            (string) self::ID,
+            mb_strtolower($this->getName()),
+        ], true);
+    }
+
+    public function getName(): string
+    {
+        return 'Рос. размер';
     }
 }

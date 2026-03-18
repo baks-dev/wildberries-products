@@ -70,11 +70,6 @@ class WbBarcode extends EntityState
         return (string) $this->id;
     }
 
-    public function getId(): CategoryProductUid
-    {
-        return $this->id;
-    }
-
     /**
      * Profile
      */
@@ -82,7 +77,6 @@ class WbBarcode extends EntityState
     {
         return $this->profile;
     }
-
 
     public function getEvent(): WbBarcodeEventUid
     {
@@ -93,6 +87,11 @@ class WbBarcode extends EntityState
     {
         $this->event = $event->getId();
         $this->id = $event->getMain();
+    }
+
+    public function getId(): CategoryProductUid
+    {
+        return $this->id;
     }
 
 }

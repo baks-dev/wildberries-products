@@ -27,6 +27,7 @@ interface WbBarcodeNameInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbBarcodeName
      */
     public function getValue(): bool;

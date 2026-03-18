@@ -86,7 +86,7 @@ class WildberriesProductsCardRepositoryTest extends KernelTestCase
                 {
                     // Вызываем метод
                     $data = $method->invoke($WildberriesProductsCardResult);
-                    dump($data);
+                    //dump($data);
                 }
             }
 

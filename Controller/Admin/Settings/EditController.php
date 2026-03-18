@@ -81,7 +81,7 @@ final class EditController extends AbstractController
 
         return $this->render([
             'form' => $form->createView(),
-            'name' => '$Event->getName()'
+            'name' => '$Event->getName()',
         ]);
 
     }

@@ -127,7 +127,7 @@ class WildberriesProductImageRepackWebpCommand extends Command
             {
                 $io->warning(sprintf(
                     'Изображение wildberriesProductCustomImage %s не найдено либо уже отправлено на CDN',
-                    $dirName
+                    $dirName,
                 ));
 
                 unlink($info->getRealPath()); // удаляем файл

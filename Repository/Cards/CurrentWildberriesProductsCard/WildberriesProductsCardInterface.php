@@ -46,6 +46,7 @@ interface WildberriesProductsCardInterface
     public function forVariationConst(ProductVariationConst|string|null $variationConst): self;
 
     public function forModificationConst(ProductModificationConst|string|null $modificationConst): self;
+
     /**
      * @see WildberriesProductsCardResult
      * Метод получает активную карточку по идентификатору и гидрирует на резалт

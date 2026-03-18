@@ -69,7 +69,7 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
                 'invariable',
                 WbProductSettings::class,
                 'settings',
-                'settings.id = invariable.main'
+                'settings.id = invariable.main',
             );
 
         $dbal
@@ -77,7 +77,7 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
                 'invariable',
                 WbProductSettingsParameters::class,
                 'parameters',
-                'parameters.event = settings.event AND parameters.type = :type'
+                'parameters.event = settings.event AND parameters.type = :type',
             )
             ->setParameter('type', $type, Types::INTEGER);
 
@@ -89,7 +89,7 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
                 'invariable',
                 CategoryProduct::class,
                 'category',
-                'category.id = invariable.main'
+                'category.id = invariable.main',
             );
 
         $dbal
@@ -97,7 +97,7 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
                 'category',
                 CategoryProductSection::class,
                 'section',
-                'section.event = category.event'
+                'section.event = category.event',
             );
 
 
@@ -106,7 +106,7 @@ final class ProductSettingsCategoryParametersRepository implements ProductSettin
                 'section',
                 CategoryProductSectionField::class,
                 'field',
-                'field.section = section.id AND field.const = parameters.field'
+                'field.section = section.id AND field.const = parameters.field',
             );
 
 

@@ -35,9 +35,12 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
 {
     public const int ID = 15000001;
 
-    public function getName(): string
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
     {
-        return 'ТНВЭД';
+        return 100;
     }
 
     public function required(): bool
@@ -56,33 +59,11 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
         return null;
     }
 
-    /**
-     * Сортировка (чем меньше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int
-    {
-        return 100;
-    }
-
-    /**
-     * Проверяет, относится ли значение к данному объекту
-     */
-    public function equals(int|string $param): bool
-    {
-        $param = mb_strtolower((string) $param);
-
-        return in_array($param, [
-            (string) self::ID,
-            mb_strtolower($this->getName())
-        ], true);
-    }
-
     public function isSetting(): bool
     {
         return true; /// 6109100000
         /// 4011100009
     }
-
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
@@ -99,7 +80,7 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
                         return [
                             'id' => $this::ID,
                             'name' => $this->getName(),
-                            'value' => $product_param->value
+                            'value' => $product_param->value,
                         ];
                     }
                 }
@@ -107,5 +88,23 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
         }
 
         return null;
+    }
+
+    /**
+     * Проверяет, относится ли значение к данному объекту
+     */
+    public function equals(int|string $param): bool
+    {
+        $param = mb_strtolower((string) $param);
+
+        return in_array($param, [
+            (string) self::ID,
+            mb_strtolower($this->getName()),
+        ], true);
+    }
+
+    public function getName(): string
+    {
+        return 'ТНВЭД';
     }
 }

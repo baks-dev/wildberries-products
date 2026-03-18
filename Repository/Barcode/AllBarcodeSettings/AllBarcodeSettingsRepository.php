@@ -98,7 +98,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
             'barcode',
             CategoryProduct::class,
             'category',
-            'category.id = barcode.id'
+            'category.id = barcode.id',
         );
 
 
@@ -110,7 +110,7 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
             'category',
             CategoryProductEvent::class,
             'category_event',
-            'category_event.id = category.event'
+            'category_event.id = category.event',
         );
 
 

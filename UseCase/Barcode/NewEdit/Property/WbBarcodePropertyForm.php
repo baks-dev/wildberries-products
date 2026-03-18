@@ -64,11 +64,11 @@ final class WbBarcodePropertyForm extends AbstractType
 
                             'label' => false,
                             'expanded' => false,
-                            'multiple' => false
+                            'multiple' => false,
                         ]);
 
                 }
-            }
+            },
         );
 
 

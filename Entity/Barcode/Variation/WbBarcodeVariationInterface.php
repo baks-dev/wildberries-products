@@ -27,6 +27,7 @@ interface WbBarcodeVariationInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbBarcodeVariation
      */
     public function getValue(): bool;

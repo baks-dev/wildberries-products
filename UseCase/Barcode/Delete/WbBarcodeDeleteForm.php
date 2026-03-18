@@ -40,7 +40,7 @@ final class WbBarcodeDeleteForm extends AbstractType
         $builder->add(
             'wb_barcode_delete',
             SubmitType::class,
-            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']]
+            ['label' => 'Save', 'label_html' => true, 'attr' => ['class' => 'btn-danger']],
         );
     }
 

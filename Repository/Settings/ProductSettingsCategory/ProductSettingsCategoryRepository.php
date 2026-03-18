@@ -67,7 +67,7 @@ final class ProductSettingsCategoryRepository implements ProductSettingsCategory
                 'invariable',
                 WbProductSettings::class,
                 'settings',
-                'settings.id = invariable.main'
+                'settings.id = invariable.main',
             );
 
         $dbal->select('settings.id AS value');

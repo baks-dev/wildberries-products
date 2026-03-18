@@ -49,7 +49,7 @@ final class WbBarcodeEventRepository
             ->setParameter(
                 key: 'category',
                 value: $category,
-                type: CategoryProductUid::TYPE
+                type: CategoryProductUid::TYPE,
             );
 
         $qb
@@ -57,7 +57,7 @@ final class WbBarcodeEventRepository
             ->leftJoin(WbBarcodeEvent::class,
                 'event',
                 'WITH',
-                'event.id = barcode.event'
+                'event.id = barcode.event',
             );
 
         return $qb->getOneOrNullResult();

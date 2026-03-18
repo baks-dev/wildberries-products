@@ -72,7 +72,7 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
             'sticker_settings_event',
             WbBarcodeProperty::class,
             'sticker_settings_property',
-            'sticker_settings_property.event = sticker_settings_event.id'
+            'sticker_settings_property.event = sticker_settings_event.id',
         );
 
         $qb->addSelect('product_property.value');
@@ -87,25 +87,6 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
         return $qb->getSQL();
     }
 
-
-    private function getCustom(): string
-    {
-        $qb = $this->from();
-
-        $qb->addSelect('sticker_settings_custom.sort');
-        $qb->addSelect('sticker_settings_custom.name');
-        $qb->addSelect('sticker_settings_custom.value');
-        $qb->join(
-            'sticker_settings_event',
-            WbBarcodeCustom::class,
-            'sticker_settings_custom',
-            'sticker_settings_custom.event = sticker_settings_event.id'
-        );
-
-        return $qb->getSQL();
-    }
-
-
     private function from()
     {
         $qb = $this->DBALQueryBuilder->createQueryBuilder(self::class);
@@ -119,7 +100,7 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
             'product_event',
             ProductInfo::class,
             'product_info',
-            'product_info.product = product_event.main'
+            'product_info.product = product_event.main',
         );
 
 
@@ -127,7 +108,7 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
             'product_event',
             ProductCategory::class,
             'product_event_category',
-            'product_event_category.event = product_event.id AND product_event_category.root = true'
+            'product_event_category.event = product_event.id AND product_event_category.root = true',
         );
 
 
@@ -135,7 +116,7 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
             'product_event',
             WbBarcode::class,
             'sticker_settings',
-            'sticker_settings.id = product_event_category.category AND sticker_settings.profile = product_info.profile'
+            'sticker_settings.id = product_event_category.category AND sticker_settings.profile = product_info.profile',
         );
 
         $qb->addSelect('sticker_settings_event.offer');
@@ -144,12 +125,29 @@ final readonly class WbBarcodePropertyByProductEventRepository implements WbBarc
             'sticker_settings',
             WbBarcodeEvent::class,
             'sticker_settings_event',
-            'sticker_settings_event.id = sticker_settings.event'
+            'sticker_settings_event.id = sticker_settings.event',
         );
 
         $qb->where('product_event.id = :event');
 
         return $qb;
+    }
+
+    private function getCustom(): string
+    {
+        $qb = $this->from();
+
+        $qb->addSelect('sticker_settings_custom.sort');
+        $qb->addSelect('sticker_settings_custom.name');
+        $qb->addSelect('sticker_settings_custom.value');
+        $qb->join(
+            'sticker_settings_event',
+            WbBarcodeCustom::class,
+            'sticker_settings_custom',
+            'sticker_settings_custom.event = sticker_settings_event.id',
+        );
+
+        return $qb->getSQL();
     }
 
 }

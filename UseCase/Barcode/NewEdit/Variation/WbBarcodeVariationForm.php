@@ -46,8 +46,8 @@ final class WbBarcodeVariationForm extends AbstractType
                 },
                 function($value) {
                     return $value === true;
-                }
-            )
+                },
+            ),
         );
     }
 

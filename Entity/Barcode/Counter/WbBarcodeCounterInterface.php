@@ -27,6 +27,7 @@ interface WbBarcodeCounterInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbBarcodeCounter
      */
     public function getValue(): ?int;

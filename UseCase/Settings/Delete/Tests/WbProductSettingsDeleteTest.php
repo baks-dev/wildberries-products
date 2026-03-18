@@ -46,6 +46,11 @@ use Symfony\Component\DependencyInjection\Attribute\When;
 #[Group('wildberries-products')]
 final class WbProductSettingsDeleteTest extends KernelTestCase
 {
+    public static function tearDownAfterClass(): void
+    {
+        WbProductSettingsNewTest::setUpBeforeClass();
+    }
+
     #[DependsOnClass(DeleteControllerTest::class)]
     #[DependsOnClass(WbProductSettingsEditTest::class)]
     public function testUseCase(): void
@@ -68,7 +73,7 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
                 WbProductSettingsEvent::class,
                 'event',
                 'WITH',
-                'event.id = main.event'
+                'event.id = main.event',
             );
 
 
@@ -108,11 +113,6 @@ final class WbProductSettingsDeleteTest extends KernelTestCase
         $handle = $DeleteWbProductSettingsHandler->handle($DeleteWbProductSettingsDTO);
         self::assertTrue(($handle instanceof WbProductSettings), $handle.': Ошибка WbProductSettings');
 
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        WbProductSettingsNewTest::setUpBeforeClass();
     }
 
 

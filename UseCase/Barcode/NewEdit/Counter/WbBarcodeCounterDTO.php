@@ -37,6 +37,7 @@ final class WbBarcodeCounterDTO implements WbBarcodeCounterInterface
 
     /**
      * Значение свойства
+     *
      * @see WbBarcodeCounter
      */
     public function getValue(): int

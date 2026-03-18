@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace BaksDev\Wildberries\Products\Repository\Custom\WildberriesProductImageIdentifierByName;
 
-use BaksDev\Wildberries\Products\Entity\Custom\WildberriesProductCustom;
-use BaksDev\Wildberries\Products\Entity\Custom\Images\WildberriesProductCustomImage;
-use BaksDev\Wildberries\Products\Type\Custom\Image\WbProductCustomImageUid;
 use BaksDev\Core\Doctrine\DBALQueryBuilder;
+use BaksDev\Wildberries\Products\Entity\Custom\Images\WildberriesProductCustomImage;
+use BaksDev\Wildberries\Products\Entity\Custom\WildberriesProductCustom;
+use BaksDev\Wildberries\Products\Type\Custom\Image\WbProductCustomImageUid;
 
 final readonly class WildberriesProductProductImageIdentifierByNameRepository implements WildberriesProductImageIdentifierByNameInterface
 {

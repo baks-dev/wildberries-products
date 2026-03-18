@@ -45,6 +45,14 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
     public const string PARAM = 'title';
 
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
+    {
+        return 999;
+    }
+
     public function getIndex(): string
     {
         return self::PARAM;
@@ -64,23 +72,6 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
     {
         return null;
     }
-
-    /**
-     * Сортировка (чем меньше число - тем первым в итерации будет значение)
-     */
-    public static function priority(): int
-    {
-        return 999;
-    }
-
-    /**
-     * Проверяет, относится ли статус к данному объекту
-     */
-    public static function equals(string $param): bool
-    {
-        return self::PARAM === $param;
-    }
-
 
     public function isSetting(): bool
     {
@@ -170,5 +161,13 @@ final class TitleWildberriesProductProperty implements WildberriesProductPropert
 
 
         return empty($name) ? null : trim($name);
+    }
+
+    /**
+     * Проверяет, относится ли статус к данному объекту
+     */
+    public static function equals(string $param): bool
+    {
+        return self::PARAM === $param;
     }
 }

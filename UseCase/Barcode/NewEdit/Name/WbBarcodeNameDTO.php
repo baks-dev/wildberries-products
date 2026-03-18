@@ -32,6 +32,7 @@ final class WbBarcodeNameDTO implements WbBarcodeNameInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbProductSettingsName
      */
     private bool $value = false;

@@ -32,6 +32,7 @@ final class WbBarcodeOfferDTO implements WbBarcodeOfferInterface
 {
     /**
      * Значение свойства
+     *
      * @see WbBarcodeOffer
      */
     private bool $value = false;

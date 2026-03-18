@@ -34,6 +34,8 @@ final class UpdateWbFbsStocksRequest extends Wildberries
     private string $article;
 
     private int $total = 0;
+    /** ID размера товара */
+    private int|false $chrt = false;
 
     /** Остаток */
     public function setTotal(int $total): self
@@ -41,9 +43,6 @@ final class UpdateWbFbsStocksRequest extends Wildberries
         $this->total = $total;
         return $this;
     }
-
-    /** ID размера товара */
-    private int|false $chrt = false;
 
     public function fromChrtId(int|string $chrt): self
     {

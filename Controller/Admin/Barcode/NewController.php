@@ -62,7 +62,7 @@ final class NewController extends AbstractController
                 'admin.page.new',
                 $handle instanceof WbBarcode ? 'admin.success.new' : 'admin.danger.new',
                 'admin.wb.products.barcode',
-                $handle
+                $handle,
             );
 
             return $this->redirectToRoute('wildberries-products:admin.barcode.index');
