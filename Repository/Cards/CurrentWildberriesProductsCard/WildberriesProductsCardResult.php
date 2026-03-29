@@ -79,6 +79,9 @@ final class WildberriesProductsCardResult
         private readonly ?string $product_currency,
         private readonly ?string $product_quantity,
         private readonly ?int $market_category,
+
+        private readonly ?string $barcodes,
+
     ) {}
 
     public function getProductUid(): ProductUid
@@ -411,4 +414,27 @@ final class WildberriesProductsCardResult
 
         return true;
     }
+
+    public function getBarcodes(): array|null
+    {
+        if(is_null($this->barcodes))
+        {
+            return null;
+        }
+
+        if(false === json_validate($this->barcodes))
+        {
+            return null;
+        }
+
+        $barcodes = json_decode($this->barcodes, true, 512, JSON_THROW_ON_ERROR);
+
+        if(true === empty(current($barcodes)))
+        {
+            return null;
+        }
+
+        return $barcodes;
+    }
+
 }

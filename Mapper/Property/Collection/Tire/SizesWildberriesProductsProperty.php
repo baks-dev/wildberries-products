@@ -131,7 +131,7 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
                         //
                         //                    'wbSize' => '0',
                         'price' => $price->getRoundValue(), // Российский размер товара
-                        'skus' => [$item->barcode], // Российский размер товара
+                        'skus' => $data->getBarcodes(), // Российский размер товара
                     ];
 
                     return $size;
@@ -144,8 +144,6 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
          * При обновлении существующей карточки
          */
 
-        //$card = $card->current();
-
         /** @var WildberriesCardDTO $card */
         foreach($sizes as $item)
         {
@@ -156,7 +154,7 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
                 'techSize' => '0',
                 'wbSize' => '',
                 'price' => $price->getRoundValue(),
-                'skus' => [$item->barcode],
+                'skus' => $data->getBarcodes(),
             ];
         }
 

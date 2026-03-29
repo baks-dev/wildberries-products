@@ -169,12 +169,10 @@ final readonly class WildberriesCardUpdateDispatcher
                 if($key !== false)
                 {
                     /** Удаляем штрихкод и задаем идентификатор свойства */
-                    unset($requestData['sizes'][$i]['skus'][$key]);
                     $requestData['sizes'][$i]['chrtID'] = $WildberriesCardDTO->getChrt($number);
                 }
             }
         }
-
 
         $update = $this->WildberriesProductUpdateCardRequest
             ->forTokenIdentifier($message->getIdentifier())
