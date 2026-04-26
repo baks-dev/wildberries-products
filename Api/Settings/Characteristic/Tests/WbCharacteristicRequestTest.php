@@ -61,26 +61,28 @@ class WbCharacteristicRequestTest extends KernelTestCase
         $WbCharacteristicRequest = self::getContainer()->get(FindAllWbCharacteristicRequest::class);
         $WbCharacteristicRequest->TokenHttpClient(self::$Authorization);
 
-        //
-
         $cats = [
             WildberriesProductProperty::CATEGORY_TIRE, // 5283 Шины автомобильные
+
+            WildberriesProductProperty::CATEGORY_DESKS, // 7611 Столы письменные
+            WildberriesProductProperty::CATEGORY_RACKS, // 1901 Стелажи
+
             WildberriesProductProperty::CATEGORY_SHIRTS, // 192 Футболки
             WildberriesProductProperty::CATEGORY_HOODIE, // 1724 Худи
             WildberriesProductProperty::CATEGORY_JEANS, // 180 Джинсы
             WildberriesProductProperty::CATEGORY_SVITSHOT, // 159 Свитшоты
-            WildberriesProductProperty::CATEGORY_TOP, // 185 Свитшоты
+            WildberriesProductProperty::CATEGORY_TOP, // 185 Топы
             WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // 402 Фартуки кухонные
             WildberriesProductProperty::CATEGORY_SLIPPERS, // 106 Тапки
             WildberriesProductProperty::CATEGORY_STRAPS,// 107 Шлепанцы;
             WildberriesProductProperty::CATEGORY_SABO, // 98 Cабо;
             WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
             WildberriesProductProperty::CATEGORY_CZECH, // 1586 Чешки;
-            WildberriesProductProperty::CATEGORY_LONGSLEEVE, // 1586 Чешки;
+            WildberriesProductProperty::CATEGORY_LONGSLEEVE, // 217 Лонгсливы;
         ];
 
         /** @see WildberriesProductProperty */
-        $cats = [WildberriesProductProperty::CATEGORY_LONGSLEEVE];
+        //$cats = [WildberriesProductProperty::CATEGORY_RACKS];
 
         foreach($cats as $category)
         {
@@ -100,6 +102,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
             foreach($data as $item)
             {
+
 
                 self::assertNotFalse($params,
                     sprintf('Отсутствует элемент ID = %s ( %s ) для категории %s', $item->getId(), $item->getName(), $category),

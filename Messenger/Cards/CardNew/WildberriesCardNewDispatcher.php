@@ -103,7 +103,7 @@ final readonly class WildberriesCardNewDispatcher
     public function __invoke(WildberriesCardNewMassage $message): void
     {
         $WildberriesCards = $this->WildberriesCardsRequest
-            ->profile($message->getTokenIdentifier())
+            ->forTokenIdentifier($message->getTokenIdentifier())
             ->findAll($message->getArticle());
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */

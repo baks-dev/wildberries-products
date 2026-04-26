@@ -27,20 +27,19 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class FeaturesApronWildberriesProductParameters implements WildberriesProductParametersInterface
+final class ColorNameWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [402];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
+    ];
 
-    public const int ID = 18332;
-
-    public function getName(): string
-    {
-        return 'Особенности фартука';
-    }
+    public const int ID = 15001935;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -68,7 +67,7 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
 
     public function isSetting(): bool
     {
-        return true;
+        return false;
     }
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
@@ -104,5 +103,10 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
+    }
+
+    public function getName(): string
+    {
+        return 'Название цвета';
     }
 }

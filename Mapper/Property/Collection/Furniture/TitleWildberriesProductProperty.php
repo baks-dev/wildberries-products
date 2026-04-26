@@ -1,0 +1,135 @@
+<?php
+/*
+ *  Copyright 2026.  Baks.dev <admin@baks.dev>
+ *  
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is furnished
+ *  to do so, subject to the following conditions:
+ *  
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *  
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ *  FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
+ *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ *  THE SOFTWARE.
+ */
+
+declare(strict_types=1);
+
+namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Furniture;
+
+use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInterface;
+use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
+use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
+
+#[AutoconfigureTag('baks.wb.product.property')]
+final class TitleWildberriesProductProperty implements WildberriesProductPropertyInterface
+{
+    /**
+     * Наименование товара
+     */
+
+    /** @see WildberriesProductProperty */
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
+    ];
+
+    public const string PARAM = 'title';
+
+    /**
+     * Сортировка (чем меньше число - тем первым в итерации будет значение)
+     */
+    public static function priority(): int
+    {
+        return 999;
+    }
+
+    /**
+     * Проверяет, относится ли статус к данному объекту
+     */
+    public static function equals(string $param): bool
+    {
+        return self::PARAM === $param;
+    }
+
+    public function getIndex(): string
+    {
+        return self::PARAM;
+    }
+
+    public function default(): ?string
+    {
+        return null;
+    }
+
+    public function required(): bool
+    {
+        return false;
+    }
+
+    public function choices(): ?array
+    {
+        return null;
+    }
+
+    public function isSetting(): bool
+    {
+        return true;
+    }
+
+    public function isCard(): bool
+    {
+        return true;
+    }
+
+    public function getData(WildberriesProductsCardResult $data): ?string
+    {
+        if(true === empty($data->getMarketCategory()) || false === in_array($data->getMarketCategory(), self::CATEGORY, true))
+        {
+            return null;
+        }
+
+        $name = '';
+
+        if(false === empty($data->getProductVariationValue()))
+        {
+            $name .= $data->getProductVariationValue().' ';
+        }
+
+        if(false === empty($data->getProductModificationValue()))
+        {
+            $name .= $data->getProductModificationValue().' ';
+        }
+
+        if(false === empty($data->getProductOfferValue()))
+        {
+            $name .= $data->getProductOfferValue().' ';
+        }
+
+        if(false === empty($data->getProductOfferPostfix()))
+        {
+            $name .= $data->getProductOfferPostfix().' ';
+        }
+
+        if(false === empty($data->getProductVariationPostfix()))
+        {
+            $name .= $data->getProductVariationPostfix().' ';
+        }
+
+        if($data->getProductModificationPostfix())
+        {
+            $name .= $data->getProductModificationPostfix().' ';
+        }
+
+        return empty($name) ? null : trim($name);
+    }
+}

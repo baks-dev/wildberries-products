@@ -39,6 +39,7 @@ final class HoodieFactureWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_SHIRTS,
     ];
 
     public const int ID = 13;

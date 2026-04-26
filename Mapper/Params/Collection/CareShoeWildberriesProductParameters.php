@@ -27,20 +27,20 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class FeaturesApronWildberriesProductParameters implements WildberriesProductParametersInterface
+final class CareShoeWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [402];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_SLIPPERS,
+        WildberriesProductProperty::CATEGORY_STRAPS,
+        WildberriesProductProperty::CATEGORY_SABO,
+    ];
 
-    public const int ID = 18332;
-
-    public function getName(): string
-    {
-        return 'Особенности фартука';
-    }
+    public const int ID = 15003167;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -73,19 +73,22 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
-        $product_params = $data->getProductParams();
-
-        if(false !== $data->getProductParams())
+        if(false === empty($data->getProductParams()))
         {
-            foreach($product_params as $product_param)
+            $product_params = $data->getProductParams();
+
+            if(false !== $product_params)
             {
-                if($this->equals($product_param->name))
+                foreach($product_params as $product_param)
                 {
-                    return [
-                        'id' => $this::ID,
-                        'name' => $this->getName(),
-                        'value' => $product_param->value,
-                    ];
+                    if($this->equals($product_param->name))
+                    {
+                        return [
+                            'id' => $this::ID,
+                            'name' => $this->getName(),
+                            'value' => $product_param->value,
+                        ];
+                    }
                 }
             }
         }
@@ -105,4 +108,11 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
             mb_strtolower($this->getName()),
         ], true);
     }
+
+    public function getName(): string
+    {
+        return 'Уход за обувью';
+    }
+
+
 }

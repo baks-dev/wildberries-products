@@ -27,20 +27,19 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class FeaturesApronWildberriesProductParameters implements WildberriesProductParametersInterface
+final class PurposeFurnitureWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [402];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
+    ];
 
-    public const int ID = 18332;
-
-    public function getName(): string
-    {
-        return 'Особенности фартука';
-    }
+    public const int ID = 59668;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -73,19 +72,30 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
     {
-        $product_params = $data->getProductParams();
-
-        if(false !== $data->getProductParams())
+        if(false === empty($data->getProductParams()))
         {
-            foreach($product_params as $product_param)
+            $product_params = $data->getProductParams();
+
+            if(false !== $product_params)
             {
-                if($this->equals($product_param->name))
+                foreach($product_params as $product_param)
                 {
-                    return [
-                        'id' => $this::ID,
-                        'name' => $this->getName(),
-                        'value' => $product_param->value,
-                    ];
+                    if($this->equals($product_param->name))
+                    {
+                        return [
+                            'id' => $this::ID,
+                            'name' => $this->getName(),
+                            'value' =>
+                                match ($product_param->value)
+                                {
+                                    'jeep' => 'для внедорожников',
+                                    'bus' => 'для коммерческого транспорта',
+                                    'truck' => 'для грузовых автомобилей',
+                                    'passenger' => 'для легковых автомобилей',
+                                    default => false,
+                                },
+                        ];
+                    }
                 }
             }
         }
@@ -105,4 +115,10 @@ final class FeaturesApronWildberriesProductParameters implements WildberriesProd
             mb_strtolower($this->getName()),
         ], true);
     }
+
+    public function getName(): string
+    {
+        return 'Назначение мебели';
+    }
+
 }

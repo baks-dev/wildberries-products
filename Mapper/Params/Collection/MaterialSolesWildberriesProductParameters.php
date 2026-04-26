@@ -38,9 +38,15 @@ final class MaterialSolesWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
     public const int ID = 1022;
+
+    public function getName(): string
+    {
+        return 'Материал подошвы обуви';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -104,10 +110,5 @@ final class MaterialSolesWildberriesProductParameters implements WildberriesProd
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Материал подошвы обуви';
     }
 }

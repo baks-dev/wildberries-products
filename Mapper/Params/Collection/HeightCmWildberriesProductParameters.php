@@ -37,9 +37,16 @@ final class HeightCmWildberriesProductParameters implements WildberriesProductPa
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
     ];
 
     public const int ID = 90630;
+
+    public function getName(): string
+    {
+        return 'Высота предмета, см'; // сантиметр
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +117,4 @@ final class HeightCmWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Высота предмета, см'; // сантиметр
-    }
 }

@@ -46,6 +46,11 @@ final class CareThingsWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 11892;
 
+    public function getName(): string
+    {
+        return 'Уход за вещами';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -113,8 +118,5 @@ final class CareThingsWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Уход за вещами';
-    }
+
 }

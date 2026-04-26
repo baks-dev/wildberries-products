@@ -37,9 +37,16 @@ final class WidthCmWildberriesProductParameters implements WildberriesProductPar
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
     ];
 
     public const int ID = 90673;
+
+    public function getName(): string
+    {
+        return 'Ширина предмета, см';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -103,10 +110,5 @@ final class WidthCmWildberriesProductParameters implements WildberriesProductPar
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Ширина предмета, см';
     }
 }

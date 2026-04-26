@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Tire;
+namespace BaksDev\Wildberries\Products\Mapper\Property\Collection\Furniture;
 
 use BaksDev\Reference\Clothing\Type\SizeClothing;
 use BaksDev\Reference\Money\Type\Money;
@@ -43,7 +43,8 @@ final class SizesWildberriesProductsProperty implements WildberriesProductProper
 
     /** @see WildberriesProductProperty */
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_TIRE,
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
     ];
 
     public const string PARAM = 'sizes';

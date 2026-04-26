@@ -40,6 +40,11 @@ final class PurposeTireWildberriesProductParameters implements WildberriesProduc
 
     public const int ID = 15001209;
 
+    public function getName(): string
+    {
+        return 'Назначение шин';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -115,8 +120,4 @@ final class PurposeTireWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Назначение шин';
-    }
 }

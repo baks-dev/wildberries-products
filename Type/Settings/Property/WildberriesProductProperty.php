@@ -29,8 +29,12 @@ use BaksDev\Wildberries\Products\Mapper\Property\WildberriesProductPropertyInter
 final class WildberriesProductProperty
 {
     public const string TYPE = 'wb_product_property';
-    public const int CATEGORY_TIRE = 5283;
-    public const int CATEGORY_SHIRTS = 192; // Шины автомобильные
+    public const int CATEGORY_TIRE = 5283;  // Шины автомобильные
+    public const int CATEGORY_SHIRTS = 192;
+
+    public const int CATEGORY_DESKS = 7611; // Столы письменные
+    public const int CATEGORY_RACKS = 1901; // Стелажи
+
     public const int CATEGORY_HOODIE = 1724; // Футболки
     public const int CATEGORY_JEANS = 180; // Худи
     public const int CATEGORY_SVITSHOT = 159; // Джинсы
@@ -41,8 +45,9 @@ final class WildberriesProductProperty
     public const int CATEGORY_STRAPS = 107; // Тапки;
     public const int CATEGORY_SABO = 98; // Шлепанцы;
     public const int CATEGORY_SHIRTS_SPORT = 5217; // Cабо;
-    public const int CATEGORY_CZECH = 1586; // Футболка спортивная;
-    public const int CATEGORY_LONGSLEEVE = 217; // Чешки;
+    public const int CATEGORY_CZECH = 1586; // Чешки;
+    public const int CATEGORY_LONGSLEEVE = 217; // Лонгсливы
+
     private ?WildberriesProductPropertyInterface $property = null; // Лонгслив;
 
     public function __construct(WildberriesProductPropertyInterface|self|string $property)
