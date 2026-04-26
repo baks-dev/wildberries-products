@@ -27,6 +27,7 @@ namespace BaksDev\Wildberries\Products\Messenger\Cards\CardNew;
 
 
 use BaksDev\Users\Profile\UserProfile\Type\Id\UserProfileUid;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use Symfony\Component\DependencyInjection\Attribute\Exclude;
 
 #[Exclude]
@@ -34,20 +35,30 @@ final class WildberriesCardNewMassage
 {
     private string $profile;
 
+    private string $token;
+
     private string|false $article;
 
     public function __construct(
         UserProfileUid|string $profile,
+        WbTokenUid|string $token,
         string|false|null $article
     )
     {
         $this->profile = (string) $profile;
+        $this->token = (string) $token;
         $this->article = empty($article) ? false : $article;
+
     }
 
     /**
      * Profile
      */
+    public function getTokenIdentifier(): WbTokenUid
+    {
+        return new WbTokenUid($this->token);
+    }
+
     public function getProfile(): UserProfileUid
     {
         return new UserProfileUid($this->profile);

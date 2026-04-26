@@ -30,6 +30,8 @@ use BaksDev\Wildberries\Products\Api\Cards\FindAllWildberriesCardsRequest;
 use BaksDev\Wildberries\Products\Api\Cards\WildberriesCardDTO;
 use BaksDev\Wildberries\Products\Messenger\Cards\CardNew\WildberriesCardNewMassage;
 use BaksDev\Wildberries\Repository\AllProfileToken\AllProfileWildberriesTokenInterface;
+use BaksDev\Wildberries\Repository\AllWbTokensByProfile\AllWbTokensByProfileInterface;
+use BaksDev\Wildberries\Type\id\WbTokenUid;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -53,7 +55,8 @@ class GetWbProductsNewCommand extends Command
     public function __construct(
         private readonly MessageDispatchInterface $messageDispatch,
         private readonly AllProfileWildberriesTokenInterface $allProfileToken,
-        private readonly FindAllWildberriesCardsRequest $WildberriesCardsRequest
+        private readonly FindAllWildberriesCardsRequest $WildberriesCardsRequest,
+        private readonly AllWbTokensByProfileInterface $AllWbTokensByProfileRepository,
     )
     {
         parent::__construct();
@@ -160,34 +163,58 @@ class GetWbProductsNewCommand extends Command
     }
 
 
-    public function update(UserProfileUid $profile, ?string $article = null, bool $async = false): void
+    public function update(UserProfileUid $UserProfileUid, ?string $article = null, bool $async = false): void
     {
-        $this->io->note(sprintf('Обновляем профиль %s', $profile->getAttr()));
+        $this->io->note(sprintf('Обновляем профиль %s', $UserProfileUid->getAttr()));
 
-        $WildberriesCards = $this->WildberriesCardsRequest
-            ->profile($profile)
+
+        /**
+         * Получаем все токены профиля
+         */
+
+        $tokensByProfile = $this->AllWbTokensByProfileRepository
+            ->forProfile($UserProfileUid)
             ->findAll();
 
-        /** @var WildberriesCardDTO $WildberriesCardDTO */
-        foreach($WildberriesCards as $WildberriesCardDTO)
+        if(false === $tokensByProfile || false === $tokensByProfile->valid())
         {
-            /**
-             * Если передан артикул - применяем фильтр по вхождению
-             */
-            if(!empty($article) && stripos($WildberriesCardDTO->getArticle(), $article) === false)
-            {
-                continue;
-            }
-
-            /** Передаем на обновление найденный артикул */
-            $WildberriesCardNewMassage = new WildberriesCardNewMassage($profile, $WildberriesCardDTO->getArticle());
-
-            $this->messageDispatch->dispatch(
-                $WildberriesCardNewMassage,
-                transport: $async === true ? 'wildberries-products-low' : null,
-            );
-
-            $this->io->writeln(sprintf('<fg=green>Добавили карточку с артикулом %s</>', $WildberriesCardDTO->getArticle()));
+            return;
         }
+
+        /** @var WbTokenUid $WbTokenUid */
+        foreach($tokensByProfile as $WbTokenUid)
+        {
+            $WildberriesCards = $this->WildberriesCardsRequest
+                ->forTokenIdentifier($WbTokenUid)
+                ->findAll();
+
+            /** @var WildberriesCardDTO $WildberriesCardDTO */
+            foreach($WildberriesCards as $WildberriesCardDTO)
+            {
+                /**
+                 * Если передан артикул - применяем фильтр по вхождению
+                 */
+                if(!empty($article) && stripos($WildberriesCardDTO->getArticle(), $article) === false)
+                {
+                    continue;
+                }
+
+                /** Передаем на обновление найденный артикул */
+                $WildberriesCardNewMassage = new WildberriesCardNewMassage(
+                    profile: $UserProfileUid,
+                    token: $WbTokenUid,
+                    article: $WildberriesCardDTO->getArticle(),
+                );
+
+                $this->messageDispatch->dispatch(
+                    $WildberriesCardNewMassage,
+                    transport: $async === true ? 'wildberries-products-low' : null,
+                );
+
+                $this->io->writeln(sprintf('<fg=green>Добавили карточку с артикулом %s</>', $WildberriesCardDTO->getArticle()));
+            }
+        }
+
+
     }
 }

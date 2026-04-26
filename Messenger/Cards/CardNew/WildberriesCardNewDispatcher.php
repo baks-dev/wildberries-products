@@ -103,7 +103,7 @@ final readonly class WildberriesCardNewDispatcher
     public function __invoke(WildberriesCardNewMassage $message): void
     {
         $WildberriesCards = $this->WildberriesCardsRequest
-            ->profile($message->getProfile())
+            ->profile($message->getTokenIdentifier())
             ->findAll($message->getArticle());
 
         /** @var WildberriesCardDTO $WildberriesCardDTO */
@@ -196,7 +196,7 @@ final readonly class WildberriesCardNewDispatcher
             /** Проверяем карточку с соответствующим корневым артикулом */
             $ProductEvent = $this->ProductEventByArticle
                 ->onlyCard() // проверяем только артикул карточки
-                ->forProfile($message->getProfile())
+                ->forProfile($message->getTokenIdentifierProfile())
                 ->findProductEventByArticle($cardArticle);
 
             /**
