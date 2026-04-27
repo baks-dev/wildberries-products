@@ -41,6 +41,11 @@ final class AssemblyManufactureWildberriesProductParameters implements Wildberri
 
     public const int ID = 12192838;
 
+    public function getName(): string
+    {
+        return 'Требуется сборка';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -103,11 +108,6 @@ final class AssemblyManufactureWildberriesProductParameters implements Wildberri
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Требуется сборка';
     }
 
 }

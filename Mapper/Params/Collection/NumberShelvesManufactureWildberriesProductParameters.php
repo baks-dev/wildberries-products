@@ -40,6 +40,11 @@ final class NumberShelvesManufactureWildberriesProductParameters implements Wild
 
     public const int ID = 88885;
 
+    public function getName(): string
+    {
+        return 'Количество полок';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class NumberShelvesManufactureWildberriesProductParameters implements Wild
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Количество полок';
-    }
 
 }

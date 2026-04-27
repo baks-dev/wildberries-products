@@ -40,6 +40,11 @@ final class CornerLocationManufactureWildberriesProductParameters implements Wil
 
     public const int ID = 15000819;
 
+    public function getName(): string
+    {
+        return 'Расположение угла';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class CornerLocationManufactureWildberriesProductParameters implements Wil
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Расположение угла';
-    }
 
 }

@@ -40,6 +40,11 @@ final class FeaturesFurnitureWildberriesProductParameters implements Wildberries
 
     public const int ID = 5769673;
 
+    public function getName(): string
+    {
+        return 'Особенности мебели';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -102,10 +107,5 @@ final class FeaturesFurnitureWildberriesProductParameters implements Wildberries
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Особенности мебели';
     }
 }

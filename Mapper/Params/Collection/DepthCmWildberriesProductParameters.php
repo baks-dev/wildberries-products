@@ -40,6 +40,11 @@ final class DepthCmWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 90652;
 
+    public function getName(): string
+    {
+        return 'Глубина предмета, см';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,5 @@ final class DepthCmWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Глубина предмета, см';
-    }
+
 }

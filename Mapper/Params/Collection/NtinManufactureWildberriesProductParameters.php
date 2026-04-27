@@ -54,6 +54,11 @@ final class NtinManufactureWildberriesProductParameters implements WildberriesPr
 
     public const int ID = 15003988;
 
+    public function getName(): string
+    {
+        return 'NTIN';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -118,8 +123,5 @@ final class NtinManufactureWildberriesProductParameters implements WildberriesPr
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'NTIN';
-    }
+
 }

@@ -40,6 +40,11 @@ final class FurnitureFasteningManufactureWildberriesProductParameters implements
 
     public const int ID = 15001406;
 
+    public function getName(): string
+    {
+        return 'Крепление мебели';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -102,11 +107,6 @@ final class FurnitureFasteningManufactureWildberriesProductParameters implements
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Крепление мебели';
     }
 
 }

@@ -131,6 +131,8 @@ final class WildberriesProductProperty
             self::CATEGORY_SHIRTS_SPORT => ['Футболки', 'Футболка спортивная'],
             self::CATEGORY_CZECH => ['Чешки'],
             self::CATEGORY_LONGSLEEVE => ['Лонгслив', 'Лонгсливы'],
+            self::CATEGORY_RACKS => ['Стеллаж', 'Стеллажи'],
+            self::CATEGORY_DESKS => ['Стол', 'Столы'],
         ];
     }
 

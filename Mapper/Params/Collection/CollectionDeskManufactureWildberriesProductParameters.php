@@ -41,6 +41,11 @@ final class CollectionDeskManufactureWildberriesProductParameters implements Wil
 
     public const int ID = 15001525;
 
+    public function getName(): string
+    {
+        return 'Коллекция мебели';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,10 +109,4 @@ final class CollectionDeskManufactureWildberriesProductParameters implements Wil
             mb_strtolower($this->getName()),
         ], true);
     }
-
-    public function getName(): string
-    {
-        return 'Коллекция мебели';
-    }
-
 }

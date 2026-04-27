@@ -40,6 +40,11 @@ final class NumberBoxesManufactureWildberriesProductParameters implements Wildbe
 
     public const int ID = 404036;
 
+    public function getName(): string
+    {
+        return 'Количество ящиков';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class NumberBoxesManufactureWildberriesProductParameters implements Wildbe
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Количество ящиков';
-    }
 
 }

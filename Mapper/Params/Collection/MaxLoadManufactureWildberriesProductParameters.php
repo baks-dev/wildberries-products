@@ -40,6 +40,11 @@ final class MaxLoadManufactureWildberriesProductParameters implements Wildberrie
 
     public const int ID = 131154;
 
+    public function getName(): string
+    {
+        return 'Максимальная нагрузка';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -102,11 +107,6 @@ final class MaxLoadManufactureWildberriesProductParameters implements Wildberrie
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Максимальная нагрузка';
     }
 
 }

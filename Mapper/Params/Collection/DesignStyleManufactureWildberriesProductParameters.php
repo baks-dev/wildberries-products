@@ -40,6 +40,11 @@ final class DesignStyleManufactureWildberriesProductParameters implements Wildbe
 
     public const int ID = 12179818;
 
+    public function getName(): string
+    {
+        return 'Стиль дизайна';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class DesignStyleManufactureWildberriesProductParameters implements Wildbe
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Стиль дизайна';
-    }
 
 }

@@ -41,6 +41,11 @@ final class PurposeFurnitureWildberriesProductParameters implements WildberriesP
 
     public const int ID = 59668;
 
+    public function getName(): string
+    {
+        return 'Назначение мебели';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -116,9 +121,5 @@ final class PurposeFurnitureWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Назначение мебели';
-    }
 
 }

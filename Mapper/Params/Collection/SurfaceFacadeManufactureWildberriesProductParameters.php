@@ -40,6 +40,11 @@ final class SurfaceFacadeManufactureWildberriesProductParameters implements Wild
 
     public const int ID = 15002887;
 
+    public function getName(): string
+    {
+        return 'Поверхность фасада';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class SurfaceFacadeManufactureWildberriesProductParameters implements Wild
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Поверхность фасада';
-    }
 
 }

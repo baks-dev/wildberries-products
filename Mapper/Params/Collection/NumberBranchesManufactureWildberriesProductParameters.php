@@ -40,6 +40,11 @@ final class NumberBranchesManufactureWildberriesProductParameters implements Wil
 
     public const int ID = 14975;
 
+    public function getName(): string
+    {
+        return 'Количество отделений';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class NumberBranchesManufactureWildberriesProductParameters implements Wil
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Количество отделений';
-    }
 
 }

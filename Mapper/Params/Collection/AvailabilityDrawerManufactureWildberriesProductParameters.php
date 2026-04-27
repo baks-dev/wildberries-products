@@ -40,6 +40,11 @@ final class AvailabilityDrawerManufactureWildberriesProductParameters implements
 
     public const int ID = 15000829;
 
+    public function getName(): string
+    {
+        return 'Наличие ящика';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -102,11 +107,6 @@ final class AvailabilityDrawerManufactureWildberriesProductParameters implements
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Наличие ящика';
     }
 
 }

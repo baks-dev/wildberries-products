@@ -40,6 +40,11 @@ final class TypeMountingManufactureWildberriesProductParameters implements Wildb
 
     public const int ID = 14196;
 
+    public function getName(): string
+    {
+        return 'Тип крепления';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class TypeMountingManufactureWildberriesProductParameters implements Wildb
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип крепления';
-    }
 
 }

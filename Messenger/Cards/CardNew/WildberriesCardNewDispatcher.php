@@ -58,6 +58,7 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Variation\ProductVaria
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Photo\PhotoCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductHandler;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Profile\CollectionProductProfileDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Property\PropertyCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
 use BaksDev\Reference\Color\Choice\ReferenceChoiceColor;
@@ -180,7 +181,7 @@ final readonly class WildberriesCardNewDispatcher
 
             $cardArticle = explode('-', $cardArticle);
 
-            if($SettingsByCategory['variation_article'])
+            if($SettingsByCategory['variation_article'] || $SettingsByCategory['offer_article'])
             {
                 count($cardArticle) === 1 ?: array_pop($cardArticle);
             }
@@ -193,11 +194,31 @@ final readonly class WildberriesCardNewDispatcher
 
             $cardArticle = implode('-', $cardArticle);
 
-            /** Проверяем карточку с соответствующим корневым артикулом */
+
+            /**
+             * Проверяем карточку с соответствующим корневым артикулом по профилю
+             */
+            $isCardProfile = true; // область видимости только по профилю
+
             $ProductEvent = $this->ProductEventByArticle
                 ->onlyCard() // проверяем только артикул карточки
-                ->forProfile($message->getTokenIdentifierProfile())
+                ->forProfile($message->getProfile())
                 ->findProductEventByArticle($cardArticle);
+
+            /** Если карточка по профилю не найдена - пробуем найти общую */
+            if(false === ($ProductEvent instanceof ProductEvent))
+            {
+                $ProductEvent = $this->ProductEventByArticle
+                    ->onlyCard()
+                    ->forProfile(false)
+                    ->findProductEventByArticle($cardArticle);
+
+                if(true === ($ProductEvent instanceof ProductEvent))
+                {
+                    $isCardProfile = false; // общая область видимости только по профилю
+                }
+            }
+
 
             /**
              * Проверяем что в ней отсутствует артикул торговых предложения с размерами
@@ -221,12 +242,6 @@ final readonly class WildberriesCardNewDispatcher
             }
 
 
-            //            if($WildberriesCardDTO->getArticle() === 'FSWOMEN-0203-07')
-            //            {
-            //
-            //            }
-
-
             $ProductDTO = new ProductDTO();
             false === ($ProductEvent instanceof ProductEvent) ?: $ProductEvent->getDto($ProductDTO);
 
@@ -246,20 +261,31 @@ final readonly class WildberriesCardNewDispatcher
             $ProductInfo = $ProductDTO->getInfo();
             $ProductDTO->setInfo($ProductInfo);
             $ProductInfo->getUrl() ?: $ProductInfo->setUrl(uniqid('', false));
-            //$ProductInfo->getProfile() ?: $ProductInfo->setProfile($message->getProfile());
-
-
             $ProductInfo->setArticle($cardArticle);
+
+            /**
+             * Присваиваем область видимости карточки
+             */
+            if(true === $isCardProfile)
+            {
+                $CollectionProductProfileDTO = new CollectionProductProfileDTO()
+                    ->setValue($message->getProfile());
+
+                $ProductDTO->getProfile()->add($CollectionProductProfileDTO);
+            }
 
 
             /** Создаем первоначально название */
             $title = $WildberriesCardDTO->getName();
 
-            // Фильтруем название категории
-            $cats = WildberriesProductProperty::caseCategory()[$WildberriesCardDTO->getCategory()];
+            /* Фильтруем в названии категорию */
+            $caseCategory = WildberriesProductProperty::caseCategory();
 
-            !$cats ?: $title = $this->filterTitle($cats, $title);
-
+            if(isset($caseCategory[$WildberriesCardDTO->getCategory()]))
+            {
+                $cats = $caseCategory[$WildberriesCardDTO->getCategory()];
+                $title = $this->filterTitle($cats, $title);
+            }
 
             $reference = iterator_to_array($this->reference);
             $fields = iterator_to_array($this->fields);
@@ -330,11 +356,22 @@ final readonly class WildberriesCardNewDispatcher
                     // Если торговое предложение является артикульным - присваиваем артикул и баркод
                     if($SettingsByCategory['offer_article'])
                     {
+                        $offerArticle = $WildberriesCardDTO->getArticle().(empty($size) ? '' : '-'.$size);
+
+                        /** Проверяем что данный артикул торгового предложения не был добавлен ранее */
+                        foreach($ProductDTO->getOffer() as $ProductOffersElement)
+                        {
+                            if($ProductOffersElement->getArticle() === $offerArticle)
+                            {
+                                return;
+                            }
+                        }
+
                         $ProductOfferBarcodeDTO = new ProductOfferBarcodeDTO()
                             ->setValue(new ProductBarcode((string) $barcode));
 
                         $OffersDTO
-                            ->setArticle($WildberriesCardDTO->getArticle().'-'.$size)
+                            ->setArticle($offerArticle)
                             ->addBarcode($ProductOfferBarcodeDTO);
                     }
 
@@ -356,7 +393,6 @@ final readonly class WildberriesCardNewDispatcher
                     /**
                      * Множественные варианты
                      */
-
 
                     if(false === $SettingsByCategory['variation_id'])
                     {
@@ -407,12 +443,22 @@ final readonly class WildberriesCardNewDispatcher
                     // Если множественный вариант является артикульным - присваиваем артикул и баркод
                     if($SettingsByCategory['variation_article'])
                     {
+                        $variationArticle = $WildberriesCardDTO->getArticle().(empty($size) ? '' : '-'.$size);
+
+                        /** Проверяем что данный артикул множественного варианта торгового предложения не был добавлен ранее */
+                        foreach($ProductVariationCollectionDTO as $ProductVariationElement)
+                        {
+                            if($ProductVariationElement->getArticle() === $variationArticle)
+                            {
+                                return;
+                            }
+                        }
 
                         $ProductVariationBarcodeDTO = new ProductVariationBarcodeDTO()
                             ->setValue(new ProductBarcode((string) $barcode));
 
                         $VariationDTO
-                            ->setArticle($WildberriesCardDTO->getArticle().'-'.$size)
+                            ->setArticle($WildberriesCardDTO->getArticle().(empty($size) ? '' : '-'.$size))
                             ->addBarcode($ProductVariationBarcodeDTO);
                     }
 
@@ -429,6 +475,12 @@ final readonly class WildberriesCardNewDispatcher
                             $this->createMediaFile($VariationDTO, ProductVariationImage::class, $media);
                         }
                     }
+
+
+                    /**
+                     * Модификация множественного варианта
+                     */
+
                 }
 
             }

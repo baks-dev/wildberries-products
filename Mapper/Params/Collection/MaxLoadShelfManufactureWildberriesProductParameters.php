@@ -40,6 +40,11 @@ final class MaxLoadShelfManufactureWildberriesProductParameters implements Wildb
 
     public const int ID = 7465859;
 
+    public function getName(): string
+    {
+        return 'Максимальная нагрузка на полку';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class MaxLoadShelfManufactureWildberriesProductParameters implements Wildb
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Максимальная нагрузка на полку';
-    }
 
 }
