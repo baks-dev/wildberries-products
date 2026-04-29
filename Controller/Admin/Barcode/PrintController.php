@@ -30,6 +30,7 @@ use BaksDev\Core\Controller\AbstractController;
 use BaksDev\Core\Listeners\Event\Security\RoleSecurity;
 use BaksDev\Core\Type\UidType\ParamConverter;
 use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventInterface;
+use BaksDev\Products\Product\Repository\ProductDetail\ProductDetailByEventResult;
 use BaksDev\Products\Product\Type\Event\ProductEventUid;
 use BaksDev\Products\Product\Type\Offers\Id\ProductOfferUid;
 use BaksDev\Products\Product\Type\Offers\Variation\Id\ProductVariationUid;
@@ -45,7 +46,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[AsController]
-#[RoleSecurity('ROLE_WB_BARCODE_PRINT')]
+#[RoleSecurity(['ROLE_WB_BARCODE_PRINT', 'ROLE_ORDERS'])]
 final class PrintController extends AbstractController
 {
     /**
@@ -70,14 +71,14 @@ final class PrintController extends AbstractController
          * Получаем информацию о продукте
          */
 
-        $ProductDetail = $ProductDetailByUid
+        $ProductDetailByEventResult = $ProductDetailByUid
             ->event($event)
             ->offer($offer)
             ->variation($variation)
             ->modification($modification)
-            ->find();
+            ->findResult();
 
-        if(!$ProductDetail)
+        if(false === ($ProductDetailByEventResult instanceof ProductDetailByEventResult))
         {
             $logger->critical(
                 'wildberries-products: Продукция в упаковке не найдена',
@@ -92,13 +93,22 @@ final class PrintController extends AbstractController
             return new Response('Продукция в упаковке не найдена', Response::HTTP_NOT_FOUND);
         }
 
+        if(empty($ProductDetailByEventResult->getProductBarcode()))
+        {
+            $logger->critical(
+                sprintf('%s: Не указан штрихкод продукта в карточке', $ProductDetailByEventResult->getProductArticle()),
+                [self::class.':'.__LINE__],
+            );
+
+            return new Response('Не указан штрихкод продукта', Response::HTTP_NOT_FOUND);
+        }
 
         /**
          * Генерируем штрихкод продукции (один на все заказы)
          */
 
         $barcode = $BarcodeWrite
-            ->text($ProductDetail['product_barcode'])
+            ->text($ProductDetailByEventResult->getProductBarcode())
             ->type(BarcodeType::Code128)
             ->format(BarcodeFormat::SVG)
             ->generate();
@@ -118,21 +128,20 @@ final class PrintController extends AbstractController
         $render = strip_tags($render, ['path']);
         $render = trim($render);
 
-
         /**
          * Получаем настройки бокового стикера
          */
 
-        $BarcodeSettings = $ProductDetail['main'] ?
-            $WbBarcodeSettings->forProduct($ProductDetail['main'])->find() : false;
-
+        $WbBarcodeSettingsResult = $WbBarcodeSettings
+            ->forProduct($ProductDetailByEventResult->getProductMain())
+            ->find();
 
         return $this->render(
             parameters: [
                 'barcode' => $render,
-                'settings' => $BarcodeSettings,
-                'total' => $request->get('total', 1),
-                'product' => $ProductDetail,
+                'settings' => $WbBarcodeSettingsResult,
+                'total' => $request->query->get('total', 1),
+                'product' => $ProductDetailByEventResult,
             ],
             file: 'print.html.twig',
         );
