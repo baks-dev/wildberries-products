@@ -137,11 +137,12 @@ final class AllBarcodeSettingsRepository implements AllBarcodeSettingsInterface
 
 
         /* Поиск */
-        if($this->search->getQuery())
+        if($this->search && $this->search->getQuery())
         {
-            $this->DBALQueryBuilder
+            $qb
                 ->createSearchQueryBuilder($this->search)
-                ->addSearchLike('category_trans.name');
+                ->addSearchLike('category_trans.name')
+                ->addSearchLike('category_trans.description');
 
         }
 
