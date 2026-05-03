@@ -132,7 +132,7 @@ final readonly class WildberriesProductsStocksDispatcher
             $this->logger->critical(sprintf(
                 'wildberries-products: Карточка товара Wildberries по артикулу %s не найдена',
                 $WildberriesProductsCardResult->getSearchArticle(),
-            ));
+            ), [self::class.':'.__LINE__]);
 
             return;
         }
