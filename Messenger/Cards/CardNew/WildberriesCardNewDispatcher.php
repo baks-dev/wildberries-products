@@ -271,7 +271,8 @@ final readonly class WildberriesCardNewDispatcher
                 $CollectionProductProfileDTO = new CollectionProductProfileDTO()
                     ->setValue($message->getProfile());
 
-                $ProductDTO->getProfile()->add($CollectionProductProfileDTO);
+                $ProductDTO->addProfile($CollectionProductProfileDTO);
+
             }
 
 
