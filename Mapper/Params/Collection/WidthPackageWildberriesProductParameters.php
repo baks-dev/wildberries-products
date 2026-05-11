@@ -36,9 +36,29 @@ final class WidthPackageWildberriesProductParameters implements WildberriesProdu
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_TIRE,
+        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_SHIRTS,
+        WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_SVITSHOT,
+        WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
+        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
+        WildberriesProductProperty::CATEGORY_SLIPPERS,
+        WildberriesProductProperty::CATEGORY_STRAPS,
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
     ];
 
     public const int ID = 90745;
+
+    public function getName(): string
+    {
+        return 'Ширина упаковки, см';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -102,11 +122,6 @@ final class WidthPackageWildberriesProductParameters implements WildberriesProdu
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Ширина упаковки';
     }
 
 }

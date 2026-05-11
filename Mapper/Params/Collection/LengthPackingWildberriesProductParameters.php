@@ -32,15 +32,29 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class ShapeToeWildberriesProductParameters implements WildberriesProductParametersInterface
+final class LengthPackingWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_TIRE,
+        WildberriesProductProperty::CATEGORY_DESKS,
+        WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_SHIRTS,
+        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_SVITSHOT,
+        WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
+        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_STRAPS,
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+
     ];
 
-    public const int ID = 6161;
+    public const int ID = 90849;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -108,6 +122,7 @@ final class ShapeToeWildberriesProductParameters implements WildberriesProductPa
 
     public function getName(): string
     {
-        return 'Форма мыска';
+        return 'Длина упаковки, см';
     }
+
 }

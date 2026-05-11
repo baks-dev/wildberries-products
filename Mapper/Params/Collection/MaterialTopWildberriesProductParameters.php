@@ -32,15 +32,13 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class ShapeToeWildberriesProductParameters implements WildberriesProductParametersInterface
+final class MaterialTopWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SABO,
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_STRAPS,
     ];
 
-    public const int ID = 6161;
+    public const int ID = 15003971;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -108,6 +106,6 @@ final class ShapeToeWildberriesProductParameters implements WildberriesProductPa
 
     public function getName(): string
     {
-        return 'Форма мыска';
+        return 'Материал верха';
     }
 }
