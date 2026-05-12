@@ -36,6 +36,8 @@ final class MaterialTopWildberriesProductParameters implements WildberriesProduc
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_SLIPPERS,
+        WildberriesProductProperty::CATEGORY_STRAPS,
     ];
 
     public const int ID = 15003971;
