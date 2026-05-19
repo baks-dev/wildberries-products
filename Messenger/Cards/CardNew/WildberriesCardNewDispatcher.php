@@ -46,7 +46,6 @@ use BaksDev\Products\Product\Type\Barcode\ProductBarcode;
 use BaksDev\Products\Product\Type\Offers\ConstId\ProductOfferConst;
 use BaksDev\Products\Product\Type\Offers\Variation\ConstId\ProductVariationConst;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Category\CategoryCollectionDTO;
-use BaksDev\Products\Product\UseCase\Admin\NewEdit\Description\ProductDescriptionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Barcode\ProductOfferBarcodeDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\Image\ProductOfferImageCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Offers\ProductOffersCollectionDTO;
@@ -59,6 +58,7 @@ use BaksDev\Products\Product\UseCase\Admin\NewEdit\Photo\PhotoCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\ProductHandler;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Profile\CollectionProductProfileDTO;
+use BaksDev\Products\Product\UseCase\Admin\NewEdit\Project\Description\ProductProjectDescriptionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Property\PropertyCollectionDTO;
 use BaksDev\Products\Product\UseCase\Admin\NewEdit\Trans\ProductTransDTO;
 use BaksDev\Reference\Color\Choice\ReferenceChoiceColor;
@@ -75,7 +75,6 @@ use Psr\Log\LoggerInterface;
 use ReflectionAttribute;
 use ReflectionClass;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -572,11 +571,14 @@ final readonly class WildberriesCardNewDispatcher
             /**
              * Описание файла
              *
-             * @var ProductDescriptionDTO $ProductDescriptionDTO
+             * @var ProductProjectDescriptionDTO $ProductProjectDescriptionDTO
              */
-            foreach($ProductDTO->getDescription() as $ProductDescriptionDTO)
+
+            $ProductProjectDTO = $ProductDTO->getProject();
+
+            foreach($ProductProjectDTO->getDescription() as $ProductProjectDescriptionDTO)
             {
-                $ProductDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
+                $ProductProjectDescriptionDTO->setPreview($WildberriesCardDTO->getDescription());
             }
 
 
