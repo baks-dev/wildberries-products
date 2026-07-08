@@ -49,6 +49,11 @@ final class QuantityEsManufactureWildberriesProductParameters implements Wildber
 
     public const int ID = 15003991;
 
+    public function getName(): string
+    {
+        return 'Количество штук в товаре по ЭС';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -113,8 +118,4 @@ final class QuantityEsManufactureWildberriesProductParameters implements Wildber
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Количество штук в товаре по ЭС';
-    }
 }

@@ -49,6 +49,11 @@ final class CodeTruOneManufactureWildberriesProductParameters implements Wildber
 
     public const int ID = 15003989;
 
+    public function getName(): string
+    {
+        return 'Код ТРУ 1';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -113,8 +118,5 @@ final class CodeTruOneManufactureWildberriesProductParameters implements Wildber
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Код ТРУ 1';
-    }
+
 }
