@@ -49,7 +49,7 @@ final class CertificateRegistrationSGRWildberriesProductParameters implements Wi
 
     public function getName(): string
     {
-        return 'Возрастные ограничения';
+        return 'Свидетельство о регистрации СГР';
     }
 
     /**
