@@ -118,15 +118,6 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
             foreach($data as $item)
             {
-
-                if($item->getId() === 19717 || $item->getId() === 62945173)
-                {
-                    dump($item->getId(), $item->getName());
-
-                }
-
-
-
                 if(empty($params))
                 {
                     dump(sprintf('Отсутствует элемент ID = %s ( %s, %s ) для категории %s', $item->getId(), $item->getName(), $item->getUnit(), $category));
