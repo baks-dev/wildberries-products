@@ -42,10 +42,15 @@ final class CertificateRegistrationSGRWildberriesProductParameters implements Wi
         WildberriesProductProperty::CATEGORY_SHIRTS,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
-
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
-    public const int ID = 19717;
+    public const int ID = 62945173;
+
+    public function getName(): string
+    {
+        return 'Возрастные ограничения';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -111,9 +116,5 @@ final class CertificateRegistrationSGRWildberriesProductParameters implements Wi
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Возрастные ограничения';
-    }
 
 }

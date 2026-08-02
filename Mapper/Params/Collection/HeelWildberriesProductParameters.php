@@ -40,6 +40,11 @@ final class HeelWildberriesProductParameters implements WildberriesProductParame
 
     public const int ID = 6158;
 
+    public function getName(): string
+    {
+        return 'Вид каблука';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,8 +112,4 @@ final class HeelWildberriesProductParameters implements WildberriesProductParame
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вид каблука';
-    }
 }

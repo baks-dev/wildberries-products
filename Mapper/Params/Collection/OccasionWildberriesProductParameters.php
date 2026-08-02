@@ -41,6 +41,11 @@ final class OccasionWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 59615;
 
+    public function getName(): string
+    {
+        return 'Повод';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class OccasionWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Повод';
-    }
 }

@@ -35,6 +35,11 @@ final class NumberDeclarationWildberriesProductParameters implements Wildberries
 {
     public const int ID = 15001135;
 
+    public function getName(): string
+    {
+        return 'Номер декларации соответствия';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class NumberDeclarationWildberriesProductParameters implements Wildberries
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Номер декларации соответствия';
-    }
 }

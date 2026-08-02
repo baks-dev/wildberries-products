@@ -37,6 +37,11 @@ final class PresentTypeWildberriesProductParameters implements WildberriesProduc
 
     public const int ID = 59623;
 
+    public function getName(): string
+    {
+        return 'Тип подарка';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -101,8 +106,4 @@ final class PresentTypeWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип подарка';
-    }
 }

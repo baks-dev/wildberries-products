@@ -40,6 +40,11 @@ final class ReligiousPurposeWildberriesProductParameters implements WildberriesP
 
     public const int ID = 214811;
 
+    public function getName(): string
+    {
+        return 'Религиозное предназначение';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class ReligiousPurposeWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Религиозное предназначение';
-    }
 
 }

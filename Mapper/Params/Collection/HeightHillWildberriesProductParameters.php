@@ -40,6 +40,11 @@ final class HeightHillWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 90842;
 
+    public function getName(): string
+    {
+        return 'Высота каблука'; // сантиметр
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -109,8 +114,4 @@ final class HeightHillWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Высота каблука'; // сантиметр
-    }
 }

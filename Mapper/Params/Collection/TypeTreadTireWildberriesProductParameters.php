@@ -40,6 +40,11 @@ final class TypeTreadTireWildberriesProductParameters implements WildberriesProd
 
     public const int ID = 15002679;
 
+    public function getName(): string
+    {
+        return 'Вид рисунка протектора';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class TypeTreadTireWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вид рисунка протектора';
-    }
 }

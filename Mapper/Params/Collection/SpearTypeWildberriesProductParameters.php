@@ -41,6 +41,11 @@ final class SpearTypeWildberriesProductParameters implements WildberriesProductP
 
     public const int ID = 10;
 
+    public function getName(): string
+    {
+        return 'Тип рукава';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class SpearTypeWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип рукава';
-    }
 }

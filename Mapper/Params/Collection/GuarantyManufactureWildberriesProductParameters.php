@@ -42,6 +42,11 @@ final class GuarantyManufactureWildberriesProductParameters implements Wildberri
 
     public const int ID = 9623;
 
+    public function getName(): string
+    {
+        return 'Гарантийный срок';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,9 +111,5 @@ final class GuarantyManufactureWildberriesProductParameters implements Wildberri
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Гарантийный срок';
-    }
 
 }

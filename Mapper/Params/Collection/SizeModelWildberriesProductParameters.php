@@ -43,9 +43,15 @@ final class SizeModelWildberriesProductParameters implements WildberriesProductP
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 246961;
+
+    public function getName(): string
+    {
+        return 'Размер на модели';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -111,8 +117,4 @@ final class SizeModelWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Размер на модели';
-    }
 }

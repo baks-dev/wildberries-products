@@ -42,9 +42,15 @@ final class ModelParameterWildberriesProductParameters implements WildberriesPro
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 165505;
+
+    public function getName(): string
+    {
+        return 'Параметры модели на фото (ОГ-ОТ-ОБ)';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -113,8 +119,4 @@ final class ModelParameterWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Параметры модели на фото (ОГ-ОТ-ОБ)';
-    }
 }

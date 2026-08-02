@@ -41,6 +41,11 @@ final class ColorNameWildberriesProductParameters implements WildberriesProductP
 
     public const int ID = 15001935;
 
+    public function getName(): string
+    {
+        return 'Название цвета';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class ColorNameWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Название цвета';
-    }
 }

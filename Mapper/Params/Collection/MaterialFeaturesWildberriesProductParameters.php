@@ -37,6 +37,11 @@ final class MaterialFeaturesWildberriesProductParameters implements WildberriesP
 
     public const int ID = 385397;
 
+    public function getName(): string
+    {
+        return 'Особенности материала';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -101,8 +106,4 @@ final class MaterialFeaturesWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Особенности материала';
-    }
 }

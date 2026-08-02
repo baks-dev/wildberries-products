@@ -40,6 +40,11 @@ final class SeasonalityWildberriesProductParameters implements WildberriesProduc
 
     public const int ID = 244922;
 
+    public function getName(): string
+    {
+        return 'Сезонность';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -111,8 +116,4 @@ final class SeasonalityWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Сезонность';
-    }
 }

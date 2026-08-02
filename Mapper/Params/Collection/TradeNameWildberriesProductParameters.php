@@ -43,10 +43,15 @@ final class TradeNameWildberriesProductParameters implements WildberriesProductP
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
-
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 15000785;
+
+    public function getName(): string
+    {
+        return 'Торговое наименование';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -112,9 +117,5 @@ final class TradeNameWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Торговое наименование';
-    }
 
 }

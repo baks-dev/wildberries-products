@@ -42,6 +42,11 @@ final class CareShoeWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 15003167;
 
+    public function getName(): string
+    {
+        return 'Уход за обувью';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -109,10 +114,6 @@ final class CareShoeWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Уход за обувью';
-    }
 
 
 }

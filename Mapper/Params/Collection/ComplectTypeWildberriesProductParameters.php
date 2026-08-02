@@ -40,6 +40,11 @@ final class ComplectTypeWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 92671;
 
+    public function getName(): string
+    {
+        return 'Тип комплекта';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class ComplectTypeWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип комплекта';
-    }
 
 }

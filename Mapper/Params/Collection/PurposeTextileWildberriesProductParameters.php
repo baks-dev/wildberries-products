@@ -40,6 +40,11 @@ final class PurposeTextileWildberriesProductParameters implements WildberriesPro
 
     public const int ID = 60898;
 
+    public function getName(): string
+    {
+        return 'Назначение текстиля';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class PurposeTextileWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Назначение текстиля';
-    }
 
 }

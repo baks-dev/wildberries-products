@@ -40,6 +40,11 @@ final class TnvedCodeWildberriesProductParameters implements WildberriesProductP
     ];
     public const int ID = 15004139;
 
+    public function getName(): string
+    {
+        return 'Код ТН ВЭД';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -108,10 +113,6 @@ final class TnvedCodeWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Код ТН ВЭД';
-    }
 
 
 }

@@ -41,9 +41,15 @@ final class SeasonWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 18769;
+
+    public function getName(): string
+    {
+        return 'Сезон';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -109,8 +115,4 @@ final class SeasonWildberriesProductParameters implements WildberriesProductPara
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Сезон';
-    }
 }

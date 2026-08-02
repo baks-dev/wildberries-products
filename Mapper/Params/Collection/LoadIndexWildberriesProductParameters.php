@@ -40,6 +40,11 @@ final class LoadIndexWildberriesProductParameters implements WildberriesProductP
 
     public const int ID = 15001208;
 
+    public function getName(): string
+    {
+        return 'Артикул производителя';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class LoadIndexWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Артикул производителя';
-    }
 }

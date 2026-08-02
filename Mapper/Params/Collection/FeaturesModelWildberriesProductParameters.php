@@ -47,9 +47,15 @@ final class FeaturesModelWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 23771;
+
+    public function getName(): string
+    {
+        return 'Особенности модели';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -115,8 +121,4 @@ final class FeaturesModelWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Особенности модели';
-    }
 }

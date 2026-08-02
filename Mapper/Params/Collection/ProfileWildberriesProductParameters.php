@@ -40,6 +40,11 @@ final class ProfileWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 244948;
 
+    public function getName(): string
+    {
+        return 'Высота профиля';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class ProfileWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Высота профиля';
-    }
 }

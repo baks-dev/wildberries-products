@@ -40,6 +40,11 @@ final class MattressSizeWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 25977;
 
+    public function getName(): string
+    {
+        return 'Размер наматрасника';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class MattressSizeWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Размер наматрасника';
-    }
 
 }

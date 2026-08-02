@@ -35,6 +35,11 @@ final class NdsWildberriesProductParameters implements WildberriesProductParamet
 {
     public const int ID = 15001405;
 
+    public function getName(): string
+    {
+        return 'Ставка НДС';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class NdsWildberriesProductParameters implements WildberriesProductParamet
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Ставка НДС';
-    }
 }

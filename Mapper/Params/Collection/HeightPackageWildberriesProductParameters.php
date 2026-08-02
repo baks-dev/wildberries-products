@@ -53,9 +53,15 @@ final class HeightPackageWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 90846;
+
+    public function getName(): string
+    {
+        return 'Высота упаковки, см';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -121,9 +127,5 @@ final class HeightPackageWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Высота упаковки, см';
-    }
 
 }

@@ -53,10 +53,15 @@ final class NamingWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
-
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 15000000;
+
+    public function getName(): string
+    {
+        return 'Наименование';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -122,9 +127,5 @@ final class NamingWildberriesProductParameters implements WildberriesProductPara
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Наименование';
-    }
 
 }

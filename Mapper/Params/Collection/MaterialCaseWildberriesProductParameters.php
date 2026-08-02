@@ -41,6 +41,11 @@ final class MaterialCaseWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 428507;
 
+    public function getName(): string
+    {
+        return 'Материал чехла';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class MaterialCaseWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал чехла';
-    }
 
 }

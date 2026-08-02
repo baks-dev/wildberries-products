@@ -40,6 +40,11 @@ final class MaterialPomponWildberriesProductParameters implements WildberriesPro
 
     public const int ID = 88058;
 
+    public function getName(): string
+    {
+        return 'Материал помпона';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class MaterialPomponWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал помпона';
-    }
 
 }

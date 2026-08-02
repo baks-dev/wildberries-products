@@ -42,9 +42,15 @@ final class FastenerWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 4;
+
+    public function getName(): string
+    {
+        return 'Вид застежки';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +116,4 @@ final class FastenerWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вид застежки';
-    }
 }

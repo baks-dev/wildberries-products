@@ -52,9 +52,15 @@ final class ColorWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_RACKS,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 14177449;
+
+    public function getName(): string
+    {
+        return 'Цвет';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -120,8 +126,4 @@ final class ColorWildberriesProductParameters implements WildberriesProductParam
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Цвет';
-    }
 }

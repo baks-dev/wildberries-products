@@ -40,6 +40,11 @@ final class LengthBackWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 90657;
 
+    public function getName(): string
+    {
+        return 'Длина изделия по спинке';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class LengthBackWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Длина изделия по спинке';
-    }
 }

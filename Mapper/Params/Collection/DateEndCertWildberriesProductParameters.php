@@ -35,6 +35,11 @@ final class DateEndCertWildberriesProductParameters implements WildberriesProduc
 {
     public const int ID = 15001138;
 
+    public function getName(): string
+    {
+        return 'Дата окончания действия сертификата/декларации';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class DateEndCertWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Дата окончания действия сертификата/декларации';
-    }
 }

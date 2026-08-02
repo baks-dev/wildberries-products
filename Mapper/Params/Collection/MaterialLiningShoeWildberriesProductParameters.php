@@ -43,6 +43,11 @@ final class MaterialLiningShoeWildberriesProductParameters implements Wildberrie
 
     public const int ID = 40;
 
+    public function getName(): string
+    {
+        return 'Материал подкладки обуви';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,9 +112,5 @@ final class MaterialLiningShoeWildberriesProductParameters implements Wildberrie
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал подкладки обуви';
-    }
 
 }

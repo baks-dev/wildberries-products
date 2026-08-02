@@ -27,15 +27,24 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class TypeLandingWildberriesProductParameters implements WildberriesProductParametersInterface
 {
-    public const array CATEGORY = [180];
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
+    ];
 
     public const int ID = 6153;
+
+    public function getName(): string
+    {
+        return 'Тип посадки';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -101,8 +110,4 @@ final class TypeLandingWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип посадки';
-    }
 }

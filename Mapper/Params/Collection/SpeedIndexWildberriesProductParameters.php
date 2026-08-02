@@ -40,6 +40,11 @@ final class SpeedIndexWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 15001207;
 
+    public function getName(): string
+    {
+        return 'Индекс скорости';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -109,8 +114,4 @@ final class SpeedIndexWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Индекс скорости';
-    }
 }

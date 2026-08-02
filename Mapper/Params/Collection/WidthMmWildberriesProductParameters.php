@@ -40,6 +40,11 @@ final class WidthMmWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 244928;
 
+    public function getName(): string
+    {
+        return 'Ширина, мм';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class WidthMmWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Ширина, мм';
-    }
 }

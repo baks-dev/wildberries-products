@@ -40,6 +40,11 @@ final class FillingWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 14281;
 
+    public function getName(): string
+    {
+        return 'Наполнитель';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class FillingWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Наполнитель';
-    }
 
 }

@@ -51,9 +51,15 @@ final class MaterialUpperWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 15004202;
+
+    public function getName(): string
+    {
+        return 'Материал верха';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -119,9 +125,5 @@ final class MaterialUpperWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал верха';
-    }
 
 }

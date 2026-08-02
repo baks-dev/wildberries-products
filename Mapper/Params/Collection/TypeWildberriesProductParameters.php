@@ -42,9 +42,15 @@ final class TypeWildberriesProductParameters implements WildberriesProductParame
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 213929;
+
+    public function getName(): string
+    {
+        return 'Тип ростовки';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +116,4 @@ final class TypeWildberriesProductParameters implements WildberriesProductParame
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип ростовки';
-    }
 }

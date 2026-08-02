@@ -41,6 +41,11 @@ final class PurposeSportWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 640;
 
+    public function getName(): string
+    {
+        return 'Спортивное назначение';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class PurposeSportWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Спортивное назначение';
-    }
 }

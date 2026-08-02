@@ -42,9 +42,15 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 23796;
+
+    public function getName(): string
+    {
+        return 'Назначение';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +116,4 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Назначение';
-    }
 }

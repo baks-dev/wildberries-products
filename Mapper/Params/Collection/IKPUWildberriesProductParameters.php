@@ -35,6 +35,11 @@ final class  IKPUWildberriesProductParameters implements WildberriesProductParam
 {
     public const int ID = 15001650;
 
+    public function getName(): string
+    {
+        return 'ИКПУ';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class  IKPUWildberriesProductParameters implements WildberriesProductParam
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'ИКПУ';
-    }
 }

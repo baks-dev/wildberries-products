@@ -52,9 +52,15 @@ final class OzonArticleWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 15003293;
+
+    public function getName(): string
+    {
+        return 'Артикул OZON';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -120,8 +126,4 @@ final class OzonArticleWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Артикул OZON';
-    }
 }

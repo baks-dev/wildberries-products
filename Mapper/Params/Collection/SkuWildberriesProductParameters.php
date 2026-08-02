@@ -35,6 +35,11 @@ final class SkuWildberriesProductParameters implements WildberriesProductParamet
 {
     public const int ID = 14177453;
 
+    public function getName(): string
+    {
+        return 'SKU';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class SkuWildberriesProductParameters implements WildberriesProductParamet
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'SKU';
-    }
 }

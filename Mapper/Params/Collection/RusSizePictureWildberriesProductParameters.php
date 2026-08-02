@@ -49,9 +49,15 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 14177456;
+
+    public function getName(): string
+    {
+        return 'Рос. размер';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -117,8 +123,4 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Рос. размер';
-    }
 }

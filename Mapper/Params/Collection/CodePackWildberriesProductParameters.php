@@ -35,6 +35,11 @@ final class CodePackWildberriesProductParameters implements WildberriesProductPa
 {
     public const int ID = 15001706;
 
+    public function getName(): string
+    {
+        return 'Код упаковки';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class CodePackWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Код упаковки';
-    }
 }

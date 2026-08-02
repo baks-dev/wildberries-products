@@ -41,6 +41,11 @@ final class OrthopedicsWildberriesProductParameters implements WildberriesProduc
 
     public const int ID = 226850;
 
+    public function getName(): string
+    {
+        return 'Ортопедия';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class OrthopedicsWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Ортопедия';
-    }
 }

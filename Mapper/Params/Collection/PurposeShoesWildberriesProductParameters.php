@@ -43,6 +43,11 @@ final class PurposeShoesWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 19448;
 
+    public function getName(): string
+    {
+        return 'Назначение обуви';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,8 +112,4 @@ final class PurposeShoesWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Назначение обуви';
-    }
 }

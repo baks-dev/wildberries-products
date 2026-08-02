@@ -41,6 +41,11 @@ final class TypeOfRiseManufactureWildberriesProductParameters implements Wildber
 
     public const int ID = 15003148;
 
+    public function getName(): string
+    {
+        return 'Тип подъема';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class TypeOfRiseManufactureWildberriesProductParameters implements Wildber
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип подъема';
-    }
 }

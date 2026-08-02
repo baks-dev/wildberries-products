@@ -41,6 +41,11 @@ final class ModelFlipFlopWildberriesProductParameters implements WildberriesProd
 
     public const int ID = 15004156;
 
+    public function getName(): string
+    {
+        return 'Модель шлепанцев';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class ModelFlipFlopWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Модель шлепанцев';
-    }
 
 }

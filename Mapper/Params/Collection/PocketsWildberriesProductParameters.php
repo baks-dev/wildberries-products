@@ -40,9 +40,15 @@ final class PocketsWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
         WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 48;
+
+    public function getName(): string
+    {
+        return 'Тип карманов';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -108,8 +114,4 @@ final class PocketsWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип карманов';
-    }
 }

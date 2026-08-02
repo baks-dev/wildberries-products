@@ -35,6 +35,11 @@ final class DateRegCertWildberriesProductParameters implements WildberriesProduc
 {
     public const int ID = 15001137;
 
+    public function getName(): string
+    {
+        return 'Дата регистрации сертификата/декларации';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -99,8 +104,4 @@ final class DateRegCertWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Дата регистрации сертификата/декларации';
-    }
 }

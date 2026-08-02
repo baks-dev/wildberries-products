@@ -41,6 +41,11 @@ final class MaterialDensManufactureWildberriesProductParameters implements Wildb
 
     public const int ID = 88996;
 
+    public function getName(): string
+    {
+        return 'Плотность материала';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class MaterialDensManufactureWildberriesProductParameters implements Wildb
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Плотность материала';
-    }
 
 }

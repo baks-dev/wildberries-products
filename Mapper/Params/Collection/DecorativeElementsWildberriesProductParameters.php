@@ -47,10 +47,16 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
 
     ];
 
     public const int ID = 50;
+
+    public function getName(): string
+    {
+        return 'Декоративные элементы';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -119,8 +125,4 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Декоративные элементы';
-    }
 }

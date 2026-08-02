@@ -42,6 +42,11 @@ final class FullnessShoesWildberriesProductParameters implements WildberriesProd
 
     public const int ID = 2029;
 
+    public function getName(): string
+    {
+        return 'Полнота обуви (EUR)';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,8 +111,4 @@ final class FullnessShoesWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Полнота обуви (EUR)';
-    }
 }

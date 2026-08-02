@@ -41,6 +41,11 @@ final class ModelCapWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 88051;
 
+    public function getName(): string
+    {
+        return 'Модель шапки';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class ModelCapWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Модель шапки';
-    }
 
 }

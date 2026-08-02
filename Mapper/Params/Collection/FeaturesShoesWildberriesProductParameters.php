@@ -43,6 +43,11 @@ final class FeaturesShoesWildberriesProductParameters implements WildberriesProd
 
     public const int ID = 15003203;
 
+    public function getName(): string
+    {
+        return 'Особенности обуви';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,8 +112,4 @@ final class FeaturesShoesWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Особенности обуви';
-    }
 }

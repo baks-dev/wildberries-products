@@ -41,6 +41,11 @@ final class HeightMattressCmWildberriesProductParameters implements WildberriesP
 
     public const int ID = 15002422;
 
+    public function getName(): string
+    {
+        return ' Высота матраса (см)';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class HeightMattressCmWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return ' Высота матраса (см)';
-    }
 
 }

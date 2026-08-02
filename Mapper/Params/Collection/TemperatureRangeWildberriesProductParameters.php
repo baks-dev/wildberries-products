@@ -40,6 +40,11 @@ final class TemperatureRangeWildberriesProductParameters implements WildberriesP
 
     public const int ID = 88815;
 
+    public function getName(): string
+    {
+        return 'Температурный режим';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class TemperatureRangeWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Температурный режим';
-    }
 
 }

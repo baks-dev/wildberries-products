@@ -37,6 +37,11 @@ final class ModelJeansWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 85592;
 
+    public function getName(): string
+    {
+        return 'Модель джинсов';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -101,8 +106,4 @@ final class ModelJeansWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Модель джинсов';
-    }
 }

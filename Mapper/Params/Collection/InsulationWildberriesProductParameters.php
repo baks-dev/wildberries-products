@@ -38,10 +38,16 @@ final class InsulationWildberriesProductParameters implements WildberriesProduct
         WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
         159,
     ];
 
     public const int ID = 1010;
+
+    public function getName(): string
+    {
+        return 'Утеплитель';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -107,8 +113,4 @@ final class InsulationWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Утеплитель';
-    }
 }

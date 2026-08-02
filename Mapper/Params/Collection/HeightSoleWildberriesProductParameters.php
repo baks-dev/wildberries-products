@@ -42,6 +42,11 @@ final class HeightSoleWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 90845;
 
+    public function getName(): string
+    {
+        return 'Высота подошвы';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,8 +111,4 @@ final class HeightSoleWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Высота подошвы';
-    }
 }

@@ -43,6 +43,11 @@ final class MaterialInsolesWildberriesProductParameters implements WildberriesPr
 
     public const int ID = 1023;
 
+    public function getName(): string
+    {
+        return 'Материал стельки';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,8 +112,4 @@ final class MaterialInsolesWildberriesProductParameters implements WildberriesPr
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал стельки';
-    }
 }

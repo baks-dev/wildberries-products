@@ -40,6 +40,11 @@ final class TypeOffRoadTireWildberriesProductParameters implements WildberriesPr
 
     public const int ID = 15004188;
 
+    public function getName(): string
+    {
+        return 'Тип внедорожной резины';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class TypeOffRoadTireWildberriesProductParameters implements WildberriesPr
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Тип внедорожной резины';
-    }
 
 }

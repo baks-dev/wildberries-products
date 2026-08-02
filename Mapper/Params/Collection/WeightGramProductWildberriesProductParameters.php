@@ -41,6 +41,11 @@ final class WeightGramProductWildberriesProductParameters implements Wildberries
 
     public const int ID = 25471;
 
+    public function getName(): string
+    {
+        return 'Вес (г)';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,8 +110,4 @@ final class WeightGramProductWildberriesProductParameters implements Wildberries
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вес (г)';
-    }
 }

@@ -42,6 +42,11 @@ final class ShapeToeWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 6161;
 
+    public function getName(): string
+    {
+        return 'Форма мыска';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,8 +111,4 @@ final class ShapeToeWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Форма мыска';
-    }
 }

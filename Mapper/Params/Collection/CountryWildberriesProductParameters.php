@@ -35,6 +35,11 @@ final class CountryWildberriesProductParameters implements WildberriesProductPar
 {
     public const int ID = 14177451;
 
+    public function getName(): string
+    {
+        return 'Страна производства';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -116,8 +121,4 @@ final class CountryWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Страна производства';
-    }
 }

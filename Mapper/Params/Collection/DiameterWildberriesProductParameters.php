@@ -40,6 +40,11 @@ final class DiameterWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 244965;
 
+    public function getName(): string
+    {
+        return 'Диаметр, дюймы';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -109,8 +114,4 @@ final class DiameterWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Диаметр, дюймы';
-    }
 }

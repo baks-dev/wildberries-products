@@ -41,6 +41,11 @@ final class MattressFeaturesWildberriesProductParameters implements WildberriesP
 
     public const int ID = 17208;
 
+    public function getName(): string
+    {
+        return 'Особенности наматрасника';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class MattressFeaturesWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Особенности наматрасника';
-    }
 
 }

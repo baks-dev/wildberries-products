@@ -40,6 +40,11 @@ final class ScopeApplicationWildberriesProductParameters implements WildberriesP
 
     public const int ID = 396628;
 
+    public function getName(): string
+    {
+        return 'Сфера применения';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class ScopeApplicationWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Сфера применения';
-    }
 }

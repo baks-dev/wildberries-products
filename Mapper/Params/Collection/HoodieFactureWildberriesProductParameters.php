@@ -44,9 +44,15 @@ final class HoodieFactureWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 13;
+
+    public function getName(): string
+    {
+        return 'Фактура материала';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -112,8 +118,4 @@ final class HoodieFactureWildberriesProductParameters implements WildberriesProd
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Фактура материала';
-    }
 }

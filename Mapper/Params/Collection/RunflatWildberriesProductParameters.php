@@ -40,6 +40,11 @@ final class RunflatWildberriesProductParameters implements WildberriesProductPar
 
     public const int ID = 244925;
 
+    public function getName(): string
+    {
+        return 'Технология RunFlat';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,8 +111,4 @@ final class RunflatWildberriesProductParameters implements WildberriesProductPar
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Технология RunFlat';
-    }
 }

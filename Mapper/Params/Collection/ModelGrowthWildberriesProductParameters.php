@@ -42,9 +42,15 @@ final class ModelGrowthWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_SVITSHOT,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 165482;
+
+    public function getName(): string
+    {
+        return 'Рост модели на фото';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +116,4 @@ final class ModelGrowthWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Рост модели на фото';
-    }
 }

@@ -40,6 +40,11 @@ final class WaterproofnessWildberriesProductParameters implements WildberriesPro
 
     public const int ID = 15001407;
 
+    public function getName(): string
+    {
+        return 'Водонепроницаемость';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,9 +109,5 @@ final class WaterproofnessWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Водонепроницаемость';
-    }
 
 }

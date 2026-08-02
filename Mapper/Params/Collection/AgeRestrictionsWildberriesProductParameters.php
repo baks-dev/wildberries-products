@@ -48,9 +48,15 @@ final class AgeRestrictionsWildberriesProductParameters implements WildberriesPr
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 19717;
+
+    public function getName(): string
+    {
+        return 'Возрастные ограничения';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -116,9 +122,5 @@ final class AgeRestrictionsWildberriesProductParameters implements WildberriesPr
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Возрастные ограничения';
-    }
 
 }

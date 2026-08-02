@@ -54,11 +54,12 @@ final class WildberriesProductProperty
     public const int CATEGORY_CZECH = 1586; // Чешки;
     public const int CATEGORY_LONGSLEEVE = 217; // Лонгсливы
     public const int CATEGORY_SWEATERS = 163; //  -id: 163 -name: "Свитеры"
+    public const int CATEGORY_TROUSERS = 11; // -id: 11 -name: "Брюки"
 
 
     // -id: 41 -name: "Блузки"
     // -id: 1635 -name: "Бомберы"
-    // -id: 11 -name: "Брюки"
+
     // -id: 172 -name: "Ветровки"
     // -id: 153 -name: "Водолазки"
     //  -id: 215 -name: "Джемперы"
@@ -234,6 +235,7 @@ final class WildberriesProductProperty
             self::CATEGORY_DESKS => ['Стол', 'Столы'],
             self::CATEGORY_MATTRESS_TOPPERS => ['Наматрасник', 'Наматрасники'],
             self::CATEGORY_CAP => ['Шапка', 'Шапки'],
+            self::CATEGORY_TROUSERS => ['Брюки', 'Штаны'],
         ];
     }
 

@@ -40,6 +40,11 @@ final class NoiseTireWildberriesProductParameters implements WildberriesProductP
 
     public const int ID = 15002678;
 
+    public function getName(): string
+    {
+        return 'Шумность шины';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class NoiseTireWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Шумность шины';
-    }
 }

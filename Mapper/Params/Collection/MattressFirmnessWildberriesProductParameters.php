@@ -41,6 +41,11 @@ final class MattressFirmnessWildberriesProductParameters implements WildberriesP
 
     public const int ID = 17212;
 
+    public function getName(): string
+    {
+        return 'Жесткость наматрасника';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class MattressFirmnessWildberriesProductParameters implements WildberriesP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Жесткость наматрасника';
-    }
 
 }

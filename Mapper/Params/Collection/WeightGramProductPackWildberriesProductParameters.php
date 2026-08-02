@@ -49,9 +49,15 @@ final class WeightGramProductPackWildberriesProductParameters implements Wildber
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 88952;
+
+    public function getName(): string
+    {
+        return 'Вес товара с упаковкой (г)';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -117,8 +123,4 @@ final class WeightGramProductPackWildberriesProductParameters implements Wildber
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вес товара с упаковкой (г)';
-    }
 }

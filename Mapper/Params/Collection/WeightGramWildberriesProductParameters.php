@@ -40,6 +40,11 @@ final class WeightGramWildberriesProductParameters implements WildberriesProduct
 
     public const int ID = 89008;
 
+    public function getName(): string
+    {
+        return 'Вес товара без упаковки (г)';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -104,8 +109,4 @@ final class WeightGramWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вес товара без упаковки (г)';
-    }
 }

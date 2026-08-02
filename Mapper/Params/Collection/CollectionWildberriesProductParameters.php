@@ -47,9 +47,15 @@ final class CollectionWildberriesProductParameters implements WildberriesProduct
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 7488315;
+
+    public function getName(): string
+    {
+        return 'Коллекция';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -115,8 +121,4 @@ final class CollectionWildberriesProductParameters implements WildberriesProduct
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Коллекция';
-    }
 }

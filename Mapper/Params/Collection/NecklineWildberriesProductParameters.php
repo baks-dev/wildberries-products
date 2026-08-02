@@ -43,6 +43,11 @@ final class NecklineWildberriesProductParameters implements WildberriesProductPa
 
     public const int ID = 6;
 
+    public function getName(): string
+    {
+        return 'Вырез горловины';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -107,8 +112,4 @@ final class NecklineWildberriesProductParameters implements WildberriesProductPa
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Вырез горловины';
-    }
 }

@@ -41,6 +41,11 @@ final class ItemThicknessCmWildberriesProductParameters implements WildberriesPr
 
     public const int ID = 90683;
 
+    public function getName(): string
+    {
+        return 'Толщина предмета, см';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -105,9 +110,5 @@ final class ItemThicknessCmWildberriesProductParameters implements WildberriesPr
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Толщина предмета, см';
-    }
 
 }

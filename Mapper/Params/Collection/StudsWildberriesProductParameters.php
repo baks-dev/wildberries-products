@@ -40,6 +40,11 @@ final class StudsWildberriesProductParameters implements WildberriesProductParam
 
     public const int ID = 15001206;
 
+    public function getName(): string
+    {
+        return 'Шипы';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -106,8 +111,4 @@ final class StudsWildberriesProductParameters implements WildberriesProductParam
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Шипы';
-    }
 }

@@ -41,7 +41,7 @@ final class StyleWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_SHIRTS,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
-
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 15004286;

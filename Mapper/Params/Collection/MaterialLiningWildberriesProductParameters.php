@@ -36,6 +36,7 @@ final class MaterialLiningWildberriesProductParameters implements WildberriesPro
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_TROUSERS,
     ];
 
     public const int ID = 1015;

@@ -46,6 +46,11 @@ final class CutWildberriesProductParameters implements WildberriesProductParamet
 
     public const int ID = 11;
 
+    public function getName(): string
+    {
+        return 'Покрой';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -110,8 +115,4 @@ final class CutWildberriesProductParameters implements WildberriesProductParamet
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Покрой';
-    }
 }

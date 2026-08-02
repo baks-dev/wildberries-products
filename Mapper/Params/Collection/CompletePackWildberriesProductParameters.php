@@ -37,6 +37,11 @@ final class CompletePackWildberriesProductParameters implements WildberriesProdu
 
     public const int ID = 179792;
 
+    public function getName(): string
+    {
+        return 'Количество предметов в упаковке';
+    }
+
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
      */
@@ -101,8 +106,4 @@ final class CompletePackWildberriesProductParameters implements WildberriesProdu
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Количество предметов в упаковке';
-    }
 }
