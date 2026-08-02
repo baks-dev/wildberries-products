@@ -45,6 +45,7 @@ final class QuantityEsManufactureWildberriesProductParameters implements Wildber
         WildberriesProductProperty::CATEGORY_STRAPS,
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
     public const int ID = 15003991;

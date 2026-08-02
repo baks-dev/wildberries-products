@@ -36,6 +36,7 @@ final class TypeMountingManufactureWildberriesProductParameters implements Wildb
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 14196;

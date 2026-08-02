@@ -62,6 +62,8 @@ class WbParentCategoryTest extends KernelTestCase
     public function testUseCase(): void
     {
 
+        /** @see WildberriesProductProperty */
+
         /** @var FindAllWbParentCategoryRequest $WbParentCategoryRequest */
         $WbParentCategoryRequest = self::getContainer()->get(FindAllWbParentCategoryRequest::class);
         $WbParentCategoryRequest->TokenHttpClient(self::$Authorization);
@@ -74,9 +76,8 @@ class WbParentCategoryTest extends KernelTestCase
             self::assertIsInt($item->getId());
             self::assertIsString($item->getName());
 
-            // dump($item);
-
-            break;
+            //echo '// '.$item->getId().' '.$item->getName().PHP_EOL;
+            //dump($item);
         }
 
         self::assertTrue(true);

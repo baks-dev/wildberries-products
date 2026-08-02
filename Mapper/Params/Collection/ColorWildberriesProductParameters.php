@@ -50,6 +50,8 @@ final class ColorWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_DESKS,
         WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
     public const int ID = 14177449;

@@ -51,6 +51,8 @@ final class NamingWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
 
     ];
 

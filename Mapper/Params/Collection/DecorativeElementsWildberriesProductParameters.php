@@ -46,6 +46,7 @@ final class DecorativeElementsWildberriesProductParameters implements Wildberrie
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
 
     ];
 

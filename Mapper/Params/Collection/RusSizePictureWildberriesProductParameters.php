@@ -48,6 +48,7 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
     public const int ID = 14177456;

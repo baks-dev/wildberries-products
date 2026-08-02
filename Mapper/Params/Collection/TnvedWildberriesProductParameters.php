@@ -27,12 +27,36 @@ namespace BaksDev\Wildberries\Products\Mapper\Params\Collection;
 
 use BaksDev\Wildberries\Products\Mapper\Params\WildberriesProductParametersInterface;
 use BaksDev\Wildberries\Products\Repository\Cards\CurrentWildberriesProductsCard\WildberriesProductsCardResult;
+use BaksDev\Wildberries\Products\Type\Settings\Property\WildberriesProductProperty;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
 final class TnvedWildberriesProductParameters implements WildberriesProductParametersInterface
 {
+    public const array CATEGORY = [
+        WildberriesProductProperty::CATEGORY_TIRE,
+        WildberriesProductProperty::CATEGORY_SHIRTS,
+        WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_SVITSHOT,
+        WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_SLIPPERS,
+        WildberriesProductProperty::CATEGORY_STRAPS,
+        WildberriesProductProperty::CATEGORY_SABO,
+        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
+    ];
+
+    public function getName(): string
+    {
+        return 'ТНВЭД';
+    }
+
     public const int ID = 15000001;
 
     /**
@@ -103,8 +127,5 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'ТНВЭД';
-    }
+
 }

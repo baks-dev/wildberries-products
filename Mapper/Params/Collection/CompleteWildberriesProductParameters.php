@@ -51,6 +51,8 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 378533;

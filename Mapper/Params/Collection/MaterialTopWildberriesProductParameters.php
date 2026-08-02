@@ -38,9 +38,15 @@ final class MaterialTopWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_SLIPPERS,
         WildberriesProductProperty::CATEGORY_STRAPS,
+        WildberriesProductProperty::CATEGORY_CZECH,
     ];
 
     public const int ID = 15003971;
+
+    public function getName(): string
+    {
+        return 'Материал верха';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -106,8 +112,5 @@ final class MaterialTopWildberriesProductParameters implements WildberriesProduc
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал верха';
-    }
+
 }

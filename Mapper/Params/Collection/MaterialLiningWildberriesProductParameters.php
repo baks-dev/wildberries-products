@@ -35,13 +35,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class MaterialLiningWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_STRAPS,
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_SABO,
-        WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
-    public const int ID = 40;
+    public const int ID = 1015;
+
+    public function getName(): string
+    {
+        return 'Материал подкладки';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -107,8 +109,4 @@ final class MaterialLiningWildberriesProductParameters implements WildberriesPro
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Материал подкладки обуви';
-    }
 }

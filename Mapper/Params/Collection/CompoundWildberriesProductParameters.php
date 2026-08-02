@@ -48,6 +48,8 @@ final class CompoundWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 14177450;

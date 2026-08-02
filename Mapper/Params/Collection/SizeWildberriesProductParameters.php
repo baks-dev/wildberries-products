@@ -48,6 +48,7 @@ final class SizeWildberriesProductParameters implements WildberriesProductParame
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_CZECH,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
     public const int ID = 54337;

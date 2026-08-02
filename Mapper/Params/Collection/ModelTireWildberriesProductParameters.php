@@ -36,9 +36,15 @@ final class ModelTireWildberriesProductParameters implements WildberriesProductP
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_TIRE,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 5023;
+
+    public function getName(): string
+    {
+        return 'Модель';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -104,8 +110,5 @@ final class ModelTireWildberriesProductParameters implements WildberriesProductP
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Модель';
-    }
+
 }

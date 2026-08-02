@@ -37,6 +37,7 @@ final class MaterialProductWildberriesProductParameters implements WildberriesPr
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_DESKS,
         WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 17596;

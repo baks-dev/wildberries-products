@@ -38,6 +38,7 @@ final class WeightKiloWildberriesProductParameters implements WildberriesProduct
         WildberriesProductProperty::CATEGORY_TIRE,
         WildberriesProductProperty::CATEGORY_DESKS,
         WildberriesProductProperty::CATEGORY_RACKS,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 89064;

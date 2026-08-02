@@ -45,9 +45,15 @@ final class PictureWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_CAP,
     ];
 
     public const int ID = 12;
+
+    public function getName(): string
+    {
+        return 'Рисунок';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -111,10 +117,5 @@ final class PictureWildberriesProductParameters implements WildberriesProductPar
             (string) self::ID,
             mb_strtolower($this->getName()),
         ], true);
-    }
-
-    public function getName(): string
-    {
-        return 'Рисунок';
     }
 }

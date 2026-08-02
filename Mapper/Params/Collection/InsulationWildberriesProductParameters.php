@@ -37,6 +37,7 @@ final class InsulationWildberriesProductParameters implements WildberriesProduct
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_JEANS,
+        WildberriesProductProperty::CATEGORY_CAP,
         159,
     ];
 

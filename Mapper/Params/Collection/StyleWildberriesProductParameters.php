@@ -35,16 +35,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class StyleWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_SHIRTS,
-        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_SVITSHOT,
+        WildberriesProductProperty::CATEGORY_HOODIE,
+        WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_TOP,
+        WildberriesProductProperty::CATEGORY_SHIRTS,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+
     ];
 
-    public const int ID = 11;
+    public const int ID = 15004286;
+
+    public function getName(): string
+    {
+        return 'Стиль';
+    }
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -110,8 +115,4 @@ final class StyleWildberriesProductParameters implements WildberriesProductParam
         ], true);
     }
 
-    public function getName(): string
-    {
-        return 'Покрой';
-    }
 }

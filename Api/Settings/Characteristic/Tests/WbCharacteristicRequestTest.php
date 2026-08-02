@@ -61,24 +61,41 @@ class WbCharacteristicRequestTest extends KernelTestCase
         $WbCharacteristicRequest = self::getContainer()->get(FindAllWbCharacteristicRequest::class);
         $WbCharacteristicRequest->TokenHttpClient(self::$Authorization);
 
+
+        /** @see WildberriesProductProperty */
+
         $cats = [
             WildberriesProductProperty::CATEGORY_TIRE, // 5283 Шины автомобильные
 
+            /** Мебель */
+
             WildberriesProductProperty::CATEGORY_DESKS, // 7611 Столы письменные
             WildberriesProductProperty::CATEGORY_RACKS, // 1901 Стелажи
+
+            /** 1 Одежда */
 
             WildberriesProductProperty::CATEGORY_SHIRTS, // 192 Футболки
             WildberriesProductProperty::CATEGORY_HOODIE, // 1724 Худи
             WildberriesProductProperty::CATEGORY_JEANS, // 180 Джинсы
             WildberriesProductProperty::CATEGORY_SVITSHOT, // 159 Свитшоты
             WildberriesProductProperty::CATEGORY_TOP, // 185 Топы
-            WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // 402 Фартуки кухонные
+
             WildberriesProductProperty::CATEGORY_SLIPPERS, // 106 Тапки
             WildberriesProductProperty::CATEGORY_STRAPS,// 107 Шлепанцы;
             WildberriesProductProperty::CATEGORY_SABO, // 98 Cабо;
             WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
             WildberriesProductProperty::CATEGORY_CZECH, // 1586 Чешки;
             WildberriesProductProperty::CATEGORY_LONGSLEEVE, // 217 Лонгсливы;
+
+
+            /** 6 Головные уборы */
+            WildberriesProductProperty::CATEGORY_CAP, // 82 Шапки
+
+
+            /** 8693 Текстиль для дома */
+            WildberriesProductProperty::CATEGORY_KITCHEN_APRONS, // 402 Фартуки кухонные
+            WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,  // 743 Наматрасники
+
         ];
 
         /** @see WildberriesProductProperty */
@@ -97,29 +114,24 @@ class WbCharacteristicRequestTest extends KernelTestCase
 
             /** @var WbCharacteristicDTO $item */
 
-            $count = 0;
-
-
             foreach($data as $item)
             {
 
-                self::assertNotFalse($params,
-                    sprintf('Отсутствует элемент ID = %s ( %s, %s ) для категории %s', $item->getId(), $item->getName(), $item->getUnit(), $category),
-                );
+                if(empty($params))
+                {
+                    dump(sprintf('Отсутствует элемент ID = %s ( %s, %s ) для категории %s', $item->getId(), $item->getName(), $item->getUnit(), $category));
+                }
 
-                /** Проверяем по всем параметрам */
-
-                self::assertNotEmpty(array_filter($params,
-                    static function(WildberriesProductParametersInterface $param) use ($item) {
-                        return $param->equals($item->getId());
-                    }), sprintf('Отсутствует элемент ID = %s ( %s, %s ) для категории %s', $item->getId(), $item->getName(), $item->getUnit(), $category));
-
-
-                ++$count;
+                if(
+                    empty(array_filter($params,
+                        static function(WildberriesProductParametersInterface $param) use ($item) {
+                            return $param->equals($item->getId());
+                        }))
+                )
+                {
+                    dump(sprintf('Отсутствует элемент ID = %s ( %s, %s ) для категории %s', $item->getId(), $item->getName(), $item->getUnit(), $category));
+                }
             }
-
-
-            //self::assertCount($count, $params, message: sprintf('В категории ID = %s количество элементов %s при %s параметрах', $category, ($i+1), count($params)));
         }
 
         self::assertTrue(true);

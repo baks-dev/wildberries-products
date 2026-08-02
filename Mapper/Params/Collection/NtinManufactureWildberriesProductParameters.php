@@ -50,6 +50,8 @@ final class NtinManufactureWildberriesProductParameters implements WildberriesPr
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_CZECH,
+        WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
     ];
 
     public const int ID = 15003988;
