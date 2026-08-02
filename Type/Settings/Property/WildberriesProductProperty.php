@@ -145,9 +145,7 @@ final class WildberriesProductProperty
     // 1249 Чехлы для мебели
     // 1479 Шторы для ванной
 
-
     public const int CATEGORY_WORKERS_APRONS = 3188; // Фартуки рабочие;
-
 
     private ?WildberriesProductPropertyInterface $property = null; // Лонгслив;
 
@@ -234,6 +232,8 @@ final class WildberriesProductProperty
             self::CATEGORY_LONGSLEEVE => ['Лонгслив', 'Лонгсливы'],
             self::CATEGORY_RACKS => ['Стеллаж', 'Стеллажи'],
             self::CATEGORY_DESKS => ['Стол', 'Столы'],
+            self::CATEGORY_MATTRESS_TOPPERS => ['Наматрасник', 'Наматрасники'],
+            self::CATEGORY_CAP => ['Шапка', 'Шапки'],
         ];
     }
 
