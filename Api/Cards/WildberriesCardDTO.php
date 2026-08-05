@@ -119,12 +119,15 @@ final class WildberriesCardDTO
 
         $this->characteristics = new ArrayObject();
 
-        foreach($data['characteristics'] as $characteristic)
+        if(isset($data['characteristics']))
         {
-            $values = $characteristic['value'];
-            $value = is_array($values) ? implode(', ', $values) : $values;
+            foreach($data['characteristics'] as $characteristic)
+            {
+                $values = $characteristic['value'];
+                $value = is_array($values) ? implode(', ', $values) : $values;
 
-            $this->characteristics->offsetSet((string) $characteristic['id'], $value);
+                $this->characteristics->offsetSet((string) $characteristic['id'], $value);
+            }
         }
 
 
