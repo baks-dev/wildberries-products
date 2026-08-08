@@ -50,6 +50,7 @@ final class GenderWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
 
     ];
 

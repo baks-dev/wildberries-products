@@ -44,6 +44,8 @@ final class PurposeWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
+
     ];
 
     public const int ID = 23796;

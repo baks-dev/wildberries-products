@@ -48,6 +48,7 @@ final class CodeTruTwoManufactureWildberriesProductParameters implements Wildber
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
 
     ];
 

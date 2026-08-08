@@ -53,6 +53,7 @@ final class MaterialUpperWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
 
     ];
 

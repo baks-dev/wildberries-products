@@ -52,6 +52,7 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
 
     ];
 

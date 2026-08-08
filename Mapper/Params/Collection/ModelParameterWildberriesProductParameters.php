@@ -44,6 +44,7 @@ final class ModelParameterWildberriesProductParameters implements WildberriesPro
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
 
     ];
 

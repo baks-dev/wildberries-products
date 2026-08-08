@@ -50,6 +50,8 @@ final class AgeRestrictionsWildberriesProductParameters implements WildberriesPr
         WildberriesProductProperty::CATEGORY_SABO,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
+
     ];
 
     public const int ID = 19717;

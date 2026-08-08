@@ -45,6 +45,8 @@ final class SizeModelWildberriesProductParameters implements WildberriesProductP
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
+
     ];
 
     public const int ID = 246961;

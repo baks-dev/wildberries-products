@@ -43,6 +43,8 @@ final class CutWildberriesProductParameters implements WildberriesProductParamet
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SWEATERS,
+
     ];
 
     public const int ID = 11;
