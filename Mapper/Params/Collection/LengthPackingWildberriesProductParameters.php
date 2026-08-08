@@ -54,6 +54,8 @@ final class LengthPackingWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
+
 
     ];
 

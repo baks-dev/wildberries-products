@@ -60,7 +60,7 @@ class WbCategoryTest extends KernelTestCase
         /** @see WildberriesProductProperty */
 
 
-        /** 1 Одежда */
+        // 1 Одежда
         // 2 Обувь
         // 3 Аксессуары
         // 4 Белье
@@ -147,7 +147,7 @@ class WbCategoryTest extends KernelTestCase
 
 
         $data = $FindAllWbCategoryRequest
-            ->parent(6)
+            ->parent(1)
             ->findAll();
 
         foreach($data as $item)
@@ -155,7 +155,7 @@ class WbCategoryTest extends KernelTestCase
             self::assertIsInt($item->getId());
             self::assertIsString($item->getName());
 
-            //echo '// '.$item->getId().' '.$item->getName().PHP_EOL;
+            echo '// '.$item->getId().' '.$item->getName().PHP_EOL;
         }
 
 

@@ -54,6 +54,7 @@ final class BrandWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
 
     ];
 

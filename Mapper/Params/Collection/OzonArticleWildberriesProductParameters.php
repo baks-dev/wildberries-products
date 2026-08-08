@@ -53,6 +53,8 @@ final class OzonArticleWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
+
     ];
 
     public const int ID = 15003293;

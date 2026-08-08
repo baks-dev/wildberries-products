@@ -1,6 +1,6 @@
 <?php
 /*
- *  Copyright 2026.  Baks.dev <admin@baks.dev>
+ *  Copyright 2025.  Baks.dev <admin@baks.dev>
  *  
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -32,38 +32,13 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class CompleteWildberriesProductParameters implements WildberriesProductParametersInterface
+final class CollarWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_TIRE,
-        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
-        WildberriesProductProperty::CATEGORY_DESKS,
-        WildberriesProductProperty::CATEGORY_RACKS,
-        WildberriesProductProperty::CATEGORY_SHIRTS,
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_JEANS,
-        WildberriesProductProperty::CATEGORY_SVITSHOT,
-        WildberriesProductProperty::CATEGORY_TOP,
-        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_STRAPS,
-        WildberriesProductProperty::CATEGORY_SABO,
-        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
-        WildberriesProductProperty::CATEGORY_CZECH,
-        WildberriesProductProperty::CATEGORY_CAP,
-        WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
-        WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
-
     ];
 
-    public const int ID = 378533;
-
-    public function getName(): string
-    {
-        return 'Комплектация';
-    }
+    public const int ID = 5;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -80,7 +55,7 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
 
     public function default(): ?string
     {
-        return '1';
+        return null;
     }
 
     /** Массив допустимых значений */
@@ -107,7 +82,7 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
                     return [
                         'id' => $this::ID,
                         'name' => $this->getName(),
-                        'value' => $product_param->value ?? 1,
+                        'value' => $product_param->value,
                     ];
                 }
             }
@@ -128,5 +103,11 @@ final class CompleteWildberriesProductParameters implements WildberriesProductPa
             mb_strtolower($this->getName()),
         ], true);
     }
+
+    public function getName(): string
+    {
+        return 'Воротник';
+    }
+
 
 }

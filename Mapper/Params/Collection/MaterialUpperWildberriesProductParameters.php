@@ -52,6 +52,8 @@ final class MaterialUpperWildberriesProductParameters implements WildberriesProd
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
+
     ];
 
     public const int ID = 15004202;

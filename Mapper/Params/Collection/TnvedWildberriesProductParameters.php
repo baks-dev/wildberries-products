@@ -51,6 +51,8 @@ final class TnvedWildberriesProductParameters implements WildberriesProductParam
         WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
         WildberriesProductProperty::CATEGORY_MATTRESS_TOPPERS,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
+
     ];
 
     public function getName(): string

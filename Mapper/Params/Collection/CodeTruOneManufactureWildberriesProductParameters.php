@@ -47,6 +47,8 @@ final class CodeTruOneManufactureWildberriesProductParameters implements Wildber
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_CARDIGANS,
+
     ];
 
     public const int ID = 15003989;

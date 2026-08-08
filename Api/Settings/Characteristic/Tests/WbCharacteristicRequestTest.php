@@ -88,6 +88,7 @@ class WbCharacteristicRequestTest extends KernelTestCase
             WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
             WildberriesProductProperty::CATEGORY_CZECH, // 1586 Чешки;
             WildberriesProductProperty::CATEGORY_LONGSLEEVE, // 217 Лонгсливы;
+            WildberriesProductProperty::CATEGORY_CARDIGANS, // 191 Кардиганы;
 
 
             /** 6 Головные уборы */
