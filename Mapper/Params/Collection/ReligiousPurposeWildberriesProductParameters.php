@@ -36,6 +36,7 @@ final class ReligiousPurposeWildberriesProductParameters implements WildberriesP
 {
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_CAP,
+        WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
     ];
 
     public const int ID = 214811;

@@ -37,6 +37,8 @@ final class SpearTypeWildberriesProductParameters implements WildberriesProductP
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
+        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
+
     ];
 
     public const int ID = 10;

@@ -44,6 +44,8 @@ final class CutWildberriesProductParameters implements WildberriesProductParamet
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
         WildberriesProductProperty::CATEGORY_SWEATERS,
+        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
+        WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
 
     ];
 

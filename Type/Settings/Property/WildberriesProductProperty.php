@@ -53,7 +53,6 @@ final class WildberriesProductProperty
     // 153 Водолазки
     // 1629 Дафлкоты
     // 1687 Джеггинсы
-    // 215 Джемперы
     // 180 Джинсы
     // 1631 Дождевики
     // 322 Дубленки
@@ -105,7 +104,6 @@ final class WildberriesProductProperty
     // 151 Шорты
     // 4377 Шубы искусственные
     // 173 Шубы натуральные
-    // 38 Юбки
 
 
     public const int CATEGORY_SHIRTS = 192; // Футболки
@@ -124,7 +122,8 @@ final class WildberriesProductProperty
     public const int CATEGORY_SWEATERS = 163; //  -id: 163 -name: "Свитеры"
     public const int CATEGORY_TROUSERS = 11; // -id: 11 -name: "Брюки"
     public const int CATEGORY_CARDIGANS = 191; // -id: 191 -name: "Кардиганы"
-
+    public const int CATEGORY_JUMPERS = 215; // 215 Джемперы
+    public const int CATEGORY_SKIRTS = 38; // 38 Юбки
 
     /** 6 Головные уборы */
 

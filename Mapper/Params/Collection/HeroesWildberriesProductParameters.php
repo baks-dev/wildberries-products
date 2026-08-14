@@ -43,6 +43,7 @@ final class HeroesWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_CAP,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
     ];
 
     public const int ID = 51;

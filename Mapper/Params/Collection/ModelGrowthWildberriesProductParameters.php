@@ -45,6 +45,8 @@ final class ModelGrowthWildberriesProductParameters implements WildberriesProduc
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
         WildberriesProductProperty::CATEGORY_SWEATERS,
+        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
+        WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
 
     ];
 

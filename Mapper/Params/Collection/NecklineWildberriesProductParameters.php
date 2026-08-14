@@ -40,6 +40,7 @@ final class NecklineWildberriesProductParameters implements WildberriesProductPa
         WildberriesProductProperty::CATEGORY_TOP,
         WildberriesProductProperty::CATEGORY_LONGSLEEVE,
         WildberriesProductProperty::CATEGORY_SWEATERS,
+        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
 
     ];
 

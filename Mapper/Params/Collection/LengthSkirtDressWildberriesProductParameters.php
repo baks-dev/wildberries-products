@@ -32,37 +32,14 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AutoconfigureTag('baks.wb.product.params')]
-final class RusSizePictureWildberriesProductParameters implements WildberriesProductParametersInterface
+final class LengthSkirtDressWildberriesProductParameters implements WildberriesProductParametersInterface
 {
     public const array CATEGORY = [
-        WildberriesProductProperty::CATEGORY_HOODIE,
-        WildberriesProductProperty::CATEGORY_SHIRTS,
-        WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
-        WildberriesProductProperty::CATEGORY_JEANS,
-        WildberriesProductProperty::CATEGORY_SVITSHOT,
-        WildberriesProductProperty::CATEGORY_TOP,
-        WildberriesProductProperty::CATEGORY_KITCHEN_APRONS,
-        WildberriesProductProperty::CATEGORY_WORKERS_APRONS,
-        WildberriesProductProperty::CATEGORY_SLIPPERS,
-        WildberriesProductProperty::CATEGORY_STRAPS,
-        WildberriesProductProperty::CATEGORY_SABO,
-        WildberriesProductProperty::CATEGORY_CZECH,
-        WildberriesProductProperty::CATEGORY_LONGSLEEVE,
-        WildberriesProductProperty::CATEGORY_CAP,
-        WildberriesProductProperty::CATEGORY_TROUSERS,
-        WildberriesProductProperty::CATEGORY_CARDIGANS,
-        WildberriesProductProperty::CATEGORY_SWEATERS,
-        WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
         WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
 
     ];
 
-    public const int ID = 14177456;
-
-    public function getName(): string
-    {
-        return 'Рос. размер';
-    }
+    public const int ID = 605;
 
     /**
      * Сортировка (чем меньше число - тем первым в итерации будет значение)
@@ -90,7 +67,7 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
 
     public function isSetting(): bool
     {
-        return false;
+        return true;
     }
 
     public function getData(WildberriesProductsCardResult $data, ?TranslatorInterface $translator = null): ?array
@@ -127,5 +104,11 @@ final class RusSizePictureWildberriesProductParameters implements WildberriesPro
             mb_strtolower($this->getName()),
         ], true);
     }
+
+    public function getName(): string
+    {
+        return 'Длина юбки/платья';
+    }
+
 
 }

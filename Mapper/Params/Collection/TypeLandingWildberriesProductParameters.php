@@ -37,6 +37,7 @@ final class TypeLandingWildberriesProductParameters implements WildberriesProduc
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_JEANS,
         WildberriesProductProperty::CATEGORY_TROUSERS,
+        WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
     ];
 
     public const int ID = 6153;

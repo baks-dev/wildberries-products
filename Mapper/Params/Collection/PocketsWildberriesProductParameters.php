@@ -42,6 +42,8 @@ final class PocketsWildberriesProductParameters implements WildberriesProductPar
         WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_TROUSERS,
         WildberriesProductProperty::CATEGORY_CARDIGANS,
+        WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
+
     ];
 
     public const int ID = 48;
