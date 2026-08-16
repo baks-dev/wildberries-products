@@ -285,6 +285,8 @@ final class WildberriesProductProperty
             self::CATEGORY_CAP => ['Шапка', 'Шапки'],
             self::CATEGORY_TROUSERS => ['Брюки', 'Штаны'],
             self::CATEGORY_CARDIGANS => ['Кардиган', 'Кардиганы'],
+            self::CATEGORY_SKIRTS => ['Юбка', 'Юбки'],
+            self::CATEGORY_JUMPERS => ['Джемпер', 'Джемперы'],
         ];
     }
 

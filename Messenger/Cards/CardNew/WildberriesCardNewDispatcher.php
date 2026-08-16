@@ -147,8 +147,12 @@ final readonly class WildberriesCardNewDispatcher
             if(false === $CategoryProductUid)
             {
                 $this->logger->warning(
-                    sprintf('Для товара с артикулом %s не найдено настройки соотношений',
-                        $WildberriesCardDTO->getArticle()));
+                    sprintf('Для товара с артикулом %s не найдено настройки соотношений категории %s',
+                        $WildberriesCardDTO->getArticle(),
+                        $WildberriesCardDTO->getCategory(),
+                    ),
+                );
+
                 continue;
             }
 
@@ -202,6 +206,7 @@ final readonly class WildberriesCardNewDispatcher
             $ProductEvent = $this->ProductEventByArticle
                 ->onlyCard() // проверяем только артикул карточки
                 ->forProfile($message->getProfile())
+                ->forCategory($CategoryProductUid)
                 ->findProductEventByArticle($cardArticle);
 
             /** Если карточка по профилю не найдена - пробуем найти общую */
@@ -210,6 +215,7 @@ final readonly class WildberriesCardNewDispatcher
                 $ProductEvent = $this->ProductEventByArticle
                     ->onlyCard()
                     ->forProfile(false)
+                    ->forCategory($CategoryProductUid)
                     ->findProductEventByArticle($cardArticle);
 
                 if(true === ($ProductEvent instanceof ProductEvent))
@@ -218,6 +224,15 @@ final readonly class WildberriesCardNewDispatcher
                 }
             }
 
+            if(
+                empty($SettingsByCategory['offer_article'])
+                && empty($SettingsByCategory['variation_article'])
+                && empty($SettingsByCategory['modification_article'])
+            )
+            {
+                dump('В настройке категории товара не указаны артикульные свойства');
+                continue;
+            }
 
             /**
              * Проверяем что в ней отсутствует артикул торговых предложения с размерами
@@ -229,6 +244,7 @@ final readonly class WildberriesCardNewDispatcher
                 $SettingsByCategory['variation_article'] => $this->ExistProductArticle->onlyVariation(),
                 $SettingsByCategory['modification_article'] => $this->ExistProductArticle->onlyModification(),
             };
+
 
             foreach($WildberriesCardDTO->getOffersCollection() as $offer)
             {
