@@ -75,17 +75,19 @@ class WbCharacteristicRequestTest extends KernelTestCase
             /** 1 Одежда */
 
             WildberriesProductProperty::CATEGORY_SHIRTS, // 192 Футболки
+            WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
+            WildberriesProductProperty::CATEGORY_SHIRTS_POLO, // 219 Футболки-поло
+            
+            
             WildberriesProductProperty::CATEGORY_HOODIE, // 1724 Худи
             WildberriesProductProperty::CATEGORY_JEANS, // 180 Джинсы
             WildberriesProductProperty::CATEGORY_SVITSHOT, // 159 Свитшоты
             WildberriesProductProperty::CATEGORY_TOP, // 185 Топы
             WildberriesProductProperty::CATEGORY_TROUSERS, // 11 Брюки
-
-
             WildberriesProductProperty::CATEGORY_SLIPPERS, // 106 Тапки
             WildberriesProductProperty::CATEGORY_STRAPS,// 107 Шлепанцы;
             WildberriesProductProperty::CATEGORY_SABO, // 98 Cабо;
-            WildberriesProductProperty::CATEGORY_SHIRTS_SPORT, // 5217 Футболка спортивная;
+
             WildberriesProductProperty::CATEGORY_CZECH, // 1586 Чешки;
             WildberriesProductProperty::CATEGORY_LONGSLEEVE, // 217 Лонгсливы;
             WildberriesProductProperty::CATEGORY_CARDIGANS, // 191 Кардиганы;

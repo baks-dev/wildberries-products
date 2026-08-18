@@ -53,6 +53,7 @@ final class GenderWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_SWEATERS,
         WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
         WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
+        WildberriesProductProperty::CATEGORY_SHIRTS_POLO, // 219 Футболки Поло
 
     ];
 

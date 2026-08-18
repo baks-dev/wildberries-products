@@ -97,7 +97,6 @@ final class WildberriesProductProperty
     // 150 Туники
     // 1340 Фартуки детские
     // 192 Футболки
-    // 219 Футболки-поло
     // 211 Халаты банные
     // 2803 Халаты домашние
     // 1724 Худи
@@ -106,14 +105,15 @@ final class WildberriesProductProperty
     // 173 Шубы натуральные
 
 
-    public const int CATEGORY_SHIRTS = 192; // Футболки
-    public const int CATEGORY_SHIRTS_SPORT = 5217; // Спортивные футболки
     public const int CATEGORY_HOODIE = 1724; // Худи
     public const int CATEGORY_JEANS = 180; // Джинсы
     public const int CATEGORY_SVITSHOT = 159; // Свитшоты
     public const int CATEGORY_TOP = 185; // Топы
 
-
+    public const int CATEGORY_SHIRTS = 192; // Футболки
+    public const int CATEGORY_SHIRTS_SPORT = 5217; // Спортивные футболки
+    public const int CATEGORY_SHIRTS_POLO = 219; // 219 Футболки-поло
+    
     public const int CATEGORY_SLIPPERS = 106; // Тапки;
     public const int CATEGORY_STRAPS = 107; // Шлепанцы;
     public const int CATEGORY_SABO = 98; // Cабо;
@@ -124,6 +124,7 @@ final class WildberriesProductProperty
     public const int CATEGORY_CARDIGANS = 191; // -id: 191 -name: "Кардиганы"
     public const int CATEGORY_JUMPERS = 215; // 215 Джемперы
     public const int CATEGORY_SKIRTS = 38; // 38 Юбки
+
 
     /** 6 Головные уборы */
 

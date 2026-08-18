@@ -37,6 +37,7 @@ final class CutWildberriesProductParameters implements WildberriesProductParamet
     public const array CATEGORY = [
         WildberriesProductProperty::CATEGORY_SHIRTS,
         WildberriesProductProperty::CATEGORY_SHIRTS_SPORT,
+        WildberriesProductProperty::CATEGORY_SHIRTS_POLO,
         WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_HOODIE,
         WildberriesProductProperty::CATEGORY_SVITSHOT,

@@ -58,6 +58,7 @@ final class NamingWildberriesProductParameters implements WildberriesProductPara
         WildberriesProductProperty::CATEGORY_SWEATERS,
         WildberriesProductProperty::CATEGORY_JUMPERS, // 215 Джемперы
         WildberriesProductProperty::CATEGORY_SKIRTS, // 38 Юбки
+        WildberriesProductProperty::CATEGORY_SHIRTS_POLO, // 219 Футболки Поло
     ];
 
     public const int ID = 15000000;
